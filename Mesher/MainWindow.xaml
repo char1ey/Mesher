@@ -7,6 +7,26 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="File">
+                    <MenuItem Header="Import mesh..."/>
+                    <Separator/>
+                    <MenuItem Header="Save mesh as..."/>
+                    <MenuItem Header="Close project"/>                
+                </MenuItem>
+                <MenuItem Header="Edit">
+                    
+                </MenuItem>
+            </Menu>
+            <StackPanel></StackPanel>
+        </DockPanel>
+       
     </Grid>
 </Window>
