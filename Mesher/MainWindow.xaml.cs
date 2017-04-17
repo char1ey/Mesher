@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Windows.Forms;
+using Mesher.GraphicsCore;
 
 namespace Mesher
 {
@@ -20,9 +10,35 @@ namespace Mesher
     /// </summary>
     public partial class MainWindow : Window
     {
+        RenderContext renderContext;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            windowsFormsHostRenderContext.Child = new Control();
+            renderContext = new RenderContext(windowsFormsHostRenderContext.Child.Handle);
+
+            var timer = new Timer();
+            timer.Interval = 1;
+            timer.Tick += Timer_Tick;
+
+            timer.Start();
+        }
+
+        private void Child_MouseClick(object sender, MouseEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+           // renderContext.Render();
+        }
+
+        private void WindowsFormsHostRenderContext_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            renderContext.ResizeContext((int)e.NewSize.Width, (int)e.NewSize.Height);
         }
     }
 }

@@ -6,27 +6,19 @@
         xmlns:local="clr-namespace:Mesher"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-        </Grid.RowDefinitions>
-
-        <DockPanel>
-            <Menu DockPanel.Dock="Top">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
                 <MenuItem Header="File">
                     <MenuItem Header="Import mesh..."/>
                     <Separator/>
                     <MenuItem Header="Save mesh as..."/>
-                    <MenuItem Header="Close project"/>                
+                    <MenuItem Header="Exit"/>                
                 </MenuItem>
                 <MenuItem Header="Edit">
                     
                 </MenuItem>
-            </Menu>
-            <StackPanel></StackPanel>
-        </DockPanel>
-       
-    </Grid>
+        </Menu>
+
+        <WindowsFormsHost Name="windowsFormsHostRenderContext" SizeChanged="WindowsFormsHostRenderContext_SizeChanged"/>
+    </DockPanel>
 </Window>
