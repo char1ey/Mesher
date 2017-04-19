@@ -41,6 +41,13 @@ namespace Mesher.Mathematics
             this.z = z;
 		}
 
+        public Vertex(double x, double y)
+        {
+            this.x = x;
+            this.y = y;
+            z = 0;
+        }
+
         public Vertex(Vertex v)
         {
             x = v.x;
@@ -128,8 +135,17 @@ namespace Mesher.Mathematics
 
         public static Vertex Normalize(Vertex v)
         {
-            double sqr = v.x * v.x + v.y * v.y + v.z * v.z;
-            return v * (1.0f / (double)Math.Sqrt(sqr));
+            return v / Math.Sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+        }
+
+        public bool Valid()
+        {
+            return Valid(this);
+        }
+
+        public static bool Valid(Vertex v)
+        {
+            return !(double.IsNaN(v.x) || double.IsNaN(v.y) || double.IsNaN(v.z) || double.IsInfinity(v.x) || double.IsInfinity(v.y) || double.IsInfinity(v.z));
         }
 
         public double[] ToArray()

@@ -604,6 +604,20 @@ namespace Mesher.Mathematics
             return Inverse * OneOverDeterminant;
         }
 
+        public static bool Valid(Matrix m)
+        {
+            for (int i = 0; i < N; i++)
+                for (int j = 0; j < N; j++)
+                    if (double.IsNaN(m[i, j]) || double.IsInfinity(m[i, j]))
+                        return false;
+            return true;
+        }
+
+        public bool Valid()
+        {
+            return Valid(this);
+        }
+
         #endregion
 
         #region entity

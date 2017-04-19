@@ -10,14 +10,9 @@ namespace Mesher
     /// </summary>
     public partial class MainWindow : Window
     {
-        RenderContext renderContext;
-
         public MainWindow()
         {
             InitializeComponent();
-
-            windowsFormsHostRenderContext.Child = new Control();
-            renderContext = new RenderContext(windowsFormsHostRenderContext.Child.Handle);
 
             var timer = new Timer();
             timer.Interval = 1;
@@ -33,12 +28,12 @@ namespace Mesher
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-           // renderContext.Render();
+            
         }
 
-        private void WindowsFormsHostRenderContext_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void renderContext_MouseMove(object sender, MouseEventArgs e)
         {
-            renderContext.ResizeContext((int)e.NewSize.Width, (int)e.NewSize.Height);
+
         }
     }
 }

@@ -1,1241 +1,1244 @@
-﻿using System;
+﻿using Mesher.Mathematics;
+using System;
 using System.Collections.Generic;
-using Mesher.Mathematics;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-namespace Mesher.GraphicsCore
+using System.Threading.Tasks;
+
+namespace Mesher.OpenGLCore
 {
     /// <summary>
     /// The OpenGL class wraps Suns OpenGL 3D library.
     /// </summary>
     public static class gl
-	{
-		#region The OpenGL constant definitions.
-	    //   OpenGL Version Identifier
-		public const uint GL_VERSION_1_1 = 1;		
-	    //  AccumOp
-		public const uint GL_ACCUM                          = 0x0100;
-		public const uint GL_LOAD                           = 0x0101;
-		public const uint GL_RETURN                         = 0x0102;
-		public const uint GL_MULT                           = 0x0103;
-		public const uint GL_ADD                            = 0x0104;
+    {
+        #region The OpenGL constant definitions.
+        //   OpenGL Version Identifier
+        public const uint GL_VERSION_1_1 = 1;
+        //  AccumOp
+        public const uint GL_ACCUM = 0x0100;
+        public const uint GL_LOAD = 0x0101;
+        public const uint GL_RETURN = 0x0102;
+        public const uint GL_MULT = 0x0103;
+        public const uint GL_ADD = 0x0104;
         //  Alpha functions
-		public const uint GL_NEVER                          = 0x0200;
-		public const uint GL_LESS                           = 0x0201;
-		public const uint GL_EQUAL                          = 0x0202;
-		public const uint GL_LEQUAL                         = 0x0203;
-		public const uint GL_GREATER                        = 0x0204;
-		public const uint GL_NOTEQUAL                       = 0x0205;
-		public const uint GL_GEQUAL                         = 0x0206;
-		public const uint GL_ALWAYS                         = 0x0207;
-	    //  AttribMask
-		public const uint GL_CURRENT_BIT                    = 0x00000001;
-		public const uint GL_POINT_BIT                      = 0x00000002;
-		public const uint GL_LINE_BIT                       = 0x00000004;
-		public const uint GL_POLYGON_BIT                    = 0x00000008;
-		public const uint GL_POLYGON_STIPPLE_BIT            = 0x00000010;
-		public const uint GL_PIXEL_MODE_BIT                 = 0x00000020;
-		public const uint GL_LIGHTING_BIT                   = 0x00000040;
-		public const uint GL_FOG_BIT                        = 0x00000080;
-		public const uint GL_DEPTH_BUFFER_BIT               = 0x00000100;
-		public const uint GL_ACCUM_BUFFER_BIT               = 0x00000200;
-		public const uint GL_STENCIL_BUFFER_BIT             = 0x00000400;
-		public const uint GL_VIEWPORT_BIT                   = 0x00000800;
-		public const uint GL_TRANSFORM_BIT                  = 0x00001000;
-		public const uint GL_ENABLE_BIT                     = 0x00002000;
-		public const uint GL_COLOR_BUFFER_BIT               = 0x00004000;
-		public const uint GL_HINT_BIT                       = 0x00008000;
-		public const uint GL_EVAL_BIT                       = 0x00010000;
-		public const uint GL_LIST_BIT                       = 0x00020000;
-		public const uint GL_TEXTURE_BIT                    = 0x00040000;
-		public const uint GL_SCISSOR_BIT                    = 0x00080000;
-		public const uint GL_ALL_ATTRIB_BITS                = 0x000fffff;
-	    //  BeginMode
+        public const uint GL_NEVER = 0x0200;
+        public const uint GL_LESS = 0x0201;
+        public const uint GL_EQUAL = 0x0202;
+        public const uint GL_LEQUAL = 0x0203;
+        public const uint GL_GREATER = 0x0204;
+        public const uint GL_NOTEQUAL = 0x0205;
+        public const uint GL_GEQUAL = 0x0206;
+        public const uint GL_ALWAYS = 0x0207;
+        //  AttribMask
+        public const uint GL_CURRENT_BIT = 0x00000001;
+        public const uint GL_POINT_BIT = 0x00000002;
+        public const uint GL_LINE_BIT = 0x00000004;
+        public const uint GL_POLYGON_BIT = 0x00000008;
+        public const uint GL_POLYGON_STIPPLE_BIT = 0x00000010;
+        public const uint GL_PIXEL_MODE_BIT = 0x00000020;
+        public const uint GL_LIGHTING_BIT = 0x00000040;
+        public const uint GL_FOG_BIT = 0x00000080;
+        public const uint GL_DEPTH_BUFFER_BIT = 0x00000100;
+        public const uint GL_ACCUM_BUFFER_BIT = 0x00000200;
+        public const uint GL_STENCIL_BUFFER_BIT = 0x00000400;
+        public const uint GL_VIEWPORT_BIT = 0x00000800;
+        public const uint GL_TRANSFORM_BIT = 0x00001000;
+        public const uint GL_ENABLE_BIT = 0x00002000;
+        public const uint GL_COLOR_BUFFER_BIT = 0x00004000;
+        public const uint GL_HINT_BIT = 0x00008000;
+        public const uint GL_EVAL_BIT = 0x00010000;
+        public const uint GL_LIST_BIT = 0x00020000;
+        public const uint GL_TEXTURE_BIT = 0x00040000;
+        public const uint GL_SCISSOR_BIT = 0x00080000;
+        public const uint GL_ALL_ATTRIB_BITS = 0x000fffff;
+        //  BeginMode
         /// <summary>
         /// Treats each vertex as a single point. Vertex n defines point n. N points are drawn.
         /// </summary>
-		public const uint GL_POINTS                         = 0x0000;
+        public const uint GL_POINTS = 0x0000;
         /// <summary>
         /// Treats each pair of vertices as an independent line segment. Vertices 2n - 1 and 2n define line n. N/2 lines are drawn.
         /// </summary>
-		public const uint GL_LINES                          = 0x0001;
+		public const uint GL_LINES = 0x0001;
         /// <summary>
         /// Draws a connected group of line segments from the first vertex to the last, then back to the first. Vertices n and n + 1 define line n. The last line, however, is defined by vertices N and 1. N lines are drawn.
         /// </summary>
-		public const uint GL_LINE_LOOP                      = 0x0002;
+		public const uint GL_LINE_LOOP = 0x0002;
         /// <summary>
         /// Draws a connected group of line segments from the first vertex to the last. Vertices n and n+1 define line n. N - 1 lines are drawn.
         /// </summary>
-		public const uint GL_LINE_STRIP                     = 0x0003;
+		public const uint GL_LINE_STRIP = 0x0003;
         /// <summary>
         /// Treats each triplet of vertices as an independent triangle. Vertices 3n - 2, 3n - 1, and 3n define triangle n. N/3 triangles are drawn.
         /// </summary>
-		public const uint GL_TRIANGLES                      = 0x0004;
+		public const uint GL_TRIANGLES = 0x0004;
         /// <summary>
         /// Draws a connected group of triangles. One triangle is defined for each vertex presented after the first two vertices. For odd n, vertices n, n + 1, and n + 2 define triangle n. For even n, vertices n + 1, n, and n + 2 define triangle n. N - 2 triangles are drawn.
         /// </summary>
-		public const uint GL_TRIANGLE_STRIP                 = 0x0005;
-	    /// <summary>
-	    /// Draws a connected group of triangles. one triangle is defined for each vertex presented after the first two vertices. Vertices 1, n + 1, n + 2 define triangle n. N - 2 triangles are drawn.
-	    /// </summary>
-	    public const uint GL_TRIANGLE_FAN = 0x0006;
+		public const uint GL_TRIANGLE_STRIP = 0x0005;
+        /// <summary>
+        /// Draws a connected group of triangles. one triangle is defined for each vertex presented after the first two vertices. Vertices 1, n + 1, n + 2 define triangle n. N - 2 triangles are drawn.
+        /// </summary>
+        public const uint GL_TRIANGLE_FAN = 0x0006;
         /// <summary>
         /// Treats each group of four vertices as an independent quadrilateral. Vertices 4n - 3, 4n - 2, 4n - 1, and 4n define quadrilateral n. N/4 quadrilaterals are drawn.
         /// </summary>
-		public const uint GL_QUADS                          = 0x0007;
+		public const uint GL_QUADS = 0x0007;
         /// <summary>
         /// Draws a connected group of quadrilaterals. One quadrilateral is defined for each pair of vertices presented after the first pair. Vertices 2n - 1, 2n, 2n + 2, and 2n + 1 define quadrilateral n. N/2 - 1 quadrilaterals are drawn. Note that the order in which vertices are used to construct a quadrilateral from strip data is different from that used with independent data.
         /// </summary>
-		public const uint GL_QUAD_STRIP                     = 0x0008;
+		public const uint GL_QUAD_STRIP = 0x0008;
         /// <summary>
         /// Draws a single, convex polygon. Vertices 1 through N define this polygon.
         /// </summary>
-		public const uint GL_POLYGON                        = 0x0009;
-	    //  BlendingFactorDest
-		public const uint GL_ZERO                           = 0;
-		public const uint GL_ONE                            = 1;
-		public const uint GL_SRC_COLOR                      = 0x0300;
-		public const uint GL_ONE_MINUS_SRC_COLOR            = 0x0301;
-		public const uint GL_SRC_ALPHA                      = 0x0302;
-		public const uint GL_ONE_MINUS_SRC_ALPHA            = 0x0303;
-		public const uint GL_DST_ALPHA                      = 0x0304;
-		public const uint GL_ONE_MINUS_DST_ALPHA            = 0x0305;
-	    //  BlendingFactorSrc
-		public const uint GL_DST_COLOR                      = 0x0306;
-		public const uint GL_ONE_MINUS_DST_COLOR            = 0x0307;
-		public const uint GL_SRC_ALPHA_SATURATE             = 0x0308;
-	    //   Boolean
-		public const uint GL_TRUE                           = 1;
-		public const uint GL_FALSE                          = 0;
-	    //   ClipPlaneName
-		public const uint GL_CLIP_PLANE0                    = 0x3000;
-		public const uint GL_CLIP_PLANE1                    = 0x3001;
-		public const uint GL_CLIP_PLANE2                    = 0x3002;
-		public const uint GL_CLIP_PLANE3                    = 0x3003;
-		public const uint GL_CLIP_PLANE4                    = 0x3004;
-		public const uint GL_CLIP_PLANE5                    = 0x3005;
-	    //   DataType
-		public const uint GL_BYTE                           = 0x1400;
-		public const uint GL_UNSIGNED_BYTE                  = 0x1401;
-		public const uint GL_SHORT                          = 0x1402;
-		public const uint GL_UNSIGNED_SHORT                 = 0x1403;
-		public const uint GL_INT                            = 0x1404;
-		public const uint GL_UNSIGNED_INT                   = 0x1405;
-		public const uint GL_FLOAT                          = 0x1406;
-		public const uint GL_2_BYTES                        = 0x1407;
-		public const uint GL_3_BYTES                        = 0x1408;
-		public const uint GL_4_BYTES                        = 0x1409;
-		public const uint GL_DOUBLE                         = 0x140A;
-	    //   DrawBufferMode
-		public const uint GL_NONE                           = 0;
-		public const uint GL_FRONT_LEFT                     = 0x0400;
-		public const uint GL_FRONT_RIGHT                    = 0x0401;
-		public const uint GL_BACK_LEFT                      = 0x0402;
-		public const uint GL_BACK_RIGHT                     = 0x0403;
-		public const uint GL_FRONT                          = 0x0404;
-		public const uint GL_BACK                           = 0x0405;
-		public const uint GL_LEFT                           = 0x0406;
-		public const uint GL_RIGHT                          = 0x0407;
-		public const uint GL_FRONT_AND_BACK                 = 0x0408;
-		public const uint GL_AUX0                           = 0x0409;
-		public const uint GL_AUX1                           = 0x040A;
-		public const uint GL_AUX2                           = 0x040B;
-		public const uint GL_AUX3                           = 0x040C;
-	    //   ErrorCode
-		public const uint GL_NO_ERROR                       = 0;
-		public const uint GL_INVALID_ENUM                   = 0x0500;
-		public const uint GL_INVALID_VALUE                  = 0x0501;
-		public const uint GL_INVALID_OPERATION              = 0x0502;
-		public const uint GL_STACK_OVERFLOW                 = 0x0503;
-		public const uint GL_STACK_UNDERFLOW                = 0x0504;
-		public const uint GL_OUT_OF_MEMORY                  = 0x0505;
-	    //   FeedBackMode
-		public const uint GL_2D                             = 0x0600;
-		public const uint GL_3D                             = 0x0601;
-		public const uint GL_4D_COLOR                       = 0x0602;
-		public const uint GL_3D_COLOR_TEXTURE               = 0x0603;
-		public const uint GL_4D_COLOR_TEXTURE               = 0x0604;
-	    //   FeedBackToken
-		public const uint GL_PASS_THROUGH_TOKEN             = 0x0700;
-		public const uint GL_POINT_TOKEN                    = 0x0701;
-		public const uint GL_LINE_TOKEN                     = 0x0702;
-		public const uint GL_POLYGON_TOKEN                  = 0x0703;
-		public const uint GL_BITMAP_TOKEN                   = 0x0704;
-		public const uint GL_DRAW_PIXEL_TOKEN               = 0x0705;
-		public const uint GL_COPY_PIXEL_TOKEN               = 0x0706;
-		public const uint GL_LINE_RESET_TOKEN               = 0x0707;
-	    //   FogMode
-	   	public const uint GL_EXP                            = 0x0800;
-		public const uint GL_EXP2                           = 0x0801;
-	    //   FrontFaceDirection
-		public const uint GL_CW                             = 0x0900;
-		public const uint GL_CCW                            = 0x0901;
-	    //    GetMapTarget 
-		public const uint GL_COEFF                          = 0x0A00;
-		public const uint GL_ORDER                          = 0x0A01;
-		public const uint GL_DOMAIN                         = 0x0A02;
-	    //   GetTarget
-		public const uint GL_CURRENT_COLOR                  = 0x0B00;
-		public const uint GL_CURRENT_INDEX                  = 0x0B01;
-		public const uint GL_CURRENT_NORMAL                 = 0x0B02;
-		public const uint GL_CURRENT_TEXTURE_COORDS         = 0x0B03;
-		public const uint GL_CURRENT_RASTER_COLOR           = 0x0B04;
-		public const uint GL_CURRENT_RASTER_INDEX           = 0x0B05;
-		public const uint GL_CURRENT_RASTER_TEXTURE_COORDS  = 0x0B06;
-		public const uint GL_CURRENT_RASTER_POSITION        = 0x0B07;
-		public const uint GL_CURRENT_RASTER_POSITION_VALID  = 0x0B08;
-		public const uint GL_CURRENT_RASTER_DISTANCE        = 0x0B09;
-		public const uint GL_POINT_SMOOTH                   = 0x0B10;
-		public const uint GL_POINT_SIZE                     = 0x0B11;
-		public const uint GL_POINT_SIZE_RANGE               = 0x0B12;
-		public const uint GL_POINT_SIZE_GRANULARITY         = 0x0B13;
-		public const uint GL_LINE_SMOOTH                    = 0x0B20;
-		public const uint GL_LINE_WIDTH                     = 0x0B21;
-		public const uint GL_LINE_WIDTH_RANGE               = 0x0B22;
-		public const uint GL_LINE_WIDTH_GRANULARITY         = 0x0B23;
-		public const uint GL_LINE_STIPPLE                   = 0x0B24;
-		public const uint GL_LINE_STIPPLE_PATTERN           = 0x0B25;
-		public const uint GL_LINE_STIPPLE_REPEAT            = 0x0B26;
-		public const uint GL_LIST_MODE                      = 0x0B30;
-		public const uint GL_MAX_LIST_NESTING               = 0x0B31;
-		public const uint GL_LIST_BASE                      = 0x0B32;
-		public const uint GL_LIST_INDEX                     = 0x0B33;
-		public const uint GL_POLYGON_MODE                   = 0x0B40;
-		public const uint GL_POLYGON_SMOOTH                 = 0x0B41;
-		public const uint GL_POLYGON_STIPPLE                = 0x0B42;
-		public const uint GL_EDGE_FLAG                      = 0x0B43;
-		public const uint GL_CULL_FACE                      = 0x0B44;
-		public const uint GL_CULL_FACE_MODE                 = 0x0B45;
-		public const uint GL_FRONT_FACE                     = 0x0B46;
-		public const uint GL_LIGHTING                       = 0x0B50;
-		public const uint GL_LIGHT_MODEL_LOCAL_VIEWER       = 0x0B51;
-		public const uint GL_LIGHT_MODEL_TWO_SIDE           = 0x0B52;
-		public const uint GL_LIGHT_MODEL_AMBIENT            = 0x0B53;
-		public const uint GL_SHADE_MODEL                    = 0x0B54;
-		public const uint GL_COLOR_MATERIAL_FACE            = 0x0B55;
-		public const uint GL_COLOR_MATERIAL_PARAMETER       = 0x0B56;
-		public const uint GL_COLOR_MATERIAL                 = 0x0B57;
-		public const uint GL_FOG                            = 0x0B60;
-		public const uint GL_FOG_INDEX                      = 0x0B61;
-		public const uint GL_FOG_DENSITY                    = 0x0B62;
-		public const uint GL_FOG_START                      = 0x0B63;
-		public const uint GL_FOG_END                        = 0x0B64;
-		public const uint GL_FOG_MODE                       = 0x0B65;
-		public const uint GL_FOG_COLOR                      = 0x0B66;
-		public const uint GL_DEPTH_RANGE                    = 0x0B70;
-		public const uint GL_DEPTH_TEST                     = 0x0B71;
-		public const uint GL_DEPTH_WRITEMASK                = 0x0B72;
-		public const uint GL_DEPTH_CLEAR_VALUE              = 0x0B73;
-		public const uint GL_DEPTH_FUNC                     = 0x0B74;
-		public const uint GL_ACCUM_CLEAR_VALUE              = 0x0B80;
-		public const uint GL_STENCIL_TEST                   = 0x0B90;
-		public const uint GL_STENCIL_CLEAR_VALUE            = 0x0B91;
-		public const uint GL_STENCIL_FUNC                   = 0x0B92;
-		public const uint GL_STENCIL_VALUE_MASK             = 0x0B93;
-		public const uint GL_STENCIL_FAIL                   = 0x0B94;
-		public const uint GL_STENCIL_PASS_DEPTH_FAIL        = 0x0B95;
-		public const uint GL_STENCIL_PASS_DEPTH_PASS        = 0x0B96;
-		public const uint GL_STENCIL_REF                    = 0x0B97;
-		public const uint GL_STENCIL_WRITEMASK              = 0x0B98;
-		public const uint GL_MATRIX_MODE                    = 0x0BA0;
-		public const uint GL_NORMALIZE                      = 0x0BA1;
-		public const uint GL_VIEWPORT                       = 0x0BA2;
-		public const uint GL_MODELVIEW_STACK_DEPTH          = 0x0BA3;
-		public const uint GL_PROJECTION_STACK_DEPTH         = 0x0BA4;
-		public const uint GL_TEXTURE_STACK_DEPTH            = 0x0BA5;
-		public const uint GL_MODELVIEW_MATRIX               = 0x0BA6;
-		public const uint GL_PROJECTION_MATRIX              = 0x0BA7;
-		public const uint GL_TEXTURE_MATRIX                 = 0x0BA8;
-		public const uint GL_ATTRIB_STACK_DEPTH             = 0x0BB0;
-		public const uint GL_CLIENT_ATTRIB_STACK_DEPTH      = 0x0BB1;
-		public const uint GL_ALPHA_TEST                     = 0x0BC0;
-		public const uint GL_ALPHA_TEST_FUNC                = 0x0BC1;
-		public const uint GL_ALPHA_TEST_REF                 = 0x0BC2;
-		public const uint GL_DITHER                         = 0x0BD0;
-		public const uint GL_BLEND_DST                      = 0x0BE0;
-		public const uint GL_BLEND_SRC                      = 0x0BE1;
-		public const uint GL_BLEND                          = 0x0BE2;
-		public const uint GL_LOGIC_OP_MODE                  = 0x0BF0;
-		public const uint GL_INDEX_LOGIC_OP                 = 0x0BF1;
-		public const uint GL_COLOR_LOGIC_OP                 = 0x0BF2;
-		public const uint GL_AUX_BUFFERS                    = 0x0C00;
-		public const uint GL_DRAW_BUFFER                    = 0x0C01;
-		public const uint GL_READ_BUFFER                    = 0x0C02;
-		public const uint GL_SCISSOR_BOX                    = 0x0C10;
-		public const uint GL_SCISSOR_TEST                   = 0x0C11;
-		public const uint GL_INDEX_CLEAR_VALUE              = 0x0C20;
-		public const uint GL_INDEX_WRITEMASK                = 0x0C21;
-		public const uint GL_COLOR_CLEAR_VALUE              = 0x0C22;
-		public const uint GL_COLOR_WRITEMASK                = 0x0C23;
-		public const uint GL_INDEX_MODE                     = 0x0C30;
-		public const uint GL_RGBA_MODE                      = 0x0C31;
-		public const uint GL_DOUBLEBUFFER                   = 0x0C32;
-		public const uint GL_STEREO                         = 0x0C33;
-		public const uint GL_RENDER_MODE                    = 0x0C40;
-		public const uint GL_PERSPECTIVE_CORRECTION_HINT    = 0x0C50;
-		public const uint GL_POINT_SMOOTH_HINT              = 0x0C51;
-		public const uint GL_LINE_SMOOTH_HINT               = 0x0C52;
-		public const uint GL_POLYGON_SMOOTH_HINT            = 0x0C53;
-		public const uint GL_FOG_HINT                       = 0x0C54;
-		public const uint GL_TEXTURE_GEN_S                  = 0x0C60;
-		public const uint GL_TEXTURE_GEN_T                  = 0x0C61;
-		public const uint GL_TEXTURE_GEN_R                  = 0x0C62;
-		public const uint GL_TEXTURE_GEN_Q                  = 0x0C63;
-		public const uint GL_PIXEL_MAP_I_TO_I               = 0x0C70;
-		public const uint GL_PIXEL_MAP_S_TO_S               = 0x0C71;
-		public const uint GL_PIXEL_MAP_I_TO_R               = 0x0C72;
-		public const uint GL_PIXEL_MAP_I_TO_G               = 0x0C73;
-		public const uint GL_PIXEL_MAP_I_TO_B               = 0x0C74;
-		public const uint GL_PIXEL_MAP_I_TO_A               = 0x0C75;
-		public const uint GL_PIXEL_MAP_R_TO_R               = 0x0C76;
-		public const uint GL_PIXEL_MAP_G_TO_G               = 0x0C77;
-		public const uint GL_PIXEL_MAP_B_TO_B               = 0x0C78;
-		public const uint GL_PIXEL_MAP_A_TO_A               = 0x0C79;
-		public const uint GL_PIXEL_MAP_I_TO_I_SIZE          = 0x0CB0;
-		public const uint GL_PIXEL_MAP_S_TO_S_SIZE          = 0x0CB1;
-		public const uint GL_PIXEL_MAP_I_TO_R_SIZE          = 0x0CB2;
-		public const uint GL_PIXEL_MAP_I_TO_G_SIZE          = 0x0CB3;
-		public const uint GL_PIXEL_MAP_I_TO_B_SIZE          = 0x0CB4;
-		public const uint GL_PIXEL_MAP_I_TO_A_SIZE          = 0x0CB5;
-		public const uint GL_PIXEL_MAP_R_TO_R_SIZE          = 0x0CB6;
-		public const uint GL_PIXEL_MAP_G_TO_G_SIZE          = 0x0CB7;
-		public const uint GL_PIXEL_MAP_B_TO_B_SIZE          = 0x0CB8;
-		public const uint GL_PIXEL_MAP_A_TO_A_SIZE          = 0x0CB9;
-		public const uint GL_UNPACK_SWAP_BYTES              = 0x0CF0;
-		public const uint GL_UNPACK_LSB_FIRST               = 0x0CF1;
-		public const uint GL_UNPACK_ROW_LENGTH              = 0x0CF2;
-		public const uint GL_UNPACK_SKIP_ROWS               = 0x0CF3;
-		public const uint GL_UNPACK_SKIP_PIXELS             = 0x0CF4;
-		public const uint GL_UNPACK_ALIGNMENT               = 0x0CF5;
-		public const uint GL_PACK_SWAP_BYTES                = 0x0D00;
-		public const uint GL_PACK_LSB_FIRST                 = 0x0D01;
-		public const uint GL_PACK_ROW_LENGTH                = 0x0D02;
-		public const uint GL_PACK_SKIP_ROWS                 = 0x0D03;
-		public const uint GL_PACK_SKIP_PIXELS               = 0x0D04;
-		public const uint GL_PACK_ALIGNMENT                 = 0x0D05;
-		public const uint GL_MAP_COLOR                      = 0x0D10;
-		public const uint GL_MAP_STENCIL                    = 0x0D11;
-		public const uint GL_INDEX_SHIFT                    = 0x0D12;
-		public const uint GL_INDEX_OFFSET                   = 0x0D13;
-		public const uint GL_RED_SCALE                      = 0x0D14;
-		public const uint GL_RED_BIAS                       = 0x0D15;
-		public const uint GL_ZOOM_X                         = 0x0D16;
-		public const uint GL_ZOOM_Y                         = 0x0D17;
-		public const uint GL_GREEN_SCALE                    = 0x0D18;
-		public const uint GL_GREEN_BIAS                     = 0x0D19;
-		public const uint GL_BLUE_SCALE                     = 0x0D1A;
-		public const uint GL_BLUE_BIAS                      = 0x0D1B;
-		public const uint GL_ALPHA_SCALE                    = 0x0D1C;
-		public const uint GL_ALPHA_BIAS                     = 0x0D1D;
-		public const uint GL_DEPTH_SCALE                    = 0x0D1E;
-		public const uint GL_DEPTH_BIAS                     = 0x0D1F;
-		public const uint GL_MAX_EVAL_ORDER                 = 0x0D30;
-		public const uint GL_MAX_LIGHTS                     = 0x0D31;
-		public const uint GL_MAX_CLIP_PLANES                = 0x0D32;
-		public const uint GL_MAX_TEXTURE_SIZE               = 0x0D33;
-		public const uint GL_MAX_PIXEL_MAP_TABLE            = 0x0D34;
-		public const uint GL_MAX_ATTRIB_STACK_DEPTH         = 0x0D35;
-		public const uint GL_MAX_MODELVIEW_STACK_DEPTH      = 0x0D36;
-		public const uint GL_MAX_NAME_STACK_DEPTH           = 0x0D37;
-		public const uint GL_MAX_PROJECTION_STACK_DEPTH     = 0x0D38;
-		public const uint GL_MAX_TEXTURE_STACK_DEPTH        = 0x0D39;
-		public const uint GL_MAX_VIEWPORT_DIMS              = 0x0D3A;
-		public const uint GL_MAX_CLIENT_ATTRIB_STACK_DEPTH  = 0x0D3B;
-		public const uint GL_SUBPIXEL_BITS                  = 0x0D50;
-		public const uint GL_INDEX_BITS                     = 0x0D51;
-		public const uint GL_RED_BITS                       = 0x0D52;
-		public const uint GL_GREEN_BITS                     = 0x0D53;
-		public const uint GL_BLUE_BITS                      = 0x0D54;
-		public const uint GL_ALPHA_BITS                     = 0x0D55;
-		public const uint GL_DEPTH_BITS                     = 0x0D56;
-		public const uint GL_STENCIL_BITS                   = 0x0D57;
-		public const uint GL_ACCUM_RED_BITS                 = 0x0D58;
-		public const uint GL_ACCUM_GREEN_BITS               = 0x0D59;
-		public const uint GL_ACCUM_BLUE_BITS                = 0x0D5A;
-		public const uint GL_ACCUM_ALPHA_BITS               = 0x0D5B;
-		public const uint GL_NAME_STACK_DEPTH               = 0x0D70;
-		public const uint GL_AUTO_NORMAL                    = 0x0D80;
-		public const uint GL_MAP1_COLOR_4                   = 0x0D90;
-		public const uint GL_MAP1_INDEX                     = 0x0D91;
-		public const uint GL_MAP1_NORMAL                    = 0x0D92;
-		public const uint GL_MAP1_TEXTURE_COORD_1           = 0x0D93;
-		public const uint GL_MAP1_TEXTURE_COORD_2           = 0x0D94;
-		public const uint GL_MAP1_TEXTURE_COORD_3           = 0x0D95;
-		public const uint GL_MAP1_TEXTURE_COORD_4           = 0x0D96;
-		public const uint GL_MAP1_VERTEX_3                  = 0x0D97;
-		public const uint GL_MAP1_VERTEX_4                  = 0x0D98;
-		public const uint GL_MAP2_COLOR_4                   = 0x0DB0;
-		public const uint GL_MAP2_INDEX                     = 0x0DB1;
-		public const uint GL_MAP2_NORMAL                    = 0x0DB2;
-		public const uint GL_MAP2_TEXTURE_COORD_1           = 0x0DB3;
-		public const uint GL_MAP2_TEXTURE_COORD_2           = 0x0DB4;
-		public const uint GL_MAP2_TEXTURE_COORD_3           = 0x0DB5;
-		public const uint GL_MAP2_TEXTURE_COORD_4           = 0x0DB6;
-		public const uint GL_MAP2_VERTEX_3                  = 0x0DB7;
-		public const uint GL_MAP2_VERTEX_4                  = 0x0DB8;
-		public const uint GL_MAP1_GRID_DOMAIN               = 0x0DD0;
-		public const uint GL_MAP1_GRID_SEGMENTS             = 0x0DD1;
-		public const uint GL_MAP2_GRID_DOMAIN               = 0x0DD2;
-		public const uint GL_MAP2_GRID_SEGMENTS             = 0x0DD3;
-		public const uint GL_TEXTURE_1D                     = 0x0DE0;
-		public const uint GL_TEXTURE_2D                     = 0x0DE1;
-		public const uint GL_FEEDBACK_BUFFER_POINTER        = 0x0DF0;
-		public const uint GL_FEEDBACK_BUFFER_SIZE           = 0x0DF1;
-		public const uint GL_FEEDBACK_BUFFER_TYPE           = 0x0DF2;
-		public const uint GL_SELECTION_BUFFER_POINTER       = 0x0DF3;
-		public const uint GL_SELECTION_BUFFER_SIZE          = 0x0DF4;
-	    //   GetTextureParameter
-		public const uint GL_TEXTURE_WIDTH                  = 0x1000;
-		public const uint GL_TEXTURE_HEIGHT                 = 0x1001;
-		public const uint GL_TEXTURE_INTERNAL_FORMAT        = 0x1003;
-		public const uint GL_TEXTURE_BORDER_COLOR           = 0x1004;
-		public const uint GL_TEXTURE_BORDER                 = 0x1005;
-	    //   HintMode
-		public const uint GL_DONT_CARE                      = 0x1100;
-		public const uint GL_FASTEST                        = 0x1101;
-		public const uint GL_NICEST                         = 0x1102;
-	    //   LightName
-		public const uint GL_LIGHT0                         = 0x4000;
-		public const uint GL_LIGHT1                         = 0x4001;
-		public const uint GL_LIGHT2                         = 0x4002;
-		public const uint GL_LIGHT3                         = 0x4003;
-		public const uint GL_LIGHT4                         = 0x4004;
-		public const uint GL_LIGHT5                         = 0x4005;
-		public const uint GL_LIGHT6                         = 0x4006;
-		public const uint GL_LIGHT7                         = 0x4007;
-	    //   LightParameter
-		public const uint GL_AMBIENT                        = 0x1200;
-		public const uint GL_DIFFUSE                        = 0x1201;
-		public const uint GL_SPECULAR                       = 0x1202;
-		public const uint GL_POSITION                       = 0x1203;
-		public const uint GL_SPOT_DIRECTION                 = 0x1204;
-		public const uint GL_SPOT_EXPONENT                  = 0x1205;
-		public const uint GL_SPOT_CUTOFF                    = 0x1206;
-		public const uint GL_CONSTANT_ATTENUATION           = 0x1207;
-		public const uint GL_LINEAR_ATTENUATION             = 0x1208;
-		public const uint GL_QUADRATIC_ATTENUATION          = 0x1209;
-	    //   ListMode
-		public const uint GL_COMPILE                        = 0x1300;
-		public const uint GL_COMPILE_AND_EXECUTE            = 0x1301;
-	    //   LogicOp
-		public const uint GL_CLEAR                          = 0x1500;
-		public const uint GL_AND                            = 0x1501;
-		public const uint GL_AND_REVERSE                    = 0x1502;
-		public const uint GL_COPY                           = 0x1503;
-		public const uint GL_AND_INVERTED                   = 0x1504;
-		public const uint GL_NOOP                           = 0x1505;
-		public const uint GL_XOR                            = 0x1506;
-		public const uint GL_OR                             = 0x1507;
-		public const uint GL_NOR                            = 0x1508;
-		public const uint GL_EQUIV                          = 0x1509;
-		public const uint GL_INVERT                         = 0x150A;
-		public const uint GL_OR_REVERSE                     = 0x150B;
-		public const uint GL_COPY_INVERTED                  = 0x150C;
-		public const uint GL_OR_INVERTED                    = 0x150D;
-		public const uint GL_NAND                           = 0x150E;
-		public const uint GL_SET                            = 0x150F;
-	    //   MaterialParameter
-		public const uint GL_EMISSION                       = 0x1600;
-		public const uint GL_SHININESS                      = 0x1601;
-		public const uint GL_AMBIENT_AND_DIFFUSE            = 0x1602;
-		public const uint GL_COLOR_INDEXES                  = 0x1603;
-	    //   MatrixMode
-		public const uint GL_MODELVIEW                      = 0x1700;
-		public const uint GL_PROJECTION                     = 0x1701;
-		public const uint GL_TEXTURE                        = 0x1702;
-	    //   PixelCopyType
-		public const uint GL_COLOR                          = 0x1800;
-		public const uint GL_DEPTH                          = 0x1801;
-		public const uint GL_STENCIL                        = 0x1802;
-	    //   PixelFormat
-		public const uint GL_COLOR_INDEX                    = 0x1900;
-		public const uint GL_STENCIL_INDEX                  = 0x1901;
-		public const uint GL_DEPTH_COMPONENT                = 0x1902;
-		public const uint GL_RED                            = 0x1903;
-		public const uint GL_GREEN                          = 0x1904;
-		public const uint GL_BLUE                           = 0x1905;
-		public const uint GL_ALPHA                          = 0x1906;
-		public const uint GL_RGB                            = 0x1907;
-		public const uint GL_RGBA                           = 0x1908;
-		public const uint GL_LUMINANCE                      = 0x1909;
-		public const uint GL_LUMINANCE_ALPHA                = 0x190A;
-	    //   PixelType
-		public const uint GL_BITMAP                     = 0x1A00;
-	    //   PolygonMode
-		public const uint GL_POINT                          = 0x1B00;
-		public const uint GL_LINE                           = 0x1B01;
-		public const uint GL_FILL                           = 0x1B02;
-	    //   RenderingMode 
-		public const uint GL_RENDER                         = 0x1C00;
-		public const uint GL_FEEDBACK                       = 0x1C01;
-		public const uint GL_SELECT                         = 0x1C02;
-	    //   ShadingModel
-		public const uint GL_FLAT                           = 0x1D00;
-		public const uint GL_SMOOTH                         = 0x1D01;
-	    //   StencilOp	
-		public const uint GL_KEEP                           = 0x1E00;
-		public const uint GL_REPLACE                        = 0x1E01;
-		public const uint GL_INCR                           = 0x1E02;
-		public const uint GL_DECR                           = 0x1E03;
-	    //   StringName
-		public const uint GL_VENDOR                         = 0x1F00;
-		public const uint GL_RENDERER                       = 0x1F01;
-		public const uint GL_VERSION                        = 0x1F02;
-		public const uint GL_EXTENSIONS                     = 0x1F03;
-	    //   TextureCoordName
-		public const uint GL_S                              = 0x2000;
-		public const uint GL_T                              = 0x2001;
-		public const uint GL_R                              = 0x2002;
-		public const uint GL_Q                              = 0x2003;
-	    //   TextureEnvMode
-		public const uint GL_MODULATE                       = 0x2100;
-		public const uint GL_DECAL                          = 0x2101;
-	    //   TextureEnvParameter
-		public const uint GL_TEXTURE_ENV_MODE               = 0x2200;
-		public const uint GL_TEXTURE_ENV_COLOR              = 0x2201;
-	    //   TextureEnvTarget
-		public const uint GL_TEXTURE_ENV                    = 0x2300;
-	    //   TextureGenMode 
-		public const uint GL_EYE_LINEAR                     = 0x2400;
-		public const uint GL_OBJECT_LINEAR                  = 0x2401;
-		public const uint GL_SPHERE_MAP                     = 0x2402;
-	    //   TextureGenParameter
-		public const uint GL_TEXTURE_GEN_MODE               = 0x2500;
-		public const uint GL_OBJECT_PLANE                   = 0x2501;
-		public const uint GL_EYE_PLANE                      = 0x2502;
-	    //   TextureMagFilter
-		public const uint GL_NEAREST                        = 0x2600;
-		public const uint GL_LINEAR                         = 0x2601;
-	    //   TextureMinFilter 
-		public const uint GL_NEAREST_MIPMAP_NEAREST         = 0x2700;
-		public const uint GL_LINEAR_MIPMAP_NEAREST          = 0x2701;
-		public const uint GL_NEAREST_MIPMAP_LINEAR          = 0x2702;
-		public const uint GL_LINEAR_MIPMAP_LINEAR           = 0x2703;
-	    //   TextureParameterName
-		public const uint GL_TEXTURE_MAG_FILTER             = 0x2800;
-		public const uint GL_TEXTURE_MIN_FILTER             = 0x2801;
-		public const uint GL_TEXTURE_WRAP_S                 = 0x2802;
-		public const uint GL_TEXTURE_WRAP_T                 = 0x2803;
-	    //   TextureWrapMode
-		public const uint GL_CLAMP                          = 0x2900;
-		public const uint GL_REPEAT                         = 0x2901;
-	    //   ClientAttribMask
-		public const uint GL_CLIENT_PIXEL_STORE_BIT         = 0x00000001;
-		public const uint GL_CLIENT_VERTEX_ARRAY_BIT        = 0x00000002;
-		public const uint GL_CLIENT_ALL_ATTRIB_BITS         = 0xffffffff;
-	    //   Polygon Offset
-		public const uint GL_POLYGON_OFFSET_FACTOR          = 0x8038;
-		public const uint GL_POLYGON_OFFSET_UNITS           = 0x2A00;
-		public const uint GL_POLYGON_OFFSET_POINT           = 0x2A01;
-		public const uint GL_POLYGON_OFFSET_LINE            = 0x2A02;
-		public const uint GL_POLYGON_OFFSET_FILL            = 0x8037;
-	    //   Texture 
-		public const uint GL_ALPHA4                         = 0x803B;
-		public const uint GL_ALPHA8                         = 0x803C;
-		public const uint GL_ALPHA12                        = 0x803D;
-		public const uint GL_ALPHA16                        = 0x803E;
-		public const uint GL_LUMINANCE4                     = 0x803F;
-		public const uint GL_LUMINANCE8                     = 0x8040;
-		public const uint GL_LUMINANCE12                    = 0x8041;
-		public const uint GL_LUMINANCE16                    = 0x8042;
-		public const uint GL_LUMINANCE4_ALPHA4              = 0x8043;
-		public const uint GL_LUMINANCE6_ALPHA2              = 0x8044;
-		public const uint GL_LUMINANCE8_ALPHA8              = 0x8045;
-		public const uint GL_LUMINANCE12_ALPHA4             = 0x8046;
-		public const uint GL_LUMINANCE12_ALPHA12            = 0x8047;
-		public const uint GL_LUMINANCE16_ALPHA16            = 0x8048;
-		public const uint GL_INTENSITY                      = 0x8049;
-		public const uint GL_INTENSITY4                     = 0x804A;
-		public const uint GL_INTENSITY8                     = 0x804B;
-		public const uint GL_INTENSITY12                    = 0x804C;
-		public const uint GL_INTENSITY16                    = 0x804D;
-		public const uint GL_R3_G3_B2                       = 0x2A10;
-		public const uint GL_RGB4                           = 0x804F;
-		public const uint GL_RGB5                           = 0x8050;
-		public const uint GL_RGB8                           = 0x8051;
-		public const uint GL_RGB10                          = 0x8052;
-		public const uint GL_RGB12                          = 0x8053;
-		public const uint GL_RGB16                          = 0x8054;
-		public const uint GL_RGBA2                          = 0x8055;
-		public const uint GL_RGBA4                          = 0x8056;
-		public const uint GL_RGB5_A1                        = 0x8057;
-		public const uint GL_RGBA8                          = 0x8058;
-		public const uint GL_RGB10_A2                       = 0x8059;
-		public const uint GL_RGBA12                         = 0x805A;
-		public const uint GL_RGBA16                         = 0x805B;
-		public const uint GL_TEXTURE_RED_SIZE               = 0x805C;
-		public const uint GL_TEXTURE_GREEN_SIZE             = 0x805D;
-		public const uint GL_TEXTURE_BLUE_SIZE              = 0x805E;
-		public const uint GL_TEXTURE_ALPHA_SIZE             = 0x805F;
-		public const uint GL_TEXTURE_LUMINANCE_SIZE         = 0x8060;
-		public const uint GL_TEXTURE_INTENSITY_SIZE         = 0x8061;
-		public const uint GL_PROXY_TEXTURE_1D               = 0x8063;
-		public const uint GL_PROXY_TEXTURE_2D               = 0x8064;
-	    //   Texture object
-		public const uint GL_TEXTURE_PRIORITY               = 0x8066;
-		public const uint GL_TEXTURE_RESIDENT               = 0x8067;
-		public const uint GL_TEXTURE_BINDING_1D             = 0x8068;
-		public const uint GL_TEXTURE_BINDING_2D             = 0x8069;
-	    //   Vertex array
-		public const uint GL_VERTEX_ARRAY                   = 0x8074;
-		public const uint GL_NORMAL_ARRAY                   = 0x8075;
-		public const uint GL_COLOR_ARRAY                    = 0x8076;
-		public const uint GL_INDEX_ARRAY                    = 0x8077;
-		public const uint GL_TEXTURE_COORD_ARRAY            = 0x8078;
-		public const uint GL_EDGE_FLAG_ARRAY                = 0x8079;
-		public const uint GL_VERTEX_ARRAY_SIZE              = 0x807A;
-		public const uint GL_VERTEX_ARRAY_TYPE              = 0x807B;
-		public const uint GL_VERTEX_ARRAY_STRIDE            = 0x807C;
-		public const uint GL_NORMAL_ARRAY_TYPE              = 0x807E;
-		public const uint GL_NORMAL_ARRAY_STRIDE            = 0x807F;
-		public const uint GL_COLOR_ARRAY_SIZE               = 0x8081;
-		public const uint GL_COLOR_ARRAY_TYPE               = 0x8082;
-		public const uint GL_COLOR_ARRAY_STRIDE             = 0x8083;
-		public const uint GL_INDEX_ARRAY_TYPE               = 0x8085;
-		public const uint GL_INDEX_ARRAY_STRIDE             = 0x8086;
-		public const uint GL_TEXTURE_COORD_ARRAY_SIZE       = 0x8088;
-		public const uint GL_TEXTURE_COORD_ARRAY_TYPE       = 0x8089;
-		public const uint GL_TEXTURE_COORD_ARRAY_STRIDE     = 0x808A;
-		public const uint GL_EDGE_FLAG_ARRAY_STRIDE         = 0x808C;
-		public const uint GL_VERTEX_ARRAY_POINTER           = 0x808E;
-		public const uint GL_NORMAL_ARRAY_POINTER           = 0x808F;
-		public const uint GL_COLOR_ARRAY_POINTER            = 0x8090;
-		public const uint GL_INDEX_ARRAY_POINTER            = 0x8091;
-		public const uint GL_TEXTURE_COORD_ARRAY_POINTER    = 0x8092;
-		public const uint GL_EDGE_FLAG_ARRAY_POINTER        = 0x8093;
-		public const uint GL_V2F                            = 0x2A20;
-		public const uint GL_V3F                            = 0x2A21;
-		public const uint GL_C4UB_V2F                       = 0x2A22;
-		public const uint GL_C4UB_V3F                       = 0x2A23;
-		public const uint GL_C3F_V3F                        = 0x2A24;
-		public const uint GL_N3F_V3F                        = 0x2A25;
-		public const uint GL_C4F_N3F_V3F                    = 0x2A26;
-		public const uint GL_T2F_V3F                        = 0x2A27;
-		public const uint GL_T4F_V4F                        = 0x2A28;
-		public const uint GL_T2F_C4UB_V3F                   = 0x2A29;
-		public const uint GL_T2F_C3F_V3F                    = 0x2A2A;
-		public const uint GL_T2F_N3F_V3F                    = 0x2A2B;
-		public const uint GL_T2F_C4F_N3F_V3F                = 0x2A2C;
-		public const uint GL_T4F_C4F_N3F_V4F                = 0x2A2D;
-	//   Extensions
-		public const uint GL_EXT_vertex_array               = 1;
-		public const uint GL_EXT_bgra                       = 1;
-		public const uint GL_EXT_paletted_texture           = 1;
-		public const uint GL_WIN_swap_hint                  = 1;
-		public const uint GL_WIN_draw_range_elements        = 1;
-	//   EXT_vertex_array 
-		public const uint GL_VERTEX_ARRAY_EXT               = 0x8074;
-		public const uint GL_NORMAL_ARRAY_EXT               = 0x8075;
-		public const uint GL_COLOR_ARRAY_EXT                = 0x8076;
-		public const uint GL_INDEX_ARRAY_EXT                = 0x8077;
-		public const uint GL_TEXTURE_COORD_ARRAY_EXT        = 0x8078;
-		public const uint GL_EDGE_FLAG_ARRAY_EXT            = 0x8079;
-		public const uint GL_VERTEX_ARRAY_SIZE_EXT          = 0x807A;
-		public const uint GL_VERTEX_ARRAY_TYPE_EXT          = 0x807B;
-		public const uint GL_VERTEX_ARRAY_STRIDE_EXT        = 0x807C;
-		public const uint GL_VERTEX_ARRAY_COUNT_EXT         = 0x807D;
-		public const uint GL_NORMAL_ARRAY_TYPE_EXT          = 0x807E;
-		public const uint GL_NORMAL_ARRAY_STRIDE_EXT        = 0x807F;
-		public const uint GL_NORMAL_ARRAY_COUNT_EXT         = 0x8080;
-		public const uint GL_COLOR_ARRAY_SIZE_EXT           = 0x8081;
-		public const uint GL_COLOR_ARRAY_TYPE_EXT           = 0x8082;
-		public const uint GL_COLOR_ARRAY_STRIDE_EXT         = 0x8083;
-		public const uint GL_COLOR_ARRAY_COUNT_EXT          = 0x8084;
-		public const uint GL_INDEX_ARRAY_TYPE_EXT           = 0x8085;
-		public const uint GL_INDEX_ARRAY_STRIDE_EXT         = 0x8086;
-		public const uint GL_INDEX_ARRAY_COUNT_EXT          = 0x8087;
-		public const uint GL_TEXTURE_COORD_ARRAY_SIZE_EXT   = 0x8088;
-		public const uint GL_TEXTURE_COORD_ARRAY_TYPE_EXT   = 0x8089;
-		public const uint GL_TEXTURE_COORD_ARRAY_STRIDE_EXT = 0x808A;
-		public const uint GL_TEXTURE_COORD_ARRAY_COUNT_EXT  = 0x808B;
-		public const uint GL_EDGE_FLAG_ARRAY_STRIDE_EXT     = 0x808C;
-		public const uint GL_EDGE_FLAG_ARRAY_COUNT_EXT      = 0x808D;
-		public const uint GL_VERTEX_ARRAY_POINTER_EXT       = 0x808E;
-		public const uint GL_NORMAL_ARRAY_POINTER_EXT       = 0x808F;
-		public const uint GL_COLOR_ARRAY_POINTER_EXT        = 0x8090;
-		public const uint GL_INDEX_ARRAY_POINTER_EXT        = 0x8091;
-		public const uint GL_TEXTURE_COORD_ARRAY_POINTER_EXT = 0x8092;
-		public const uint GL_EDGE_FLAG_ARRAY_POINTER_EXT    = 0x8093;
-		public const uint GL_DOUBLE_EXT                     =1;/*DOUBLE*/
-	//   EXT_paletted_texture
-		public const uint GL_COLOR_TABLE_FORMAT_EXT         = 0x80D8;
-		public const uint GL_COLOR_TABLE_WIDTH_EXT          = 0x80D9;
-		public const uint GL_COLOR_TABLE_RED_SIZE_EXT       = 0x80DA;
-		public const uint GL_COLOR_TABLE_GREEN_SIZE_EXT     = 0x80DB;
-		public const uint GL_COLOR_TABLE_BLUE_SIZE_EXT      = 0x80DC;
-		public const uint GL_COLOR_TABLE_ALPHA_SIZE_EXT     = 0x80DD;
-		public const uint GL_COLOR_TABLE_LUMINANCE_SIZE_EXT = 0x80DE;
-		public const uint GL_COLOR_TABLE_INTENSITY_SIZE_EXT = 0x80DF;
-		public const uint GL_COLOR_INDEX1_EXT               = 0x80E2;
-		public const uint GL_COLOR_INDEX2_EXT               = 0x80E3;
-		public const uint GL_COLOR_INDEX4_EXT               = 0x80E4;
-		public const uint GL_COLOR_INDEX8_EXT               = 0x80E5;
-		public const uint GL_COLOR_INDEX12_EXT              = 0x80E6;
-		public const uint GL_COLOR_INDEX16_EXT              = 0x80E7;
-	//   WIN_draw_range_elements
-		public const uint GL_MAX_ELEMENTS_VERTICES_WIN      = 0x80E8;
-		public const uint GL_MAX_ELEMENTS_INDICES_WIN       = 0x80E9;
-	//   WIN_phong_shading
-		public const uint GL_PHONG_WIN                      = 0x80EA;
-		public const uint GL_PHONG_HINT_WIN                 = 0x80EB; 
-	//   WIN_specular_fog 
-		public static uint FOG_SPECULAR_TEXTURE_WIN       = 0x80EC;
+		public const uint GL_POLYGON = 0x0009;
+        //  BlendingFactorDest
+        public const uint GL_ZERO = 0;
+        public const uint GL_ONE = 1;
+        public const uint GL_SRC_COLOR = 0x0300;
+        public const uint GL_ONE_MINUS_SRC_COLOR = 0x0301;
+        public const uint GL_SRC_ALPHA = 0x0302;
+        public const uint GL_ONE_MINUS_SRC_ALPHA = 0x0303;
+        public const uint GL_DST_ALPHA = 0x0304;
+        public const uint GL_ONE_MINUS_DST_ALPHA = 0x0305;
+        //  BlendingFactorSrc
+        public const uint GL_DST_COLOR = 0x0306;
+        public const uint GL_ONE_MINUS_DST_COLOR = 0x0307;
+        public const uint GL_SRC_ALPHA_SATURATE = 0x0308;
+        //   Boolean
+        public const uint GL_TRUE = 1;
+        public const uint GL_FALSE = 0;
+        //   ClipPlaneName
+        public const uint GL_CLIP_PLANE0 = 0x3000;
+        public const uint GL_CLIP_PLANE1 = 0x3001;
+        public const uint GL_CLIP_PLANE2 = 0x3002;
+        public const uint GL_CLIP_PLANE3 = 0x3003;
+        public const uint GL_CLIP_PLANE4 = 0x3004;
+        public const uint GL_CLIP_PLANE5 = 0x3005;
+        //   DataType
+        public const uint GL_BYTE = 0x1400;
+        public const uint GL_UNSIGNED_BYTE = 0x1401;
+        public const uint GL_SHORT = 0x1402;
+        public const uint GL_UNSIGNED_SHORT = 0x1403;
+        public const uint GL_INT = 0x1404;
+        public const uint GL_UNSIGNED_INT = 0x1405;
+        public const uint GL_FLOAT = 0x1406;
+        public const uint GL_2_BYTES = 0x1407;
+        public const uint GL_3_BYTES = 0x1408;
+        public const uint GL_4_BYTES = 0x1409;
+        public const uint GL_DOUBLE = 0x140A;
+        //   DrawBufferMode
+        public const uint GL_NONE = 0;
+        public const uint GL_FRONT_LEFT = 0x0400;
+        public const uint GL_FRONT_RIGHT = 0x0401;
+        public const uint GL_BACK_LEFT = 0x0402;
+        public const uint GL_BACK_RIGHT = 0x0403;
+        public const uint GL_FRONT = 0x0404;
+        public const uint GL_BACK = 0x0405;
+        public const uint GL_LEFT = 0x0406;
+        public const uint GL_RIGHT = 0x0407;
+        public const uint GL_FRONT_AND_BACK = 0x0408;
+        public const uint GL_AUX0 = 0x0409;
+        public const uint GL_AUX1 = 0x040A;
+        public const uint GL_AUX2 = 0x040B;
+        public const uint GL_AUX3 = 0x040C;
+        //   ErrorCode
+        public const uint GL_NO_ERROR = 0;
+        public const uint GL_INVALID_ENUM = 0x0500;
+        public const uint GL_INVALID_VALUE = 0x0501;
+        public const uint GL_INVALID_OPERATION = 0x0502;
+        public const uint GL_STACK_OVERFLOW = 0x0503;
+        public const uint GL_STACK_UNDERFLOW = 0x0504;
+        public const uint GL_OUT_OF_MEMORY = 0x0505;
+        //   FeedBackMode
+        public const uint GL_2D = 0x0600;
+        public const uint GL_3D = 0x0601;
+        public const uint GL_4D_COLOR = 0x0602;
+        public const uint GL_3D_COLOR_TEXTURE = 0x0603;
+        public const uint GL_4D_COLOR_TEXTURE = 0x0604;
+        //   FeedBackToken
+        public const uint GL_PASS_THROUGH_TOKEN = 0x0700;
+        public const uint GL_POINT_TOKEN = 0x0701;
+        public const uint GL_LINE_TOKEN = 0x0702;
+        public const uint GL_POLYGON_TOKEN = 0x0703;
+        public const uint GL_BITMAP_TOKEN = 0x0704;
+        public const uint GL_DRAW_PIXEL_TOKEN = 0x0705;
+        public const uint GL_COPY_PIXEL_TOKEN = 0x0706;
+        public const uint GL_LINE_RESET_TOKEN = 0x0707;
+        //   FogMode
+        public const uint GL_EXP = 0x0800;
+        public const uint GL_EXP2 = 0x0801;
+        //   FrontFaceDirection
+        public const uint GL_CW = 0x0900;
+        public const uint GL_CCW = 0x0901;
+        //    GetMapTarget 
+        public const uint GL_COEFF = 0x0A00;
+        public const uint GL_ORDER = 0x0A01;
+        public const uint GL_DOMAIN = 0x0A02;
+        //   GetTarget
+        public const uint GL_CURRENT_COLOR = 0x0B00;
+        public const uint GL_CURRENT_INDEX = 0x0B01;
+        public const uint GL_CURRENT_NORMAL = 0x0B02;
+        public const uint GL_CURRENT_TEXTURE_COORDS = 0x0B03;
+        public const uint GL_CURRENT_RASTER_COLOR = 0x0B04;
+        public const uint GL_CURRENT_RASTER_INDEX = 0x0B05;
+        public const uint GL_CURRENT_RASTER_TEXTURE_COORDS = 0x0B06;
+        public const uint GL_CURRENT_RASTER_POSITION = 0x0B07;
+        public const uint GL_CURRENT_RASTER_POSITION_VALID = 0x0B08;
+        public const uint GL_CURRENT_RASTER_DISTANCE = 0x0B09;
+        public const uint GL_POINT_SMOOTH = 0x0B10;
+        public const uint GL_POINT_SIZE = 0x0B11;
+        public const uint GL_POINT_SIZE_RANGE = 0x0B12;
+        public const uint GL_POINT_SIZE_GRANULARITY = 0x0B13;
+        public const uint GL_LINE_SMOOTH = 0x0B20;
+        public const uint GL_LINE_WIDTH = 0x0B21;
+        public const uint GL_LINE_WIDTH_RANGE = 0x0B22;
+        public const uint GL_LINE_WIDTH_GRANULARITY = 0x0B23;
+        public const uint GL_LINE_STIPPLE = 0x0B24;
+        public const uint GL_LINE_STIPPLE_PATTERN = 0x0B25;
+        public const uint GL_LINE_STIPPLE_REPEAT = 0x0B26;
+        public const uint GL_LIST_MODE = 0x0B30;
+        public const uint GL_MAX_LIST_NESTING = 0x0B31;
+        public const uint GL_LIST_BASE = 0x0B32;
+        public const uint GL_LIST_INDEX = 0x0B33;
+        public const uint GL_POLYGON_MODE = 0x0B40;
+        public const uint GL_POLYGON_SMOOTH = 0x0B41;
+        public const uint GL_POLYGON_STIPPLE = 0x0B42;
+        public const uint GL_EDGE_FLAG = 0x0B43;
+        public const uint GL_CULL_FACE = 0x0B44;
+        public const uint GL_CULL_FACE_MODE = 0x0B45;
+        public const uint GL_FRONT_FACE = 0x0B46;
+        public const uint GL_LIGHTING = 0x0B50;
+        public const uint GL_LIGHT_MODEL_LOCAL_VIEWER = 0x0B51;
+        public const uint GL_LIGHT_MODEL_TWO_SIDE = 0x0B52;
+        public const uint GL_LIGHT_MODEL_AMBIENT = 0x0B53;
+        public const uint GL_SHADE_MODEL = 0x0B54;
+        public const uint GL_COLOR_MATERIAL_FACE = 0x0B55;
+        public const uint GL_COLOR_MATERIAL_PARAMETER = 0x0B56;
+        public const uint GL_COLOR_MATERIAL = 0x0B57;
+        public const uint GL_FOG = 0x0B60;
+        public const uint GL_FOG_INDEX = 0x0B61;
+        public const uint GL_FOG_DENSITY = 0x0B62;
+        public const uint GL_FOG_START = 0x0B63;
+        public const uint GL_FOG_END = 0x0B64;
+        public const uint GL_FOG_MODE = 0x0B65;
+        public const uint GL_FOG_COLOR = 0x0B66;
+        public const uint GL_DEPTH_RANGE = 0x0B70;
+        public const uint GL_DEPTH_TEST = 0x0B71;
+        public const uint GL_DEPTH_WRITEMASK = 0x0B72;
+        public const uint GL_DEPTH_CLEAR_VALUE = 0x0B73;
+        public const uint GL_DEPTH_FUNC = 0x0B74;
+        public const uint GL_ACCUM_CLEAR_VALUE = 0x0B80;
+        public const uint GL_STENCIL_TEST = 0x0B90;
+        public const uint GL_STENCIL_CLEAR_VALUE = 0x0B91;
+        public const uint GL_STENCIL_FUNC = 0x0B92;
+        public const uint GL_STENCIL_VALUE_MASK = 0x0B93;
+        public const uint GL_STENCIL_FAIL = 0x0B94;
+        public const uint GL_STENCIL_PASS_DEPTH_FAIL = 0x0B95;
+        public const uint GL_STENCIL_PASS_DEPTH_PASS = 0x0B96;
+        public const uint GL_STENCIL_REF = 0x0B97;
+        public const uint GL_STENCIL_WRITEMASK = 0x0B98;
+        public const uint GL_MATRIX_MODE = 0x0BA0;
+        public const uint GL_NORMALIZE = 0x0BA1;
+        public const uint GL_VIEWPORT = 0x0BA2;
+        public const uint GL_MODELVIEW_STACK_DEPTH = 0x0BA3;
+        public const uint GL_PROJECTION_STACK_DEPTH = 0x0BA4;
+        public const uint GL_TEXTURE_STACK_DEPTH = 0x0BA5;
+        public const uint GL_MODELVIEW_MATRIX = 0x0BA6;
+        public const uint GL_PROJECTION_MATRIX = 0x0BA7;
+        public const uint GL_TEXTURE_MATRIX = 0x0BA8;
+        public const uint GL_ATTRIB_STACK_DEPTH = 0x0BB0;
+        public const uint GL_CLIENT_ATTRIB_STACK_DEPTH = 0x0BB1;
+        public const uint GL_ALPHA_TEST = 0x0BC0;
+        public const uint GL_ALPHA_TEST_FUNC = 0x0BC1;
+        public const uint GL_ALPHA_TEST_REF = 0x0BC2;
+        public const uint GL_DITHER = 0x0BD0;
+        public const uint GL_BLEND_DST = 0x0BE0;
+        public const uint GL_BLEND_SRC = 0x0BE1;
+        public const uint GL_BLEND = 0x0BE2;
+        public const uint GL_LOGIC_OP_MODE = 0x0BF0;
+        public const uint GL_INDEX_LOGIC_OP = 0x0BF1;
+        public const uint GL_COLOR_LOGIC_OP = 0x0BF2;
+        public const uint GL_AUX_BUFFERS = 0x0C00;
+        public const uint GL_DRAW_BUFFER = 0x0C01;
+        public const uint GL_READ_BUFFER = 0x0C02;
+        public const uint GL_SCISSOR_BOX = 0x0C10;
+        public const uint GL_SCISSOR_TEST = 0x0C11;
+        public const uint GL_INDEX_CLEAR_VALUE = 0x0C20;
+        public const uint GL_INDEX_WRITEMASK = 0x0C21;
+        public const uint GL_COLOR_CLEAR_VALUE = 0x0C22;
+        public const uint GL_COLOR_WRITEMASK = 0x0C23;
+        public const uint GL_INDEX_MODE = 0x0C30;
+        public const uint GL_RGBA_MODE = 0x0C31;
+        public const uint GL_DOUBLEBUFFER = 0x0C32;
+        public const uint GL_STEREO = 0x0C33;
+        public const uint GL_RENDER_MODE = 0x0C40;
+        public const uint GL_PERSPECTIVE_CORRECTION_HINT = 0x0C50;
+        public const uint GL_POINT_SMOOTH_HINT = 0x0C51;
+        public const uint GL_LINE_SMOOTH_HINT = 0x0C52;
+        public const uint GL_POLYGON_SMOOTH_HINT = 0x0C53;
+        public const uint GL_FOG_HINT = 0x0C54;
+        public const uint GL_TEXTURE_GEN_S = 0x0C60;
+        public const uint GL_TEXTURE_GEN_T = 0x0C61;
+        public const uint GL_TEXTURE_GEN_R = 0x0C62;
+        public const uint GL_TEXTURE_GEN_Q = 0x0C63;
+        public const uint GL_PIXEL_MAP_I_TO_I = 0x0C70;
+        public const uint GL_PIXEL_MAP_S_TO_S = 0x0C71;
+        public const uint GL_PIXEL_MAP_I_TO_R = 0x0C72;
+        public const uint GL_PIXEL_MAP_I_TO_G = 0x0C73;
+        public const uint GL_PIXEL_MAP_I_TO_B = 0x0C74;
+        public const uint GL_PIXEL_MAP_I_TO_A = 0x0C75;
+        public const uint GL_PIXEL_MAP_R_TO_R = 0x0C76;
+        public const uint GL_PIXEL_MAP_G_TO_G = 0x0C77;
+        public const uint GL_PIXEL_MAP_B_TO_B = 0x0C78;
+        public const uint GL_PIXEL_MAP_A_TO_A = 0x0C79;
+        public const uint GL_PIXEL_MAP_I_TO_I_SIZE = 0x0CB0;
+        public const uint GL_PIXEL_MAP_S_TO_S_SIZE = 0x0CB1;
+        public const uint GL_PIXEL_MAP_I_TO_R_SIZE = 0x0CB2;
+        public const uint GL_PIXEL_MAP_I_TO_G_SIZE = 0x0CB3;
+        public const uint GL_PIXEL_MAP_I_TO_B_SIZE = 0x0CB4;
+        public const uint GL_PIXEL_MAP_I_TO_A_SIZE = 0x0CB5;
+        public const uint GL_PIXEL_MAP_R_TO_R_SIZE = 0x0CB6;
+        public const uint GL_PIXEL_MAP_G_TO_G_SIZE = 0x0CB7;
+        public const uint GL_PIXEL_MAP_B_TO_B_SIZE = 0x0CB8;
+        public const uint GL_PIXEL_MAP_A_TO_A_SIZE = 0x0CB9;
+        public const uint GL_UNPACK_SWAP_BYTES = 0x0CF0;
+        public const uint GL_UNPACK_LSB_FIRST = 0x0CF1;
+        public const uint GL_UNPACK_ROW_LENGTH = 0x0CF2;
+        public const uint GL_UNPACK_SKIP_ROWS = 0x0CF3;
+        public const uint GL_UNPACK_SKIP_PIXELS = 0x0CF4;
+        public const uint GL_UNPACK_ALIGNMENT = 0x0CF5;
+        public const uint GL_PACK_SWAP_BYTES = 0x0D00;
+        public const uint GL_PACK_LSB_FIRST = 0x0D01;
+        public const uint GL_PACK_ROW_LENGTH = 0x0D02;
+        public const uint GL_PACK_SKIP_ROWS = 0x0D03;
+        public const uint GL_PACK_SKIP_PIXELS = 0x0D04;
+        public const uint GL_PACK_ALIGNMENT = 0x0D05;
+        public const uint GL_MAP_COLOR = 0x0D10;
+        public const uint GL_MAP_STENCIL = 0x0D11;
+        public const uint GL_INDEX_SHIFT = 0x0D12;
+        public const uint GL_INDEX_OFFSET = 0x0D13;
+        public const uint GL_RED_SCALE = 0x0D14;
+        public const uint GL_RED_BIAS = 0x0D15;
+        public const uint GL_ZOOM_X = 0x0D16;
+        public const uint GL_ZOOM_Y = 0x0D17;
+        public const uint GL_GREEN_SCALE = 0x0D18;
+        public const uint GL_GREEN_BIAS = 0x0D19;
+        public const uint GL_BLUE_SCALE = 0x0D1A;
+        public const uint GL_BLUE_BIAS = 0x0D1B;
+        public const uint GL_ALPHA_SCALE = 0x0D1C;
+        public const uint GL_ALPHA_BIAS = 0x0D1D;
+        public const uint GL_DEPTH_SCALE = 0x0D1E;
+        public const uint GL_DEPTH_BIAS = 0x0D1F;
+        public const uint GL_MAX_EVAL_ORDER = 0x0D30;
+        public const uint GL_MAX_LIGHTS = 0x0D31;
+        public const uint GL_MAX_CLIP_PLANES = 0x0D32;
+        public const uint GL_MAX_TEXTURE_SIZE = 0x0D33;
+        public const uint GL_MAX_PIXEL_MAP_TABLE = 0x0D34;
+        public const uint GL_MAX_ATTRIB_STACK_DEPTH = 0x0D35;
+        public const uint GL_MAX_MODELVIEW_STACK_DEPTH = 0x0D36;
+        public const uint GL_MAX_NAME_STACK_DEPTH = 0x0D37;
+        public const uint GL_MAX_PROJECTION_STACK_DEPTH = 0x0D38;
+        public const uint GL_MAX_TEXTURE_STACK_DEPTH = 0x0D39;
+        public const uint GL_MAX_VIEWPORT_DIMS = 0x0D3A;
+        public const uint GL_MAX_CLIENT_ATTRIB_STACK_DEPTH = 0x0D3B;
+        public const uint GL_SUBPIXEL_BITS = 0x0D50;
+        public const uint GL_INDEX_BITS = 0x0D51;
+        public const uint GL_RED_BITS = 0x0D52;
+        public const uint GL_GREEN_BITS = 0x0D53;
+        public const uint GL_BLUE_BITS = 0x0D54;
+        public const uint GL_ALPHA_BITS = 0x0D55;
+        public const uint GL_DEPTH_BITS = 0x0D56;
+        public const uint GL_STENCIL_BITS = 0x0D57;
+        public const uint GL_ACCUM_RED_BITS = 0x0D58;
+        public const uint GL_ACCUM_GREEN_BITS = 0x0D59;
+        public const uint GL_ACCUM_BLUE_BITS = 0x0D5A;
+        public const uint GL_ACCUM_ALPHA_BITS = 0x0D5B;
+        public const uint GL_NAME_STACK_DEPTH = 0x0D70;
+        public const uint GL_AUTO_NORMAL = 0x0D80;
+        public const uint GL_MAP1_COLOR_4 = 0x0D90;
+        public const uint GL_MAP1_INDEX = 0x0D91;
+        public const uint GL_MAP1_NORMAL = 0x0D92;
+        public const uint GL_MAP1_TEXTURE_COORD_1 = 0x0D93;
+        public const uint GL_MAP1_TEXTURE_COORD_2 = 0x0D94;
+        public const uint GL_MAP1_TEXTURE_COORD_3 = 0x0D95;
+        public const uint GL_MAP1_TEXTURE_COORD_4 = 0x0D96;
+        public const uint GL_MAP1_VERTEX_3 = 0x0D97;
+        public const uint GL_MAP1_VERTEX_4 = 0x0D98;
+        public const uint GL_MAP2_COLOR_4 = 0x0DB0;
+        public const uint GL_MAP2_INDEX = 0x0DB1;
+        public const uint GL_MAP2_NORMAL = 0x0DB2;
+        public const uint GL_MAP2_TEXTURE_COORD_1 = 0x0DB3;
+        public const uint GL_MAP2_TEXTURE_COORD_2 = 0x0DB4;
+        public const uint GL_MAP2_TEXTURE_COORD_3 = 0x0DB5;
+        public const uint GL_MAP2_TEXTURE_COORD_4 = 0x0DB6;
+        public const uint GL_MAP2_VERTEX_3 = 0x0DB7;
+        public const uint GL_MAP2_VERTEX_4 = 0x0DB8;
+        public const uint GL_MAP1_GRID_DOMAIN = 0x0DD0;
+        public const uint GL_MAP1_GRID_SEGMENTS = 0x0DD1;
+        public const uint GL_MAP2_GRID_DOMAIN = 0x0DD2;
+        public const uint GL_MAP2_GRID_SEGMENTS = 0x0DD3;
+        public const uint GL_TEXTURE_1D = 0x0DE0;
+        public const uint GL_TEXTURE_2D = 0x0DE1;
+        public const uint GL_FEEDBACK_BUFFER_POINTER = 0x0DF0;
+        public const uint GL_FEEDBACK_BUFFER_SIZE = 0x0DF1;
+        public const uint GL_FEEDBACK_BUFFER_TYPE = 0x0DF2;
+        public const uint GL_SELECTION_BUFFER_POINTER = 0x0DF3;
+        public const uint GL_SELECTION_BUFFER_SIZE = 0x0DF4;
+        //   GetTextureParameter
+        public const uint GL_TEXTURE_WIDTH = 0x1000;
+        public const uint GL_TEXTURE_HEIGHT = 0x1001;
+        public const uint GL_TEXTURE_INTERNAL_FORMAT = 0x1003;
+        public const uint GL_TEXTURE_BORDER_COLOR = 0x1004;
+        public const uint GL_TEXTURE_BORDER = 0x1005;
+        //   HintMode
+        public const uint GL_DONT_CARE = 0x1100;
+        public const uint GL_FASTEST = 0x1101;
+        public const uint GL_NICEST = 0x1102;
+        //   LightName
+        public const uint GL_LIGHT0 = 0x4000;
+        public const uint GL_LIGHT1 = 0x4001;
+        public const uint GL_LIGHT2 = 0x4002;
+        public const uint GL_LIGHT3 = 0x4003;
+        public const uint GL_LIGHT4 = 0x4004;
+        public const uint GL_LIGHT5 = 0x4005;
+        public const uint GL_LIGHT6 = 0x4006;
+        public const uint GL_LIGHT7 = 0x4007;
+        //   LightParameter
+        public const uint GL_AMBIENT = 0x1200;
+        public const uint GL_DIFFUSE = 0x1201;
+        public const uint GL_SPECULAR = 0x1202;
+        public const uint GL_POSITION = 0x1203;
+        public const uint GL_SPOT_DIRECTION = 0x1204;
+        public const uint GL_SPOT_EXPONENT = 0x1205;
+        public const uint GL_SPOT_CUTOFF = 0x1206;
+        public const uint GL_CONSTANT_ATTENUATION = 0x1207;
+        public const uint GL_LINEAR_ATTENUATION = 0x1208;
+        public const uint GL_QUADRATIC_ATTENUATION = 0x1209;
+        //   ListMode
+        public const uint GL_COMPILE = 0x1300;
+        public const uint GL_COMPILE_AND_EXECUTE = 0x1301;
+        //   LogicOp
+        public const uint GL_CLEAR = 0x1500;
+        public const uint GL_AND = 0x1501;
+        public const uint GL_AND_REVERSE = 0x1502;
+        public const uint GL_COPY = 0x1503;
+        public const uint GL_AND_INVERTED = 0x1504;
+        public const uint GL_NOOP = 0x1505;
+        public const uint GL_XOR = 0x1506;
+        public const uint GL_OR = 0x1507;
+        public const uint GL_NOR = 0x1508;
+        public const uint GL_EQUIV = 0x1509;
+        public const uint GL_INVERT = 0x150A;
+        public const uint GL_OR_REVERSE = 0x150B;
+        public const uint GL_COPY_INVERTED = 0x150C;
+        public const uint GL_OR_INVERTED = 0x150D;
+        public const uint GL_NAND = 0x150E;
+        public const uint GL_SET = 0x150F;
+        //   MaterialParameter
+        public const uint GL_EMISSION = 0x1600;
+        public const uint GL_SHININESS = 0x1601;
+        public const uint GL_AMBIENT_AND_DIFFUSE = 0x1602;
+        public const uint GL_COLOR_INDEXES = 0x1603;
+        //   MatrixMode
+        public const uint GL_MODELVIEW = 0x1700;
+        public const uint GL_PROJECTION = 0x1701;
+        public const uint GL_TEXTURE = 0x1702;
+        //   PixelCopyType
+        public const uint GL_COLOR = 0x1800;
+        public const uint GL_DEPTH = 0x1801;
+        public const uint GL_STENCIL = 0x1802;
+        //   PixelFormat
+        public const uint GL_COLOR_INDEX = 0x1900;
+        public const uint GL_STENCIL_INDEX = 0x1901;
+        public const uint GL_DEPTH_COMPONENT = 0x1902;
+        public const uint GL_RED = 0x1903;
+        public const uint GL_GREEN = 0x1904;
+        public const uint GL_BLUE = 0x1905;
+        public const uint GL_ALPHA = 0x1906;
+        public const uint GL_RGB = 0x1907;
+        public const uint GL_RGBA = 0x1908;
+        public const uint GL_LUMINANCE = 0x1909;
+        public const uint GL_LUMINANCE_ALPHA = 0x190A;
+        //   PixelType
+        public const uint GL_BITMAP = 0x1A00;
+        //   PolygonMode
+        public const uint GL_POINT = 0x1B00;
+        public const uint GL_LINE = 0x1B01;
+        public const uint GL_FILL = 0x1B02;
+        //   RenderingMode 
+        public const uint GL_RENDER = 0x1C00;
+        public const uint GL_FEEDBACK = 0x1C01;
+        public const uint GL_SELECT = 0x1C02;
+        //   ShadingModel
+        public const uint GL_FLAT = 0x1D00;
+        public const uint GL_SMOOTH = 0x1D01;
+        //   StencilOp	
+        public const uint GL_KEEP = 0x1E00;
+        public const uint GL_REPLACE = 0x1E01;
+        public const uint GL_INCR = 0x1E02;
+        public const uint GL_DECR = 0x1E03;
+        //   StringName
+        public const uint GL_VENDOR = 0x1F00;
+        public const uint GL_RENDERER = 0x1F01;
+        public const uint GL_VERSION = 0x1F02;
+        public const uint GL_EXTENSIONS = 0x1F03;
+        //   TextureCoordName
+        public const uint GL_S = 0x2000;
+        public const uint GL_T = 0x2001;
+        public const uint GL_R = 0x2002;
+        public const uint GL_Q = 0x2003;
+        //   TextureEnvMode
+        public const uint GL_MODULATE = 0x2100;
+        public const uint GL_DECAL = 0x2101;
+        //   TextureEnvParameter
+        public const uint GL_TEXTURE_ENV_MODE = 0x2200;
+        public const uint GL_TEXTURE_ENV_COLOR = 0x2201;
+        //   TextureEnvTarget
+        public const uint GL_TEXTURE_ENV = 0x2300;
+        //   TextureGenMode 
+        public const uint GL_EYE_LINEAR = 0x2400;
+        public const uint GL_OBJECT_LINEAR = 0x2401;
+        public const uint GL_SPHERE_MAP = 0x2402;
+        //   TextureGenParameter
+        public const uint GL_TEXTURE_GEN_MODE = 0x2500;
+        public const uint GL_OBJECT_PLANE = 0x2501;
+        public const uint GL_EYE_PLANE = 0x2502;
+        //   TextureMagFilter
+        public const uint GL_NEAREST = 0x2600;
+        public const uint GL_LINEAR = 0x2601;
+        //   TextureMinFilter 
+        public const uint GL_NEAREST_MIPMAP_NEAREST = 0x2700;
+        public const uint GL_LINEAR_MIPMAP_NEAREST = 0x2701;
+        public const uint GL_NEAREST_MIPMAP_LINEAR = 0x2702;
+        public const uint GL_LINEAR_MIPMAP_LINEAR = 0x2703;
+        //   TextureParameterName
+        public const uint GL_TEXTURE_MAG_FILTER = 0x2800;
+        public const uint GL_TEXTURE_MIN_FILTER = 0x2801;
+        public const uint GL_TEXTURE_WRAP_S = 0x2802;
+        public const uint GL_TEXTURE_WRAP_T = 0x2803;
+        //   TextureWrapMode
+        public const uint GL_CLAMP = 0x2900;
+        public const uint GL_REPEAT = 0x2901;
+        //   ClientAttribMask
+        public const uint GL_CLIENT_PIXEL_STORE_BIT = 0x00000001;
+        public const uint GL_CLIENT_VERTEX_ARRAY_BIT = 0x00000002;
+        public const uint GL_CLIENT_ALL_ATTRIB_BITS = 0xffffffff;
+        //   Polygon Offset
+        public const uint GL_POLYGON_OFFSET_FACTOR = 0x8038;
+        public const uint GL_POLYGON_OFFSET_UNITS = 0x2A00;
+        public const uint GL_POLYGON_OFFSET_POINT = 0x2A01;
+        public const uint GL_POLYGON_OFFSET_LINE = 0x2A02;
+        public const uint GL_POLYGON_OFFSET_FILL = 0x8037;
+        //   Texture 
+        public const uint GL_ALPHA4 = 0x803B;
+        public const uint GL_ALPHA8 = 0x803C;
+        public const uint GL_ALPHA12 = 0x803D;
+        public const uint GL_ALPHA16 = 0x803E;
+        public const uint GL_LUMINANCE4 = 0x803F;
+        public const uint GL_LUMINANCE8 = 0x8040;
+        public const uint GL_LUMINANCE12 = 0x8041;
+        public const uint GL_LUMINANCE16 = 0x8042;
+        public const uint GL_LUMINANCE4_ALPHA4 = 0x8043;
+        public const uint GL_LUMINANCE6_ALPHA2 = 0x8044;
+        public const uint GL_LUMINANCE8_ALPHA8 = 0x8045;
+        public const uint GL_LUMINANCE12_ALPHA4 = 0x8046;
+        public const uint GL_LUMINANCE12_ALPHA12 = 0x8047;
+        public const uint GL_LUMINANCE16_ALPHA16 = 0x8048;
+        public const uint GL_INTENSITY = 0x8049;
+        public const uint GL_INTENSITY4 = 0x804A;
+        public const uint GL_INTENSITY8 = 0x804B;
+        public const uint GL_INTENSITY12 = 0x804C;
+        public const uint GL_INTENSITY16 = 0x804D;
+        public const uint GL_R3_G3_B2 = 0x2A10;
+        public const uint GL_RGB4 = 0x804F;
+        public const uint GL_RGB5 = 0x8050;
+        public const uint GL_RGB8 = 0x8051;
+        public const uint GL_RGB10 = 0x8052;
+        public const uint GL_RGB12 = 0x8053;
+        public const uint GL_RGB16 = 0x8054;
+        public const uint GL_RGBA2 = 0x8055;
+        public const uint GL_RGBA4 = 0x8056;
+        public const uint GL_RGB5_A1 = 0x8057;
+        public const uint GL_RGBA8 = 0x8058;
+        public const uint GL_RGB10_A2 = 0x8059;
+        public const uint GL_RGBA12 = 0x805A;
+        public const uint GL_RGBA16 = 0x805B;
+        public const uint GL_TEXTURE_RED_SIZE = 0x805C;
+        public const uint GL_TEXTURE_GREEN_SIZE = 0x805D;
+        public const uint GL_TEXTURE_BLUE_SIZE = 0x805E;
+        public const uint GL_TEXTURE_ALPHA_SIZE = 0x805F;
+        public const uint GL_TEXTURE_LUMINANCE_SIZE = 0x8060;
+        public const uint GL_TEXTURE_INTENSITY_SIZE = 0x8061;
+        public const uint GL_PROXY_TEXTURE_1D = 0x8063;
+        public const uint GL_PROXY_TEXTURE_2D = 0x8064;
+        //   Texture object
+        public const uint GL_TEXTURE_PRIORITY = 0x8066;
+        public const uint GL_TEXTURE_RESIDENT = 0x8067;
+        public const uint GL_TEXTURE_BINDING_1D = 0x8068;
+        public const uint GL_TEXTURE_BINDING_2D = 0x8069;
+        //   Vertex array
+        public const uint GL_VERTEX_ARRAY = 0x8074;
+        public const uint GL_NORMAL_ARRAY = 0x8075;
+        public const uint GL_COLOR_ARRAY = 0x8076;
+        public const uint GL_INDEX_ARRAY = 0x8077;
+        public const uint GL_TEXTURE_COORD_ARRAY = 0x8078;
+        public const uint GL_EDGE_FLAG_ARRAY = 0x8079;
+        public const uint GL_VERTEX_ARRAY_SIZE = 0x807A;
+        public const uint GL_VERTEX_ARRAY_TYPE = 0x807B;
+        public const uint GL_VERTEX_ARRAY_STRIDE = 0x807C;
+        public const uint GL_NORMAL_ARRAY_TYPE = 0x807E;
+        public const uint GL_NORMAL_ARRAY_STRIDE = 0x807F;
+        public const uint GL_COLOR_ARRAY_SIZE = 0x8081;
+        public const uint GL_COLOR_ARRAY_TYPE = 0x8082;
+        public const uint GL_COLOR_ARRAY_STRIDE = 0x8083;
+        public const uint GL_INDEX_ARRAY_TYPE = 0x8085;
+        public const uint GL_INDEX_ARRAY_STRIDE = 0x8086;
+        public const uint GL_TEXTURE_COORD_ARRAY_SIZE = 0x8088;
+        public const uint GL_TEXTURE_COORD_ARRAY_TYPE = 0x8089;
+        public const uint GL_TEXTURE_COORD_ARRAY_STRIDE = 0x808A;
+        public const uint GL_EDGE_FLAG_ARRAY_STRIDE = 0x808C;
+        public const uint GL_VERTEX_ARRAY_POINTER = 0x808E;
+        public const uint GL_NORMAL_ARRAY_POINTER = 0x808F;
+        public const uint GL_COLOR_ARRAY_POINTER = 0x8090;
+        public const uint GL_INDEX_ARRAY_POINTER = 0x8091;
+        public const uint GL_TEXTURE_COORD_ARRAY_POINTER = 0x8092;
+        public const uint GL_EDGE_FLAG_ARRAY_POINTER = 0x8093;
+        public const uint GL_V2F = 0x2A20;
+        public const uint GL_V3F = 0x2A21;
+        public const uint GL_C4UB_V2F = 0x2A22;
+        public const uint GL_C4UB_V3F = 0x2A23;
+        public const uint GL_C3F_V3F = 0x2A24;
+        public const uint GL_N3F_V3F = 0x2A25;
+        public const uint GL_C4F_N3F_V3F = 0x2A26;
+        public const uint GL_T2F_V3F = 0x2A27;
+        public const uint GL_T4F_V4F = 0x2A28;
+        public const uint GL_T2F_C4UB_V3F = 0x2A29;
+        public const uint GL_T2F_C3F_V3F = 0x2A2A;
+        public const uint GL_T2F_N3F_V3F = 0x2A2B;
+        public const uint GL_T2F_C4F_N3F_V3F = 0x2A2C;
+        public const uint GL_T4F_C4F_N3F_V4F = 0x2A2D;
+        //   Extensions
+        public const uint GL_EXT_vertex_array = 1;
+        public const uint GL_EXT_bgra = 1;
+        public const uint GL_EXT_paletted_texture = 1;
+        public const uint GL_WIN_swap_hint = 1;
+        public const uint GL_WIN_draw_range_elements = 1;
+        //   EXT_vertex_array 
+        public const uint GL_VERTEX_ARRAY_EXT = 0x8074;
+        public const uint GL_NORMAL_ARRAY_EXT = 0x8075;
+        public const uint GL_COLOR_ARRAY_EXT = 0x8076;
+        public const uint GL_INDEX_ARRAY_EXT = 0x8077;
+        public const uint GL_TEXTURE_COORD_ARRAY_EXT = 0x8078;
+        public const uint GL_EDGE_FLAG_ARRAY_EXT = 0x8079;
+        public const uint GL_VERTEX_ARRAY_SIZE_EXT = 0x807A;
+        public const uint GL_VERTEX_ARRAY_TYPE_EXT = 0x807B;
+        public const uint GL_VERTEX_ARRAY_STRIDE_EXT = 0x807C;
+        public const uint GL_VERTEX_ARRAY_COUNT_EXT = 0x807D;
+        public const uint GL_NORMAL_ARRAY_TYPE_EXT = 0x807E;
+        public const uint GL_NORMAL_ARRAY_STRIDE_EXT = 0x807F;
+        public const uint GL_NORMAL_ARRAY_COUNT_EXT = 0x8080;
+        public const uint GL_COLOR_ARRAY_SIZE_EXT = 0x8081;
+        public const uint GL_COLOR_ARRAY_TYPE_EXT = 0x8082;
+        public const uint GL_COLOR_ARRAY_STRIDE_EXT = 0x8083;
+        public const uint GL_COLOR_ARRAY_COUNT_EXT = 0x8084;
+        public const uint GL_INDEX_ARRAY_TYPE_EXT = 0x8085;
+        public const uint GL_INDEX_ARRAY_STRIDE_EXT = 0x8086;
+        public const uint GL_INDEX_ARRAY_COUNT_EXT = 0x8087;
+        public const uint GL_TEXTURE_COORD_ARRAY_SIZE_EXT = 0x8088;
+        public const uint GL_TEXTURE_COORD_ARRAY_TYPE_EXT = 0x8089;
+        public const uint GL_TEXTURE_COORD_ARRAY_STRIDE_EXT = 0x808A;
+        public const uint GL_TEXTURE_COORD_ARRAY_COUNT_EXT = 0x808B;
+        public const uint GL_EDGE_FLAG_ARRAY_STRIDE_EXT = 0x808C;
+        public const uint GL_EDGE_FLAG_ARRAY_COUNT_EXT = 0x808D;
+        public const uint GL_VERTEX_ARRAY_POINTER_EXT = 0x808E;
+        public const uint GL_NORMAL_ARRAY_POINTER_EXT = 0x808F;
+        public const uint GL_COLOR_ARRAY_POINTER_EXT = 0x8090;
+        public const uint GL_INDEX_ARRAY_POINTER_EXT = 0x8091;
+        public const uint GL_TEXTURE_COORD_ARRAY_POINTER_EXT = 0x8092;
+        public const uint GL_EDGE_FLAG_ARRAY_POINTER_EXT = 0x8093;
+        public const uint GL_DOUBLE_EXT = 1;/*DOUBLE*/
+                                            //   EXT_paletted_texture
+        public const uint GL_COLOR_TABLE_FORMAT_EXT = 0x80D8;
+        public const uint GL_COLOR_TABLE_WIDTH_EXT = 0x80D9;
+        public const uint GL_COLOR_TABLE_RED_SIZE_EXT = 0x80DA;
+        public const uint GL_COLOR_TABLE_GREEN_SIZE_EXT = 0x80DB;
+        public const uint GL_COLOR_TABLE_BLUE_SIZE_EXT = 0x80DC;
+        public const uint GL_COLOR_TABLE_ALPHA_SIZE_EXT = 0x80DD;
+        public const uint GL_COLOR_TABLE_LUMINANCE_SIZE_EXT = 0x80DE;
+        public const uint GL_COLOR_TABLE_INTENSITY_SIZE_EXT = 0x80DF;
+        public const uint GL_COLOR_INDEX1_EXT = 0x80E2;
+        public const uint GL_COLOR_INDEX2_EXT = 0x80E3;
+        public const uint GL_COLOR_INDEX4_EXT = 0x80E4;
+        public const uint GL_COLOR_INDEX8_EXT = 0x80E5;
+        public const uint GL_COLOR_INDEX12_EXT = 0x80E6;
+        public const uint GL_COLOR_INDEX16_EXT = 0x80E7;
+        //   WIN_draw_range_elements
+        public const uint GL_MAX_ELEMENTS_VERTICES_WIN = 0x80E8;
+        public const uint GL_MAX_ELEMENTS_INDICES_WIN = 0x80E9;
+        //   WIN_phong_shading
+        public const uint GL_PHONG_WIN = 0x80EA;
+        public const uint GL_PHONG_HINT_WIN = 0x80EB;
+        //   WIN_specular_fog 
+        public static uint FOG_SPECULAR_TEXTURE_WIN = 0x80EC;
         #endregion
         #region The GLU DLL Constant Definitions.
         //   Version
-		public const uint GLU_VERSION_1_1                 = 1;
-		public const uint GLU_VERSION_1_2                 = 1;
-		//   Errors: (return value 0 = no error)
-		public const uint GLU_INVALID_ENUM        = 100900;
-		public const uint GLU_INVALID_VALUE       = 100901;
-		public const uint GLU_OUT_OF_MEMORY       = 100902;
-		public const uint GLU_INCOMPATIBLE_GL_VERSION    = 100903;
-		//   StringName
-		public const uint GLU_VERSION             = 100800;
-		public const uint GLU_EXTENSIONS          = 100801;
-		//   Boolean
-		public const uint GLU_TRUE                = 1;
-		public const uint GLU_FALSE               = 0;
+        public const uint GLU_VERSION_1_1 = 1;
+        public const uint GLU_VERSION_1_2 = 1;
+        //   Errors: (return value 0 = no error)
+        public const uint GLU_INVALID_ENUM = 100900;
+        public const uint GLU_INVALID_VALUE = 100901;
+        public const uint GLU_OUT_OF_MEMORY = 100902;
+        public const uint GLU_INCOMPATIBLE_GL_VERSION = 100903;
+        //   StringName
+        public const uint GLU_VERSION = 100800;
+        public const uint GLU_EXTENSIONS = 100801;
+        //   Boolean
+        public const uint GLU_TRUE = 1;
+        public const uint GLU_FALSE = 0;
         //  Quadric constants
-		//   QuadricNormal
-		public const uint GLU_SMOOTH              = 100000;
-		public const uint GLU_FLAT                = 100001;
-		public const uint GLU_NONE                = 100002;
-		//   QuadricDrawStyle
-		public const uint GLU_POINT               = 100010;
-		public const uint GLU_LINE                = 100011;
-		public const uint GLU_FILL                = 100012;
-		public const uint GLU_SILHOUETTE          = 100013;
-		//   QuadricOrientation
-		public const uint GLU_OUTSIDE             = 100020;
-		public const uint GLU_INSIDE              = 100021;
-		//  Tesselation constants
-		public const double GLU_TESS_MAX_COORD             = 1.0e150;
-		//   TessProperty
-		public const uint GLU_TESS_WINDING_RULE           =100140;
-		public const uint GLU_TESS_BOUNDARY_ONLY          =100141;
-		public const uint GLU_TESS_TOLERANCE              =100142;
-		//   TessWinding
-		public const uint GLU_TESS_WINDING_ODD            =100130;
-		public const uint GLU_TESS_WINDING_NONZERO        =100131;
-		public const uint GLU_TESS_WINDING_POSITIVE       =100132;
-		public const uint GLU_TESS_WINDING_NEGATIVE       =100133;
-		public const uint GLU_TESS_WINDING_ABS_GEQ_TWO    =100134;
-		//   TessCallback
-		public const uint GLU_TESS_BEGIN          =100100;
-		public const uint GLU_TESS_VERTEX         =100101;
-		public const uint GLU_TESS_END            =100102;
-		public const uint GLU_TESS_ERROR          =100103;
-		public const uint GLU_TESS_EDGE_FLAG      =100104;
-		public const uint GLU_TESS_COMBINE        =100105;
-		public const uint GLU_TESS_BEGIN_DATA     =100106;
-		public const uint GLU_TESS_VERTEX_DATA    =100107;
-		public const uint GLU_TESS_END_DATA       =100108;
-		public const uint GLU_TESS_ERROR_DATA     =100109;
-		public const uint GLU_TESS_EDGE_FLAG_DATA =100110;
-		public const uint GLU_TESS_COMBINE_DATA   =100111;
-		//   TessError
-		public const uint GLU_TESS_ERROR1     =100151;
-		public const uint GLU_TESS_ERROR2     =100152;
-		public const uint GLU_TESS_ERROR3     =100153;
-		public const uint GLU_TESS_ERROR4     =100154;
-		public const uint GLU_TESS_ERROR5     =100155;
-		public const uint GLU_TESS_ERROR6     =100156;
-		public const uint GLU_TESS_ERROR7     =100157;
-		public const uint GLU_TESS_ERROR8     =100158;
-		public const uint GLU_TESS_MISSING_BEGIN_POLYGON  =100151;
-		public const uint GLU_TESS_MISSING_BEGIN_CONTOUR  =100152;
-		public const uint GLU_TESS_MISSING_END_POLYGON    =100153;
-		public const uint GLU_TESS_MISSING_END_CONTOUR    =100154;
-		public const uint GLU_TESS_COORD_TOO_LARGE        =100155;
-		public const uint GLU_TESS_NEED_COMBINE_CALLBACK  =100156;
-		//  NURBS constants
-		//   NurbsProperty
-		public const uint GLU_AUTO_LOAD_MATRIX    =100200;
-		public const uint GLU_CULLING             =100201;
-		public const uint GLU_SAMPLING_TOLERANCE  =100203;
-		public const uint GLU_DISPLAY_MODE        =100204;
-		public const uint GLU_PARAMETRIC_TOLERANCE        =100202;
-		public const uint GLU_SAMPLING_METHOD             =100205;
-		public const uint GLU_U_STEP                      =100206;
-		public const uint GLU_V_STEP                      =100207;
-		//   NurbsSampling
-		public const uint GLU_PATH_LENGTH                 =100215;
-		public const uint GLU_PARAMETRIC_ERROR            =100216;
-		public const uint GLU_DOMAIN_DISTANCE             =100217;
-		//   NurbsTrim
-		public const uint GLU_MAP1_TRIM_2         =100210;
-		public const uint GLU_MAP1_TRIM_3         =100211;
-		//   NurbsDisplay
-		//        GLU_FILL                100012
-		public const uint GLU_OUTLINE_POLYGON     =100240;
-		public const uint GLU_OUTLINE_PATCH       =100241;
-		//   NurbsCallback
-		//        GLU_ERROR               100103
-		//   NurbsErrors
-		public const uint GLU_NURBS_ERROR1        =100251;
-		public const uint GLU_NURBS_ERROR2        =100252;
-		public const uint GLU_NURBS_ERROR3        =100253;
-		public const uint GLU_NURBS_ERROR4        =100254;
-		public const uint GLU_NURBS_ERROR5        =100255;
-		public const uint GLU_NURBS_ERROR6        =100256;
-		public const uint GLU_NURBS_ERROR7        =100257;
-		public const uint GLU_NURBS_ERROR8        =100258;
-		public const uint GLU_NURBS_ERROR9        =100259;
-		public const uint GLU_NURBS_ERROR10       =100260;
-		public const uint GLU_NURBS_ERROR11       =100261;
-		public const uint GLU_NURBS_ERROR12       =100262;
-		public const uint GLU_NURBS_ERROR13       =100263;
-		public const uint GLU_NURBS_ERROR14       =100264;
-		public const uint GLU_NURBS_ERROR15       =100265;
-		public const uint GLU_NURBS_ERROR16       =100266;
-		public const uint GLU_NURBS_ERROR17       =100267;
-		public const uint GLU_NURBS_ERROR18       =100268;
-		public const uint GLU_NURBS_ERROR19       =100269;
-		public const uint GLU_NURBS_ERROR20       =100270;
-		public const uint GLU_NURBS_ERROR21       =100271;
-		public const uint GLU_NURBS_ERROR22       =100272;
-		public const uint GLU_NURBS_ERROR23       =100273;
-		public const uint GLU_NURBS_ERROR24       =100274;
-		public const uint GLU_NURBS_ERROR25       =100275;
-		public const uint GLU_NURBS_ERROR26       =100276;
-		public const uint GLU_NURBS_ERROR27       =100277;
-		public const uint GLU_NURBS_ERROR28       =100278;
-		public const uint GLU_NURBS_ERROR29       =100279;
-		public const uint GLU_NURBS_ERROR30       =100280;
-		public const uint GLU_NURBS_ERROR31       =100281;
-		public const uint GLU_NURBS_ERROR32       =100282;
-		public const uint GLU_NURBS_ERROR33       =100283;
-		public const uint GLU_NURBS_ERROR34       =100284;
-		public const uint GLU_NURBS_ERROR35       =100285;
-		public const uint GLU_NURBS_ERROR36       =100286;
-		public const uint GLU_NURBS_ERROR37       =100287;
-		#endregion
-		#region The OpenGL DLL Functions (Exactly the same naming).
+        //   QuadricNormal
+        public const uint GLU_SMOOTH = 100000;
+        public const uint GLU_FLAT = 100001;
+        public const uint GLU_NONE = 100002;
+        //   QuadricDrawStyle
+        public const uint GLU_POINT = 100010;
+        public const uint GLU_LINE = 100011;
+        public const uint GLU_FILL = 100012;
+        public const uint GLU_SILHOUETTE = 100013;
+        //   QuadricOrientation
+        public const uint GLU_OUTSIDE = 100020;
+        public const uint GLU_INSIDE = 100021;
+        //  Tesselation constants
+        public const double GLU_TESS_MAX_COORD = 1.0e150;
+        //   TessProperty
+        public const uint GLU_TESS_WINDING_RULE = 100140;
+        public const uint GLU_TESS_BOUNDARY_ONLY = 100141;
+        public const uint GLU_TESS_TOLERANCE = 100142;
+        //   TessWinding
+        public const uint GLU_TESS_WINDING_ODD = 100130;
+        public const uint GLU_TESS_WINDING_NONZERO = 100131;
+        public const uint GLU_TESS_WINDING_POSITIVE = 100132;
+        public const uint GLU_TESS_WINDING_NEGATIVE = 100133;
+        public const uint GLU_TESS_WINDING_ABS_GEQ_TWO = 100134;
+        //   TessCallback
+        public const uint GLU_TESS_BEGIN = 100100;
+        public const uint GLU_TESS_VERTEX = 100101;
+        public const uint GLU_TESS_END = 100102;
+        public const uint GLU_TESS_ERROR = 100103;
+        public const uint GLU_TESS_EDGE_FLAG = 100104;
+        public const uint GLU_TESS_COMBINE = 100105;
+        public const uint GLU_TESS_BEGIN_DATA = 100106;
+        public const uint GLU_TESS_VERTEX_DATA = 100107;
+        public const uint GLU_TESS_END_DATA = 100108;
+        public const uint GLU_TESS_ERROR_DATA = 100109;
+        public const uint GLU_TESS_EDGE_FLAG_DATA = 100110;
+        public const uint GLU_TESS_COMBINE_DATA = 100111;
+        //   TessError
+        public const uint GLU_TESS_ERROR1 = 100151;
+        public const uint GLU_TESS_ERROR2 = 100152;
+        public const uint GLU_TESS_ERROR3 = 100153;
+        public const uint GLU_TESS_ERROR4 = 100154;
+        public const uint GLU_TESS_ERROR5 = 100155;
+        public const uint GLU_TESS_ERROR6 = 100156;
+        public const uint GLU_TESS_ERROR7 = 100157;
+        public const uint GLU_TESS_ERROR8 = 100158;
+        public const uint GLU_TESS_MISSING_BEGIN_POLYGON = 100151;
+        public const uint GLU_TESS_MISSING_BEGIN_CONTOUR = 100152;
+        public const uint GLU_TESS_MISSING_END_POLYGON = 100153;
+        public const uint GLU_TESS_MISSING_END_CONTOUR = 100154;
+        public const uint GLU_TESS_COORD_TOO_LARGE = 100155;
+        public const uint GLU_TESS_NEED_COMBINE_CALLBACK = 100156;
+        //  NURBS constants
+        //   NurbsProperty
+        public const uint GLU_AUTO_LOAD_MATRIX = 100200;
+        public const uint GLU_CULLING = 100201;
+        public const uint GLU_SAMPLING_TOLERANCE = 100203;
+        public const uint GLU_DISPLAY_MODE = 100204;
+        public const uint GLU_PARAMETRIC_TOLERANCE = 100202;
+        public const uint GLU_SAMPLING_METHOD = 100205;
+        public const uint GLU_U_STEP = 100206;
+        public const uint GLU_V_STEP = 100207;
+        //   NurbsSampling
+        public const uint GLU_PATH_LENGTH = 100215;
+        public const uint GLU_PARAMETRIC_ERROR = 100216;
+        public const uint GLU_DOMAIN_DISTANCE = 100217;
+        //   NurbsTrim
+        public const uint GLU_MAP1_TRIM_2 = 100210;
+        public const uint GLU_MAP1_TRIM_3 = 100211;
+        //   NurbsDisplay
+        //        GLU_FILL                100012
+        public const uint GLU_OUTLINE_POLYGON = 100240;
+        public const uint GLU_OUTLINE_PATCH = 100241;
+        //   NurbsCallback
+        //        GLU_ERROR               100103
+        //   NurbsErrors
+        public const uint GLU_NURBS_ERROR1 = 100251;
+        public const uint GLU_NURBS_ERROR2 = 100252;
+        public const uint GLU_NURBS_ERROR3 = 100253;
+        public const uint GLU_NURBS_ERROR4 = 100254;
+        public const uint GLU_NURBS_ERROR5 = 100255;
+        public const uint GLU_NURBS_ERROR6 = 100256;
+        public const uint GLU_NURBS_ERROR7 = 100257;
+        public const uint GLU_NURBS_ERROR8 = 100258;
+        public const uint GLU_NURBS_ERROR9 = 100259;
+        public const uint GLU_NURBS_ERROR10 = 100260;
+        public const uint GLU_NURBS_ERROR11 = 100261;
+        public const uint GLU_NURBS_ERROR12 = 100262;
+        public const uint GLU_NURBS_ERROR13 = 100263;
+        public const uint GLU_NURBS_ERROR14 = 100264;
+        public const uint GLU_NURBS_ERROR15 = 100265;
+        public const uint GLU_NURBS_ERROR16 = 100266;
+        public const uint GLU_NURBS_ERROR17 = 100267;
+        public const uint GLU_NURBS_ERROR18 = 100268;
+        public const uint GLU_NURBS_ERROR19 = 100269;
+        public const uint GLU_NURBS_ERROR20 = 100270;
+        public const uint GLU_NURBS_ERROR21 = 100271;
+        public const uint GLU_NURBS_ERROR22 = 100272;
+        public const uint GLU_NURBS_ERROR23 = 100273;
+        public const uint GLU_NURBS_ERROR24 = 100274;
+        public const uint GLU_NURBS_ERROR25 = 100275;
+        public const uint GLU_NURBS_ERROR26 = 100276;
+        public const uint GLU_NURBS_ERROR27 = 100277;
+        public const uint GLU_NURBS_ERROR28 = 100278;
+        public const uint GLU_NURBS_ERROR29 = 100279;
+        public const uint GLU_NURBS_ERROR30 = 100280;
+        public const uint GLU_NURBS_ERROR31 = 100281;
+        public const uint GLU_NURBS_ERROR32 = 100282;
+        public const uint GLU_NURBS_ERROR33 = 100283;
+        public const uint GLU_NURBS_ERROR34 = 100284;
+        public const uint GLU_NURBS_ERROR35 = 100285;
+        public const uint GLU_NURBS_ERROR36 = 100286;
+        public const uint GLU_NURBS_ERROR37 = 100287;
+        #endregion
+        #region The OpenGL DLL Functions (Exactly the same naming).
         public const string LIBRARY_OPENGL = "opengl32.dll";
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glAccum(uint op, float value);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glAlphaFunc (uint func, float ref_notkeword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern byte glAreTexturesResident (int n,  uint []textures, byte []residences);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glArrayElement (int i);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glBegin (uint mode);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glBindTexture (uint target, uint texture);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glBitmap (int width, int height, float xorig, float yorig, float xmove, float ymove,  byte []bitmap);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glBlendFunc (uint sfactor, uint dfactor);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glCallList (uint list);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glCallLists (int n, uint type,  IntPtr lists);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glCallLists (int n, uint type,  uint[] lists);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glCallLists (int n, uint type,  byte[] lists);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glClear (uint mask);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glClearAccum (float red, float green, float blue, float alpha);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glClearColor (float red, float green, float blue, float alpha);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glClearDepth (double depth);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glClearIndex (float c);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glClearStencil (int s);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glClipPlane (uint plane,  double []equation);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3b (byte red, byte green, byte blue);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3bv ( byte []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3d (double red, double green, double blue);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3dv ( double []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3f (float red, float green, float blue);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3fv ( float []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3i (int red, int green, int blue);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3iv ( int []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3s (short red, short green, short blue);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3sv ( short []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3ub (byte red, byte green, byte blue);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3ubv ( byte []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3ui (uint red, uint green, uint blue);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3uiv ( uint []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3us (ushort red, ushort green, ushort blue);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3usv ( ushort []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4b (byte red, byte green, byte blue, byte alpha);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4bv ( byte []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4d (double red, double green, double blue, double alpha);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4dv ( double []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4f (float red, float green, float blue, float alpha);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4fv ( float []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4i (int red, int green, int blue, int alpha);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4iv ( int []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4s (short red, short green, short blue, short alpha);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4sv ( short []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4ub (byte red, byte green, byte blue, byte alpha);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4ubv ( byte []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4ui (uint red, uint green, uint blue, uint alpha);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4uiv ( uint []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4us (ushort red, ushort green, ushort blue, ushort alpha);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4usv ( ushort []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColorMask (byte red, byte green, byte blue, byte alpha);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColorMaterial (uint face, uint mode);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColorPointer (int size, uint type, int stride,  IntPtr pointer);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glCopyPixels (int x, int y, int width, int height, uint type);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glCopyTexImage1D (uint target, int level, uint internalFormat, int x, int y, int width, int border);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glCopyTexImage2D (uint target, int level, uint internalFormat, int x, int y, int width, int height, int border);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glCopyTexSubImage1D (uint target, int level, int xoffset, int x, int y, int width);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glCopyTexSubImage2D (uint target, int level, int xoffset, int yoffset, int x, int y, int width, int height);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glCullFace (uint mode);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDeleteLists (uint list, int range);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDeleteTextures (int n,  uint []textures);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDepthFunc (uint func);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDepthMask (byte flag);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDepthRange (double zNear, double zFar);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDisable (uint cap);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDisableClientState (uint array);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDrawArrays (uint mode, int first, int count);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDrawBuffer (uint mode);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glAccum(uint op, float value);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glAlphaFunc(uint func, float ref_notkeword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern byte glAreTexturesResident(int n, uint[] textures, byte[] residences);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glArrayElement(int i);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glBegin(uint mode);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glBindTexture(uint target, uint texture);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glBitmap(int width, int height, float xorig, float yorig, float xmove, float ymove, byte[] bitmap);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glBlendFunc(uint sfactor, uint dfactor);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glCallList(uint list);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glCallLists(int n, uint type, IntPtr lists);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glCallLists(int n, uint type, uint[] lists);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glCallLists(int n, uint type, byte[] lists);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glClear(uint mask);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glClearAccum(float red, float green, float blue, float alpha);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glClearColor(float red, float green, float blue, float alpha);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glClearDepth(double depth);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glClearIndex(float c);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glClearStencil(int s);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glClipPlane(uint plane, double[] equation);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3b(byte red, byte green, byte blue);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3bv(byte[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3d(double red, double green, double blue);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3dv(double[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3f(float red, float green, float blue);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3fv(float[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3i(int red, int green, int blue);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3iv(int[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3s(short red, short green, short blue);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3sv(short[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3ub(byte red, byte green, byte blue);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3ubv(byte[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3ui(uint red, uint green, uint blue);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3uiv(uint[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3us(ushort red, ushort green, ushort blue);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor3usv(ushort[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4b(byte red, byte green, byte blue, byte alpha);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4bv(byte[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4d(double red, double green, double blue, double alpha);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4dv(double[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4f(float red, float green, float blue, float alpha);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4fv(float[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4i(int red, int green, int blue, int alpha);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4iv(int[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4s(short red, short green, short blue, short alpha);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4sv(short[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4ub(byte red, byte green, byte blue, byte alpha);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4ubv(byte[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4ui(uint red, uint green, uint blue, uint alpha);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4uiv(uint[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4us(ushort red, ushort green, ushort blue, ushort alpha);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColor4usv(ushort[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColorMask(byte red, byte green, byte blue, byte alpha);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColorMaterial(uint face, uint mode);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glColorPointer(int size, uint type, int stride, IntPtr pointer);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glCopyPixels(int x, int y, int width, int height, uint type);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glCopyTexImage1D(uint target, int level, uint internalFormat, int x, int y, int width, int border);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glCopyTexImage2D(uint target, int level, uint internalFormat, int x, int y, int width, int height, int border);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glCopyTexSubImage1D(uint target, int level, int xoffset, int x, int y, int width);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glCopyTexSubImage2D(uint target, int level, int xoffset, int yoffset, int x, int y, int width, int height);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glCullFace(uint mode);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDeleteLists(uint list, int range);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDeleteTextures(int n, uint[] textures);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDepthFunc(uint func);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDepthMask(byte flag);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDepthRange(double zNear, double zFar);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDisable(uint cap);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDisableClientState(uint array);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDrawArrays(uint mode, int first, int count);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDrawBuffer(uint mode);
         [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDrawElements(uint mode, int count, uint type, IntPtr indices);
         [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDrawElements(uint mode, int count, uint type, uint[] indices);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDrawPixels(int width, int height, uint format, uint type, float[] pixels);
-    [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDrawPixels(int width, int height, uint format, uint type, uint[] pixels);
-    [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDrawPixels(int width, int height, uint format, uint type, ushort[] pixels);
-    [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDrawPixels(int width, int height, uint format, uint type, byte[] pixels);
-    [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDrawPixels(int width, int height, uint format, uint type, IntPtr pixels);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEdgeFlag (byte flag);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEdgeFlagPointer (int stride,  int[] pointer);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEdgeFlagv ( byte []flag);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEnable (uint cap);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEnableClientState (uint array);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEnd ();
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEndList ();
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEvalCoord1d (double u);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEvalCoord1dv ( double []u);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEvalCoord1f (float u);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEvalCoord1fv ( float []u);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEvalCoord2d (double u, double v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEvalCoord2dv ( double []u);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEvalCoord2f (float u, float v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEvalCoord2fv ( float []u);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEvalMesh1 (uint mode, int i1, int i2);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEvalMesh2 (uint mode, int i1, int i2, int j1, int j2);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEvalPoint1 (int i);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEvalPoint2 (int i, int j);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glFeedbackBuffer (int size, uint type, float []buffer);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glFinish ();
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glFlush ();
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glFogf (uint pname, float param);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glFogfv (uint pname,  float []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glFogi (uint pname, int param);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glFogiv (uint pname,  int []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glFrontFace (uint mode);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glFrustum (double left, double right, double bottom, double top, double zNear, double zFar);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern uint glGenLists (int range);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGenTextures (int n, uint []textures);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetBooleanv (uint pname, byte []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetClipPlane (uint plane, double []equation);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetDoublev (uint pname, double []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern uint glGetError ();
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetFloatv (uint pname, float []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetIntegerv (uint pname, int []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetLightfv (uint light, uint pname, float []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetLightiv (uint light, uint pname, int []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetMapdv (uint target, uint query, double []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetMapfv (uint target, uint query, float []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetMapiv (uint target, uint query, int []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetMaterialfv (uint face, uint pname, float []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetMaterialiv (uint face, uint pname, int []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetPixelMapfv (uint map, float []values);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetPixelMapuiv (uint map, uint []values);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetPixelMapusv (uint map, ushort []values);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetPointerv (uint pname, int[] params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetPolygonStipple (byte []mask);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private unsafe static extern sbyte* glGetString (uint name);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetTexEnvfv (uint target, uint pname, float []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetTexEnviv (uint target, uint pname, int []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetTexGendv (uint coord, uint pname, double []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetTexGenfv (uint coord, uint pname, float []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetTexGeniv (uint coord, uint pname, int []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetTexImage (uint target, int level, uint format, uint type, int []pixels);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetTexLevelParameterfv (uint target, int level, uint pname, float []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetTexLevelParameteriv (uint target, int level, uint pname, int []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetTexParameterfv (uint target, uint pname, float []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetTexParameteriv (uint target, uint pname, int []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glHint (uint target, uint mode);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glIndexMask (uint mask);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glIndexPointer (uint type, int stride,  int[] pointer);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glIndexd (double c);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glIndexdv ( double []c);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glIndexf (float c);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glIndexfv ( float []c);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glIndexi (int c);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glIndexiv ( int []c);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glIndexs (short c);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glIndexsv ( short []c);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glIndexub (byte c);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glIndexubv ( byte []c);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glInitNames ();
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glInterleavedArrays (uint format, int stride,  int[] pointer);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern byte glIsEnabled (uint cap);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern byte glIsList (uint list);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern byte glIsTexture (uint texture);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLightModelf (uint pname, float param);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLightModelfv (uint pname,  float []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLightModeli (uint pname, int param);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLightModeliv (uint pname,  int []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLightf (uint light, uint pname, float param);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLightfv (uint light, uint pname,  float []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLighti (uint light, uint pname, int param);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLightiv (uint light, uint pname,  int []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLineStipple (int factor, ushort pattern);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLineWidth (float width);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glListBase (uint base_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLoadIdentity ();
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLoadMatrixd ( double []m);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLoadMatrixf ( float []m);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLoadName (uint name);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLogicOp (uint opcode);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMap1d (uint target, double u1, double u2, int stride, int order,  double []points);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMap1f (uint target, float u1, float u2, int stride, int order,  float []points);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMap2d (uint target, double u1, double u2, int ustride, int uorder, double v1, double v2, int vstride, int vorder,  double []points);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMap2f (uint target, float u1, float u2, int ustride, int uorder, float v1, float v2, int vstride, int vorder,  float []points);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMapGrid1d (int un, double u1, double u2);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMapGrid1f (int un, float u1, float u2);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMapGrid2d (int un, double u1, double u2, int vn, double v1, double v2);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMapGrid2f (int un, float u1, float u2, int vn, float v1, float v2);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMaterialf (uint face, uint pname, float param);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMaterialfv (uint face, uint pname,  float []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMateriali (uint face, uint pname, int param);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMaterialiv (uint face, uint pname,  int []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMatrixMode (uint mode);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMultMatrixd ( double []m);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMultMatrixf ( float []m);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glNewList (uint list, uint mode);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glNormal3b (byte nx, byte ny, byte nz);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glNormal3bv ( byte []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glNormal3d (double nx, double ny, double nz);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glNormal3dv ( double []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glNormal3f (float nx, float ny, float nz);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glNormal3fv ( float []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glNormal3i (int nx, int ny, int nz);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glNormal3iv ( int []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glNormal3s (short nx, short ny, short nz);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDrawPixels(int width, int height, uint format, uint type, float[] pixels);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDrawPixels(int width, int height, uint format, uint type, uint[] pixels);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDrawPixels(int width, int height, uint format, uint type, ushort[] pixels);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDrawPixels(int width, int height, uint format, uint type, byte[] pixels);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glDrawPixels(int width, int height, uint format, uint type, IntPtr pixels);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEdgeFlag(byte flag);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEdgeFlagPointer(int stride, int[] pointer);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEdgeFlagv(byte[] flag);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEnable(uint cap);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEnableClientState(uint array);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEnd();
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEndList();
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEvalCoord1d(double u);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEvalCoord1dv(double[] u);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEvalCoord1f(float u);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEvalCoord1fv(float[] u);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEvalCoord2d(double u, double v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEvalCoord2dv(double[] u);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEvalCoord2f(float u, float v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEvalCoord2fv(float[] u);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEvalMesh1(uint mode, int i1, int i2);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEvalMesh2(uint mode, int i1, int i2, int j1, int j2);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEvalPoint1(int i);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glEvalPoint2(int i, int j);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glFeedbackBuffer(int size, uint type, float[] buffer);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glFinish();
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glFlush();
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glFogf(uint pname, float param);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glFogfv(uint pname, float[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glFogi(uint pname, int param);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glFogiv(uint pname, int[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glFrontFace(uint mode);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glFrustum(double left, double right, double bottom, double top, double zNear, double zFar);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern uint glGenLists(int range);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGenTextures(int n, uint[] textures);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetBooleanv(uint pname, byte[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetClipPlane(uint plane, double[] equation);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetDoublev(uint pname, double[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern uint glGetError();
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetFloatv(uint pname, float[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetIntegerv(uint pname, int[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetLightfv(uint light, uint pname, float[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetLightiv(uint light, uint pname, int[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetMapdv(uint target, uint query, double[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetMapfv(uint target, uint query, float[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetMapiv(uint target, uint query, int[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetMaterialfv(uint face, uint pname, float[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetMaterialiv(uint face, uint pname, int[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetPixelMapfv(uint map, float[] values);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetPixelMapuiv(uint map, uint[] values);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetPixelMapusv(uint map, ushort[] values);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetPointerv(uint pname, int[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetPolygonStipple(byte[] mask);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private unsafe static extern sbyte* glGetString(uint name);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetTexEnvfv(uint target, uint pname, float[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetTexEnviv(uint target, uint pname, int[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetTexGendv(uint coord, uint pname, double[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetTexGenfv(uint coord, uint pname, float[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetTexGeniv(uint coord, uint pname, int[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetTexImage(uint target, int level, uint format, uint type, int[] pixels);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetTexLevelParameterfv(uint target, int level, uint pname, float[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetTexLevelParameteriv(uint target, int level, uint pname, int[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetTexParameterfv(uint target, uint pname, float[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glGetTexParameteriv(uint target, uint pname, int[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glHint(uint target, uint mode);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glIndexMask(uint mask);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glIndexPointer(uint type, int stride, int[] pointer);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glIndexd(double c);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glIndexdv(double[] c);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glIndexf(float c);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glIndexfv(float[] c);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glIndexi(int c);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glIndexiv(int[] c);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glIndexs(short c);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glIndexsv(short[] c);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glIndexub(byte c);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glIndexubv(byte[] c);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glInitNames();
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glInterleavedArrays(uint format, int stride, int[] pointer);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern byte glIsEnabled(uint cap);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern byte glIsList(uint list);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern byte glIsTexture(uint texture);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLightModelf(uint pname, float param);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLightModelfv(uint pname, float[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLightModeli(uint pname, int param);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLightModeliv(uint pname, int[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLightf(uint light, uint pname, float param);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLightfv(uint light, uint pname, float[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLighti(uint light, uint pname, int param);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLightiv(uint light, uint pname, int[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLineStipple(int factor, ushort pattern);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLineWidth(float width);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glListBase(uint base_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLoadIdentity();
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLoadMatrixd(double[] m);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLoadMatrixf(float[] m);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLoadName(uint name);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glLogicOp(uint opcode);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMap1d(uint target, double u1, double u2, int stride, int order, double[] points);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMap1f(uint target, float u1, float u2, int stride, int order, float[] points);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMap2d(uint target, double u1, double u2, int ustride, int uorder, double v1, double v2, int vstride, int vorder, double[] points);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMap2f(uint target, float u1, float u2, int ustride, int uorder, float v1, float v2, int vstride, int vorder, float[] points);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMapGrid1d(int un, double u1, double u2);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMapGrid1f(int un, float u1, float u2);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMapGrid2d(int un, double u1, double u2, int vn, double v1, double v2);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMapGrid2f(int un, float u1, float u2, int vn, float v1, float v2);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMaterialf(uint face, uint pname, float param);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMaterialfv(uint face, uint pname, float[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMateriali(uint face, uint pname, int param);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMaterialiv(uint face, uint pname, int[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMatrixMode(uint mode);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMultMatrixd(double[] m);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glMultMatrixf(float[] m);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glNewList(uint list, uint mode);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glNormal3b(byte nx, byte ny, byte nz);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glNormal3bv(byte[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glNormal3d(double nx, double ny, double nz);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glNormal3dv(double[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glNormal3f(float nx, float ny, float nz);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glNormal3fv(float[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glNormal3i(int nx, int ny, int nz);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glNormal3iv(int[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glNormal3s(short nx, short ny, short nz);
         [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glNormal3sv(short[] v);
         [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glNormalPointer(uint type, int stride, IntPtr pointer);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glNormalPointer (uint type, int stride, float[] pointer);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glOrtho (double left, double right, double bottom, double top, double zNear, double zFar);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPassThrough (float token);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPixelMapfv (uint map, int mapsize,  float []values);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPixelMapuiv (uint map, int mapsize,  uint []values);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPixelMapusv (uint map, int mapsize,  ushort []values);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPixelStoref (uint pname, float param);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPixelStorei (uint pname, int param);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPixelTransferf (uint pname, float param);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPixelTransferi (uint pname, int param);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPixelZoom (float xfactor, float yfactor);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPointSize (float size);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPolygonMode (uint face, uint mode);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPolygonOffset (float factor, float units);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPolygonStipple ( byte []mask);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPopAttrib ();
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPopClientAttrib ();
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPopMatrix ();
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPopName ();
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPrioritizeTextures (int n,  uint []textures,  float []priorities);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPushAttrib (uint mask);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPushClientAttrib (uint mask);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPushMatrix ();
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPushName (uint name);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos2d (double x, double y);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos2dv ( double []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos2f (float x, float y);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos2fv ( float []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos2i (int x, int y);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos2iv ( int []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos2s (short x, short y);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos2sv ( short []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos3d (double x, double y, double z);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos3dv ( double []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos3f (float x, float y, float z);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos3fv ( float []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos3i (int x, int y, int z);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos3iv ( int []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos3s (short x, short y, short z);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos3sv ( short []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos4d (double x, double y, double z, double w);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos4dv ( double []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos4f (float x, float y, float z, float w);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos4fv ( float []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos4i (int x, int y, int z, int w);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos4iv ( int []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos4s (short x, short y, short z, short w);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos4sv ( short []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glReadBuffer (uint mode);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glNormalPointer(uint type, int stride, float[] pointer);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glOrtho(double left, double right, double bottom, double top, double zNear, double zFar);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPassThrough(float token);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPixelMapfv(uint map, int mapsize, float[] values);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPixelMapuiv(uint map, int mapsize, uint[] values);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPixelMapusv(uint map, int mapsize, ushort[] values);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPixelStoref(uint pname, float param);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPixelStorei(uint pname, int param);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPixelTransferf(uint pname, float param);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPixelTransferi(uint pname, int param);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPixelZoom(float xfactor, float yfactor);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPointSize(float size);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPolygonMode(uint face, uint mode);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPolygonOffset(float factor, float units);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPolygonStipple(byte[] mask);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPopAttrib();
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPopClientAttrib();
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPopMatrix();
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPopName();
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPrioritizeTextures(int n, uint[] textures, float[] priorities);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPushAttrib(uint mask);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPushClientAttrib(uint mask);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPushMatrix();
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glPushName(uint name);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos2d(double x, double y);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos2dv(double[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos2f(float x, float y);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos2fv(float[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos2i(int x, int y);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos2iv(int[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos2s(short x, short y);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos2sv(short[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos3d(double x, double y, double z);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos3dv(double[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos3f(float x, float y, float z);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos3fv(float[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos3i(int x, int y, int z);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos3iv(int[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos3s(short x, short y, short z);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos3sv(short[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos4d(double x, double y, double z, double w);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos4dv(double[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos4f(float x, float y, float z, float w);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos4fv(float[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos4i(int x, int y, int z, int w);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos4iv(int[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos4s(short x, short y, short z, short w);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRasterPos4sv(short[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glReadBuffer(uint mode);
         [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glReadPixels(int x, int y, int width, int height, uint format, uint type, byte[] pixels);
         [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glReadPixels(int x, int y, int width, int height, uint format, uint type, IntPtr pixels);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRectd (double x1, double y1, double x2, double y2);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRectdv ( double []v1,  double []v2);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRectf (float x1, float y1, float x2, float y2);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRectfv ( float []v1,  float []v2);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRecti (int x1, int y1, int x2, int y2);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRectiv ( int []v1,  int []v2);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRects (short x1, short y1, short x2, short y2);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRectsv ( short []v1,  short []v2);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern int glRenderMode (uint mode);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRotated (double angle, double x, double y, double z);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRotatef (float angle, float x, float y, float z);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glScaled (double x, double y, double z);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glScalef (float x, float y, float z);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glScissor (int x, int y, int width, int height);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glSelectBuffer (int size, uint []buffer);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glShadeModel (uint mode);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glStencilFunc (uint func, int ref_notkeword, uint mask);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glStencilMask (uint mask);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glStencilOp (uint fail, uint zfail, uint zpass);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord1d (double s);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord1dv ( double []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord1f (float s);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord1fv ( float []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord1i (int s);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord1iv ( int []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord1s (short s);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord1sv ( short []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord2d (double s, double t);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord2dv ( double []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord2f (float s, float t);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord2fv ( float []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord2i (int s, int t);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord2iv ( int []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord2s (short s, short t);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord2sv ( short []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord3d (double s, double t, double r);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord3dv ( double []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord3f (float s, float t, float r);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord3fv ( float []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord3i (int s, int t, int r);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord3iv ( int []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord3s (short s, short t, short r);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord3sv ( short []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord4d (double s, double t, double r, double q);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord4dv ( double []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord4f (float s, float t, float r, float q);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord4fv ( float []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord4i (int s, int t, int r, int q);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord4iv ( int []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord4s (short s, short t, short r, short q);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRectd(double x1, double y1, double x2, double y2);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRectdv(double[] v1, double[] v2);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRectf(float x1, float y1, float x2, float y2);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRectfv(float[] v1, float[] v2);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRecti(int x1, int y1, int x2, int y2);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRectiv(int[] v1, int[] v2);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRects(short x1, short y1, short x2, short y2);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRectsv(short[] v1, short[] v2);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern int glRenderMode(uint mode);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRotated(double angle, double x, double y, double z);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glRotatef(float angle, float x, float y, float z);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glScaled(double x, double y, double z);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glScalef(float x, float y, float z);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glScissor(int x, int y, int width, int height);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glSelectBuffer(int size, uint[] buffer);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glShadeModel(uint mode);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glStencilFunc(uint func, int ref_notkeword, uint mask);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glStencilMask(uint mask);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glStencilOp(uint fail, uint zfail, uint zpass);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord1d(double s);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord1dv(double[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord1f(float s);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord1fv(float[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord1i(int s);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord1iv(int[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord1s(short s);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord1sv(short[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord2d(double s, double t);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord2dv(double[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord2f(float s, float t);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord2fv(float[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord2i(int s, int t);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord2iv(int[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord2s(short s, short t);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord2sv(short[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord3d(double s, double t, double r);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord3dv(double[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord3f(float s, float t, float r);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord3fv(float[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord3i(int s, int t, int r);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord3iv(int[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord3s(short s, short t, short r);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord3sv(short[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord4d(double s, double t, double r, double q);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord4dv(double[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord4f(float s, float t, float r, float q);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord4fv(float[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord4i(int s, int t, int r, int q);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord4iv(int[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord4s(short s, short t, short r, short q);
         [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoord4sv(short[] v);
         [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoordPointer(int size, uint type, int stride, IntPtr pointer);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoordPointer (int size, uint type, int stride,  float[] pointer);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexEnvf (uint target, uint pname, float param);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexEnvfv (uint target, uint pname,  float []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexEnvi (uint target, uint pname, int param);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexEnviv (uint target, uint pname,  int []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexGend (uint coord, uint pname, double param);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexGendv (uint coord, uint pname,  double []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexGenf (uint coord, uint pname, float param);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexGenfv (uint coord, uint pname,  float []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexGeni (uint coord, uint pname, int param);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexGeniv (uint coord, uint pname,  int []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexImage1D (uint target, int level, uint internalformat, int width, int border, uint format, uint type,  byte[] pixels);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexImage2D (uint target, int level, uint internalformat, int width, int height, int border, uint format, uint type, byte[] pixels);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexImage2D (uint target, int level, uint internalformat, int width, int height, int border, uint format, uint type, IntPtr pixels);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexParameterf (uint target, uint pname, float param);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexParameterfv (uint target, uint pname,  float []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexParameteri (uint target, uint pname, int param);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexParameteriv (uint target, uint pname,  int []params_notkeyword);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexSubImage1D (uint target, int level, int xoffset, int width, uint format, uint type,  int[] pixels);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexSubImage2D (uint target, int level, int xoffset, int yoffset, int width, int height, uint format, uint type,  int[] pixels);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTranslated (double x, double y, double z);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTranslatef (float x, float y, float z);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex2d (double x, double y);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex2dv ( double []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex2f (float x, float y);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex2fv ( float []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex2i (int x, int y);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex2iv ( int []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex2s (short x, short y);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex2sv ( short []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex3d (double x, double y, double z);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex3dv ( double []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex3f (float x, float y, float z);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex3fv ( float []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex3i (int x, int y, int z);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex3iv ( int []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex3s (short x, short y, short z);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex3sv ( short []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex4d (double x, double y, double z, double w);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex4dv ( double []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex4f (float x, float y, float z, float w);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex4fv ( float []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex4i (int x, int y, int z, int w);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex4iv ( int []v);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex4s (short x, short y, short z, short w);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex4sv ( short []v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexCoordPointer(int size, uint type, int stride, float[] pointer);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexEnvf(uint target, uint pname, float param);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexEnvfv(uint target, uint pname, float[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexEnvi(uint target, uint pname, int param);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexEnviv(uint target, uint pname, int[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexGend(uint coord, uint pname, double param);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexGendv(uint coord, uint pname, double[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexGenf(uint coord, uint pname, float param);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexGenfv(uint coord, uint pname, float[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexGeni(uint coord, uint pname, int param);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexGeniv(uint coord, uint pname, int[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexImage1D(uint target, int level, uint internalformat, int width, int border, uint format, uint type, byte[] pixels);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexImage2D(uint target, int level, uint internalformat, int width, int height, int border, uint format, uint type, byte[] pixels);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexImage2D(uint target, int level, uint internalformat, int width, int height, int border, uint format, uint type, IntPtr pixels);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexParameterf(uint target, uint pname, float param);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexParameterfv(uint target, uint pname, float[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexParameteri(uint target, uint pname, int param);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexParameteriv(uint target, uint pname, int[] params_notkeyword);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexSubImage1D(uint target, int level, int xoffset, int width, uint format, uint type, int[] pixels);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexSubImage2D(uint target, int level, int xoffset, int yoffset, int width, int height, uint format, uint type, int[] pixels);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTranslated(double x, double y, double z);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTranslatef(float x, float y, float z);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex2d(double x, double y);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex2dv(double[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex2f(float x, float y);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex2fv(float[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex2i(int x, int y);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex2iv(int[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex2s(short x, short y);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex2sv(short[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex3d(double x, double y, double z);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex3dv(double[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex3f(float x, float y, float z);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex3fv(float[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex3i(int x, int y, int z);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex3iv(int[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex3s(short x, short y, short z);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex3sv(short[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex4d(double x, double y, double z, double w);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex4dv(double[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex4f(float x, float y, float z, float w);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex4fv(float[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex4i(int x, int y, int z, int w);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex4iv(int[] v);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex4s(short x, short y, short z, short w);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex4sv(short[] v);
         [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertexPointer(int size, uint type, int stride, IntPtr pointer);
         [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertexPointer(int size, uint type, int stride, short[] pointer);
         [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertexPointer(int size, uint type, int stride, int[] pointer);
         [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertexPointer(int size, uint type, int stride, float[] pointer);
         [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertexPointer(int size, uint type, int stride, double[] pointer);
-		[DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glViewport (int x, int y, int width, int height);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glViewport(int x, int y, int width, int height);
         #endregion
-		#region The GLU DLL Functions (Exactly the same naming).
+        #region The GLU DLL Functions (Exactly the same naming).
         internal const string LIBRARY_GLU = "Glu32.dll";
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static unsafe extern sbyte* gluErrorString(uint errCode);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static unsafe extern sbyte* gluGetString(int name);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluOrtho2D(double left, double right, double bottom, double top);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluPerspective (double fovy, double aspect, double zNear, double zFar);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluPickMatrix ( double x, double y, double width, double height, int[] viewport);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluLookAt ( double eyex, double eyey, double eyez, double centerx, double centery, double centerz, double upx, double upy, double upz);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluProject (double objx, double        objy, double        objz,   double[]  modelMatrix,  double[]  projMatrix,  int[] viewport, double [] winx, double        []winy, double        []winz);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluUnProject (double winx, double winy, double winz, double[] modelMatrix, double[] projMatrix, int[] viewport, ref double objx, ref double objy, ref double objz);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluScaleImage (int format, int widthin, int heightin,  int typein,  int  []datain, int       widthout, int       heightout, int      typeout, int[] dataout);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluBuild1DMipmaps (uint target, uint components, int width, uint format, uint type,  IntPtr data);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluBuild2DMipmaps (uint target, uint components, int width, int height, uint format, uint type, IntPtr data);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern IntPtr gluNewQuadric();
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluDeleteQuadric (IntPtr state);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluQuadricNormals (IntPtr quadObject, uint normals);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluQuadricTexture (IntPtr quadObject, int textureCoords);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluQuadricOrientation (IntPtr quadObject, int orientation);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluQuadricDrawStyle (IntPtr quadObject, uint drawStyle);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluCylinder(IntPtr           qobj,double            baseRadius, double topRadius, double height,int slices,int stacks);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluDisk(IntPtr qobj, double innerRadius,double outerRadius,int slices, int loops);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluPartialDisk(IntPtr qobj,double innerRadius,double outerRadius, int slices, int loops, double startAngle, double sweepAngle);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluSphere(IntPtr qobj, double radius, int slices, int stacks);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern IntPtr gluNewTess();
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluDeleteTess(IntPtr tess);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessBeginPolygon(IntPtr tess, IntPtr polygonData);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessBeginContour(IntPtr tess);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessVertex(IntPtr tess,double[] coords, double[] data );
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessEndContour(   IntPtr        tess );
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessEndPolygon(   IntPtr        tess );
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessProperty(     IntPtr        tess,int              which, double            value );
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessNormal(       IntPtr        tess, double            x,double            y, double            z );
-//		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessCallback(IntPtr tess, int which, Mesher.GraphicsCore.Delegates.Tesselators.Begin callback);
-//		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessCallback(IntPtr tess, int which, Mesher.GraphicsCore.Delegates.Tesselators.BeginData callback);
-//		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessCallback(IntPtr tess, int which, Mesher.GraphicsCore.Delegates.Tesselators.Combine callback);
-//		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessCallback(IntPtr tess, int which, Mesher.GraphicsCore.Delegates.Tesselators.CombineData callback);
-//		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessCallback(IntPtr tess, int which, Mesher.GraphicsCore.Delegates.Tesselators.EdgeFlag callback);
-//		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessCallback(IntPtr tess, int which, Mesher.GraphicsCore.Delegates.Tesselators.EdgeFlagData callback);
-//		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessCallback(IntPtr tess, int which, Mesher.GraphicsCore.Delegates.Tesselators.End callback);
-//		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessCallback(IntPtr tess, int which, Mesher.GraphicsCore.Delegates.Tesselators.EndData callback);
-//		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessCallback(IntPtr tess, int which, Mesher.GraphicsCore.Delegates.Tesselators.Error callback);
-//		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessCallback(IntPtr tess, int which, Mesher.GraphicsCore.Delegates.Tesselators.ErrorData callback);
-//		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessCallback(IntPtr tess, int which, Mesher.GraphicsCore.Delegates.Tesselators.Vertex callback);
-//		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessCallback(IntPtr tess, int which, Mesher.GraphicsCore.Delegates.Tesselators.VertexData callback);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluGetTessProperty(  IntPtr        tess,int              which, double            value );
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern IntPtr gluNewNurbsRenderer ();
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluDeleteNurbsRenderer (IntPtr            nobj);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluBeginSurface (IntPtr            nobj);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluBeginCurve (IntPtr            nobj);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluEndCurve (IntPtr            nobj);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluEndSurface (IntPtr            nobj);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluBeginTrim (IntPtr            nobj);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluEndTrim (IntPtr            nobj);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluPwlCurve (IntPtr            nobj, int               count, float             array, int stride, uint type);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluNurbsCurve(IntPtr nobj, int nknots, float[] knot, int               stride, float[] ctlarray, int               order, uint type);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluNurbsSurface(IntPtr nobj, int sknot_count, float[] sknot, int tknot_count, float[]             tknot, int               s_stride, int               t_stride, float[] ctlarray, int sorder, int               torder, uint              type);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluLoadSamplingMatrices (IntPtr            nobj,  float[] modelMatrix,  float[] projMatrix, int[] viewport);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluNurbsProperty(IntPtr nobj, int property, float value);
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluGetNurbsProperty (IntPtr            nobj, int              property, float             value );
-		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void IntPtrCallback(IntPtr            nobj, int              which, IntPtr Callback );
-		#endregion
-		#region Wrapped OpenGL Functions
-		/// <summary>
-		/// Set the Accumulation Buffer operation.
-		/// </summary>
-		/// <param name="op">Operation of the buffer.</param>
-		/// <param name="value">Reference value.</param>
-		public static void Accum(uint op, float value)
-		{
-			glAccum(op, value);
-		}
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static unsafe extern sbyte* gluErrorString(uint errCode);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static unsafe extern sbyte* gluGetString(int name);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluOrtho2D(double left, double right, double bottom, double top);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluPerspective(double fovy, double aspect, double zNear, double zFar);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluPickMatrix(double x, double y, double width, double height, int[] viewport);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluLookAt(double eyex, double eyey, double eyez, double centerx, double centery, double centerz, double upx, double upy, double upz);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluProject(double objx, double objy, double objz, double[] modelMatrix, double[] projMatrix, int[] viewport, double[] winx, double[] winy, double[] winz);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluUnProject(double winx, double winy, double winz, double[] modelMatrix, double[] projMatrix, int[] viewport, ref double objx, ref double objy, ref double objz);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluScaleImage(int format, int widthin, int heightin, int typein, int[] datain, int widthout, int heightout, int typeout, int[] dataout);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluBuild1DMipmaps(uint target, uint components, int width, uint format, uint type, IntPtr data);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluBuild2DMipmaps(uint target, uint components, int width, int height, uint format, uint type, IntPtr data);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern IntPtr gluNewQuadric();
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluDeleteQuadric(IntPtr state);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluQuadricNormals(IntPtr quadObject, uint normals);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluQuadricTexture(IntPtr quadObject, int textureCoords);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluQuadricOrientation(IntPtr quadObject, int orientation);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluQuadricDrawStyle(IntPtr quadObject, uint drawStyle);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluCylinder(IntPtr qobj, double baseRadius, double topRadius, double height, int slices, int stacks);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluDisk(IntPtr qobj, double innerRadius, double outerRadius, int slices, int loops);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluPartialDisk(IntPtr qobj, double innerRadius, double outerRadius, int slices, int loops, double startAngle, double sweepAngle);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluSphere(IntPtr qobj, double radius, int slices, int stacks);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern IntPtr gluNewTess();
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluDeleteTess(IntPtr tess);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluTessBeginPolygon(IntPtr tess, IntPtr polygonData);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluTessBeginContour(IntPtr tess);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluTessVertex(IntPtr tess, double[] coords, double[] data);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluTessEndContour(IntPtr tess);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluTessEndPolygon(IntPtr tess);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluTessProperty(IntPtr tess, int which, double value);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluTessNormal(IntPtr tess, double x, double y, double z);
+        //		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessCallback(IntPtr tess, int which, Mesher.GraphicsCore.Delegates.Tesselators.Begin callback);
+        //		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessCallback(IntPtr tess, int which, Mesher.GraphicsCore.Delegates.Tesselators.BeginData callback);
+        //		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessCallback(IntPtr tess, int which, Mesher.GraphicsCore.Delegates.Tesselators.Combine callback);
+        //		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessCallback(IntPtr tess, int which, Mesher.GraphicsCore.Delegates.Tesselators.CombineData callback);
+        //		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessCallback(IntPtr tess, int which, Mesher.GraphicsCore.Delegates.Tesselators.EdgeFlag callback);
+        //		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessCallback(IntPtr tess, int which, Mesher.GraphicsCore.Delegates.Tesselators.EdgeFlagData callback);
+        //		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessCallback(IntPtr tess, int which, Mesher.GraphicsCore.Delegates.Tesselators.End callback);
+        //		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessCallback(IntPtr tess, int which, Mesher.GraphicsCore.Delegates.Tesselators.EndData callback);
+        //		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessCallback(IntPtr tess, int which, Mesher.GraphicsCore.Delegates.Tesselators.Error callback);
+        //		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessCallback(IntPtr tess, int which, Mesher.GraphicsCore.Delegates.Tesselators.ErrorData callback);
+        //		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessCallback(IntPtr tess, int which, Mesher.GraphicsCore.Delegates.Tesselators.Vertex callback);
+        //		[DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void  gluTessCallback(IntPtr tess, int which, Mesher.GraphicsCore.Delegates.Tesselators.VertexData callback);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluGetTessProperty(IntPtr tess, int which, double value);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern IntPtr gluNewNurbsRenderer();
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluDeleteNurbsRenderer(IntPtr nobj);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluBeginSurface(IntPtr nobj);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluBeginCurve(IntPtr nobj);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluEndCurve(IntPtr nobj);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluEndSurface(IntPtr nobj);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluBeginTrim(IntPtr nobj);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluEndTrim(IntPtr nobj);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluPwlCurve(IntPtr nobj, int count, float array, int stride, uint type);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluNurbsCurve(IntPtr nobj, int nknots, float[] knot, int stride, float[] ctlarray, int order, uint type);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluNurbsSurface(IntPtr nobj, int sknot_count, float[] sknot, int tknot_count, float[] tknot, int s_stride, int t_stride, float[] ctlarray, int sorder, int torder, uint type);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluLoadSamplingMatrices(IntPtr nobj, float[] modelMatrix, float[] projMatrix, int[] viewport);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluNurbsProperty(IntPtr nobj, int property, float value);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluGetNurbsProperty(IntPtr nobj, int property, float value);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void IntPtrCallback(IntPtr nobj, int which, IntPtr Callback);
+        #endregion
+        #region Wrapped OpenGL Functions
+        /// <summary>
+        /// Set the Accumulation Buffer operation.
+        /// </summary>
+        /// <param name="op">Operation of the buffer.</param>
+        /// <param name="value">Reference value.</param>
+        public static void Accum(uint op, float value)
+        {
+            glAccum(op, value);
+        }
         /// <summary>
         /// Specify the Alpha Test function.
         /// </summary>
@@ -1252,7 +1255,7 @@ namespace Mesher.GraphicsCore
         /// <param name="textures">Specifies an array containing the names of the textures to be queried.</param>
         /// <param name="residences">Specifies an array in which the texture residence status is returned. The residence status of a texture named by an element of textures is returned in the corresponding element of residences.</param>
         /// <returns></returns>
-		public static byte AreTexturesResident(int n,  uint []textures, byte []residences)
+		public static byte AreTexturesResident(int n, uint[] textures, byte[] residences)
         {
             return glAreTexturesResident(n, textures, residences);
         }
@@ -1264,10 +1267,10 @@ namespace Mesher.GraphicsCore
         {
             glArrayElement(i);
         }
-		/// <summary>
-		/// Begin drawing geometry in the specified mode.
-		/// </summary>
-		/// <param name="mode">The mode to draw in, e.g. OpenGL.POLYGONS.</param>
+        /// <summary>
+        /// Begin drawing geometry in the specified mode.
+        /// </summary>
+        /// <param name="mode">The mode to draw in, e.g. OpenGL.POLYGONS.</param>
         public static void Begin(uint mode)
         {
             //  Let's remember something important here - you CANNOT call 'glGetError'
@@ -1277,32 +1280,32 @@ namespace Mesher.GraphicsCore
             //  Set the begun flag.
             insideGLBegin = true;
         }
-		/// <summary>
-		/// This function begins drawing a NURBS curve.
-		/// </summary>
-		/// <param name="nurbsObject">The NURBS object.</param>
+        /// <summary>
+        /// This function begins drawing a NURBS curve.
+        /// </summary>
+        /// <param name="nurbsObject">The NURBS object.</param>
         public static void BeginCurve(IntPtr nurbsObject)
-		{
-			gluBeginCurve(nurbsObject);
-		}
-		/// <summary>
-		/// This function begins drawing a NURBS surface.
-		/// </summary>
-		/// <param name="nurbsObject">The NURBS object.</param>
-		public static void BeginSurface(IntPtr nurbsObject)
-		{
-			gluBeginSurface(nurbsObject);
-		}
-		/// <summary>
-		/// Call this function after creating a texture to finalise creation of it, 
-		/// or to make an existing texture current.
-		/// </summary>
-		/// <param name="target">The target type, e.g TEXTURE_2D.</param>
-		/// <param name="texture">The OpenGL texture object.</param>
-		public static void BindTexture(uint target, uint texture)
-		{
-			glBindTexture(target, texture);
-		}
+        {
+            gluBeginCurve(nurbsObject);
+        }
+        /// <summary>
+        /// This function begins drawing a NURBS surface.
+        /// </summary>
+        /// <param name="nurbsObject">The NURBS object.</param>
+        public static void BeginSurface(IntPtr nurbsObject)
+        {
+            gluBeginSurface(nurbsObject);
+        }
+        /// <summary>
+        /// Call this function after creating a texture to finalise creation of it, 
+        /// or to make an existing texture current.
+        /// </summary>
+        /// <param name="target">The target type, e.g TEXTURE_2D.</param>
+        /// <param name="texture">The OpenGL texture object.</param>
+        public static void BindTexture(uint target, uint texture)
+        {
+            glBindTexture(target, texture);
+        }
         /// <summary>
         /// Draw a bitmap.
         /// </summary>
@@ -1313,34 +1316,34 @@ namespace Mesher.GraphicsCore
         /// <param name="xmove">Specify	the x and y offsets to be added	to the current	raster position	after the bitmap is drawn.</param>
         /// <param name="ymove">Specify	the x and y offsets to be added	to the current	raster position	after the bitmap is drawn.</param>
         /// <param name="bitmap">Specifies the address of the bitmap image.</param>
-		public static void Bitmap(int width, int height, float xorig, float yorig, float xmove, float ymove,  byte []bitmap)
+		public static void Bitmap(int width, int height, float xorig, float yorig, float xmove, float ymove, byte[] bitmap)
         {
             glBitmap(width, height, xorig, yorig, xmove, ymove, bitmap);
         }
-		/// <summary>
-		/// This function sets the current blending function.
-		/// </summary>
-		/// <param name="sfactor">Source factor.</param>
-		/// <param name="dfactor">Destination factor.</param>
-		public static void BlendFunc(uint sfactor, uint dfactor)
-		{
-			glBlendFunc(sfactor,dfactor);
-		}
-		/// <summary>
-		/// This function calls a certain display list.
-		/// </summary>
-		/// <param name="list">The display list to call.</param>
-		public static void CallList(uint list)
-		{
-			glCallList(list);
-		}
+        /// <summary>
+        /// This function sets the current blending function.
+        /// </summary>
+        /// <param name="sfactor">Source factor.</param>
+        /// <param name="dfactor">Destination factor.</param>
+        public static void BlendFunc(uint sfactor, uint dfactor)
+        {
+            glBlendFunc(sfactor, dfactor);
+        }
+        /// <summary>
+        /// This function calls a certain display list.
+        /// </summary>
+        /// <param name="list">The display list to call.</param>
+        public static void CallList(uint list)
+        {
+            glCallList(list);
+        }
         /// <summary>
         /// Execute	a list of display lists.
         /// </summary>
         /// <param name="n">Specifies the number of display lists to be executed.</param>
         /// <param name="type">Specifies the type of values in lists. Symbolic constants OpenGL.BYTE, OpenGL.UNSIGNED_BYTE, OpenGL.SHORT, OpenGL.UNSIGNED_SHORT, OpenGL.INT, OpenGL.UNSIGNED_INT, OpenGL.FLOAT, OpenGL.2_BYTES, OpenGL.3_BYTES and OpenGL.4_BYTES are accepted.</param>
         /// <param name="lists">Specifies the address of an array of name offsets in the display list. The pointer type is void because the offsets can be bytes, shorts, ints, or floats, depending on the value of type.</param>
-		public static void CallLists (int n, uint type, IntPtr lists)
+		public static void CallLists(int n, uint type, IntPtr lists)
         {
             glCallLists(n, type, lists);
         }
@@ -1362,14 +1365,14 @@ namespace Mesher.GraphicsCore
         {
             glCallLists(n, GL_UNSIGNED_INT, lists);
         }
-		/// <summary>
-		/// This function clears the buffers specified by mask.
-		/// </summary>
-		/// <param name="mask">Which buffers to clear.</param>
-		public static void Clear(uint mask)
-		{
-			glClear(mask);
-		}
+        /// <summary>
+        /// This function clears the buffers specified by mask.
+        /// </summary>
+        /// <param name="mask">Which buffers to clear.</param>
+        public static void Clear(uint mask)
+        {
+            glClear(mask);
+        }
         /// <summary>
         /// Specify clear values for the accumulation buffer.
         /// </summary>
@@ -1377,21 +1380,21 @@ namespace Mesher.GraphicsCore
         /// <param name="green">Specify the red, green, blue and alpha values used when the accumulation buffer is cleared. The initial values are all 0.</param>
         /// <param name="blue">Specify the red, green, blue and alpha values used when the accumulation buffer is cleared. The initial values are all 0.</param>
         /// <param name="alpha">Specify the red, green, blue and alpha values used when the accumulation buffer is cleared. The initial values are all 0.</param>
-		public static void ClearAccum (float red, float green, float blue, float alpha)
+		public static void ClearAccum(float red, float green, float blue, float alpha)
         {
             glClearAccum(red, green, blue, alpha);
         }
-		/// <summary>
-		/// This function sets the color that the drawing buffer is 'cleared' to.
-		/// </summary>
-		/// <param name="red">Red component of the color (between 0 and 1).</param>
-		/// <param name="green">Green component of the color (between 0 and 1).</param>
-		/// <param name="blue">Blue component of the color (between 0 and 1)./</param>
-		/// <param name="alpha">Alpha component of the color (between 0 and 1).</param>
-		public static void ClearColor (float red, float green, float blue, float alpha)
-		{
-			glClearColor(red, green, blue, alpha);
-		}
+        /// <summary>
+        /// This function sets the color that the drawing buffer is 'cleared' to.
+        /// </summary>
+        /// <param name="red">Red component of the color (between 0 and 1).</param>
+        /// <param name="green">Green component of the color (between 0 and 1).</param>
+        /// <param name="blue">Blue component of the color (between 0 and 1)./</param>
+        /// <param name="alpha">Alpha component of the color (between 0 and 1).</param>
+        public static void ClearColor(float red, float green, float blue, float alpha)
+        {
+            glClearColor(red, green, blue, alpha);
+        }
         /// <summary>
         /// Specify the clear value for the depth buffer.
         /// </summary>
@@ -1404,7 +1407,7 @@ namespace Mesher.GraphicsCore
         /// Specify the clear value for the color index buffers.
         /// </summary>
         /// <param name="c">Specifies the index used when the color index buffers are cleared. The initial value is 0.</param>
-		public static void ClearIndex (float c)
+		public static void ClearIndex(float c)
         {
             glClearIndex(c);
         }
@@ -1412,7 +1415,7 @@ namespace Mesher.GraphicsCore
         /// Specify the clear value for the stencil buffer.
         /// </summary>
         /// <param name="s">Specifies the index used when the stencil buffer is cleared. The initial value is 0.</param>
-		public static void ClearStencil (int s)
+		public static void ClearStencil(int s)
         {
             glClearStencil(s);
         }
@@ -1421,20 +1424,20 @@ namespace Mesher.GraphicsCore
         /// </summary>
         /// <param name="plane">Specifies which clipping plane is being positioned. Symbolic names of the form OpenGL.CLIP_PLANEi, where i is an integer between 0 and OpenGL.MAX_CLIP_PLANES -1, are accepted.</param>
         /// <param name="equation">Specifies the address of an	array of four double-precision floating-point values. These values are interpreted as a plane equation.</param>
-		public static void ClipPlane (uint plane,  double []equation)
+		public static void ClipPlane(uint plane, double[] equation)
         {
             glClipPlane(plane, equation);
         }
-		/// <summary>
-		/// Sets the current color.
-		/// </summary>
-		/// <param name="red">Red color component (between 0 and 255).</param>
-		/// <param name="green">Green color component (between 0 and 255).</param>
-		/// <param name="blue">Blue color component (between 0 and 255).</param>
-		public static void Color(byte red, byte green, byte blue)
-		{
-			glColor3ub(red, green, blue);
-		}
+        /// <summary>
+        /// Sets the current color.
+        /// </summary>
+        /// <param name="red">Red color component (between 0 and 255).</param>
+        /// <param name="green">Green color component (between 0 and 255).</param>
+        /// <param name="blue">Blue color component (between 0 and 255).</param>
+        public static void Color(byte red, byte green, byte blue)
+        {
+            glColor3ub(red, green, blue);
+        }
         /// <summary>
         /// Sets the current color.
         /// </summary>
@@ -1446,16 +1449,16 @@ namespace Mesher.GraphicsCore
         {
             glColor4ub(red, green, blue, alpha);
         }
-		/// <summary>
-		/// Sets the current color.
-		/// </summary>
-		/// <param name="red">Red color component (between 0 and 1).</param>
-		/// <param name="green">Green color component (between 0 and 1).</param>
-		/// <param name="blue">Blue color component (between 0 and 1).</param>
-		public static void Color(double red, double green, double blue)
-		{
-			glColor3d(red, green, blue);
-		}
+        /// <summary>
+        /// Sets the current color.
+        /// </summary>
+        /// <param name="red">Red color component (between 0 and 1).</param>
+        /// <param name="green">Green color component (between 0 and 1).</param>
+        /// <param name="blue">Blue color component (between 0 and 1).</param>
+        public static void Color(double red, double green, double blue)
+        {
+            glColor3d(red, green, blue);
+        }
         /// <summary>
         /// Sets the current color.
         /// </summary>
@@ -1467,27 +1470,27 @@ namespace Mesher.GraphicsCore
         {
             glColor4d(red, green, blue, alpha);
         }
-		/// <summary>
-		/// Sets the current color.
-		/// </summary>
-		/// <param name="red">Red color component (between 0 and 1).</param>
-		/// <param name="green">Green color component (between 0 and 1).</param>
-		/// <param name="blue">Blue color component (between 0 and 1).</param>
-		public static void Color(float red, float green, float blue)
-		{
-			glColor3f(red, green, blue);
-		}
-		/// <summary>
-		/// Sets the current color to 'v'.
-		/// </summary>
-		/// <param name="v">An array of either 3 or 4 float values.</param>
-		public static void Color(float[] v)
-		{
-			if(v.Length == 3)
-				glColor3fv(v);
-			else if(v.Length == 4)
-				glColor4fv(v);
-		}
+        /// <summary>
+        /// Sets the current color.
+        /// </summary>
+        /// <param name="red">Red color component (between 0 and 1).</param>
+        /// <param name="green">Green color component (between 0 and 1).</param>
+        /// <param name="blue">Blue color component (between 0 and 1).</param>
+        public static void Color(float red, float green, float blue)
+        {
+            glColor3f(red, green, blue);
+        }
+        /// <summary>
+        /// Sets the current color to 'v'.
+        /// </summary>
+        /// <param name="v">An array of either 3 or 4 float values.</param>
+        public static void Color(float[] v)
+        {
+            if (v.Length == 3)
+                glColor3fv(v);
+            else if (v.Length == 4)
+                glColor4fv(v);
+        }
         /// <summary>
         /// Sets the current color to 'v'.
         /// </summary>
@@ -1536,7 +1539,7 @@ namespace Mesher.GraphicsCore
         /// Sets the current color to 'v'.
         /// </summary>
         /// <param name="v">An array of either 3 or 4 unsigned int values.</param>
-        public static void Color(uint[] v) 
+        public static void Color(uint[] v)
         {
             if (v.Length == 3)
                 glColor3uiv(v);
@@ -1554,16 +1557,16 @@ namespace Mesher.GraphicsCore
             else if (v.Length == 4)
                 glColor4usv(v);
         }
-		/// <summary>
-		/// Sets the current color.
-		/// </summary>
-		/// <param name="red">Red color component (between 0 and 1).</param>
-		/// <param name="green">Green color component (between 0 and 1).</param>
-		/// <param name="blue">Blue color component (between 0 and 1).</param>
-		public static void Color(int red, int green, int blue)
-		{
-			glColor3i(red, green, blue);
-		}
+        /// <summary>
+        /// Sets the current color.
+        /// </summary>
+        /// <param name="red">Red color component (between 0 and 1).</param>
+        /// <param name="green">Green color component (between 0 and 1).</param>
+        /// <param name="blue">Blue color component (between 0 and 1).</param>
+        public static void Color(int red, int green, int blue)
+        {
+            glColor3i(red, green, blue);
+        }
         /// <summary>
         /// Sets the current color.
         /// </summary>
@@ -1575,16 +1578,16 @@ namespace Mesher.GraphicsCore
         {
             glColor4i(red, green, blue, alpha);
         }
-		/// <summary>
-		/// Sets the current color.
-		/// </summary>
-		/// <param name="red">Red color component (between 0 and 1).</param>
-		/// <param name="green">Green color component (between 0 and 1).</param>
-		/// <param name="blue">Blue color component (between 0 and 1).</param>
-		public static void Color(short red, short green, short blue)
-		{
-			glColor3s(red, green, blue);
-		}
+        /// <summary>
+        /// Sets the current color.
+        /// </summary>
+        /// <param name="red">Red color component (between 0 and 1).</param>
+        /// <param name="green">Green color component (between 0 and 1).</param>
+        /// <param name="blue">Blue color component (between 0 and 1).</param>
+        public static void Color(short red, short green, short blue)
+        {
+            glColor3s(red, green, blue);
+        }
         /// <summary>
         /// Sets the current color.
         /// </summary>
@@ -1596,16 +1599,16 @@ namespace Mesher.GraphicsCore
         {
             glColor4s(red, green, blue, alpha);
         }
-		/// <summary>
-		/// Sets the current color.
-		/// </summary>
-		/// <param name="red">Red color component (between 0 and 1).</param>
-		/// <param name="green">Green color component (between 0 and 1).</param>
-		/// <param name="blue">Blue color component (between 0 and 1).</param>
-		public static void Color(uint red, uint green, uint blue)
-		{
-			glColor3ui(red, green, blue);
-		}
+        /// <summary>
+        /// Sets the current color.
+        /// </summary>
+        /// <param name="red">Red color component (between 0 and 1).</param>
+        /// <param name="green">Green color component (between 0 and 1).</param>
+        /// <param name="blue">Blue color component (between 0 and 1).</param>
+        public static void Color(uint red, uint green, uint blue)
+        {
+            glColor3ui(red, green, blue);
+        }
         /// <summary>
         /// Sets the current color.
         /// </summary>
@@ -1617,16 +1620,16 @@ namespace Mesher.GraphicsCore
         {
             glColor4ui(red, green, blue, alpha);
         }
-		/// <summary>
-		/// Sets the current color.
-		/// </summary>
-		/// <param name="red">Red color component (between 0 and 1).</param>
-		/// <param name="green">Green color component (between 0 and 1).</param>
-		/// <param name="blue">Blue color component (between 0 and 1).</param>
-		public static void Color(ushort red, ushort green, ushort blue)
-		{
-			glColor3us(red, green, blue);
-		}
+        /// <summary>
+        /// Sets the current color.
+        /// </summary>
+        /// <param name="red">Red color component (between 0 and 1).</param>
+        /// <param name="green">Green color component (between 0 and 1).</param>
+        /// <param name="blue">Blue color component (between 0 and 1).</param>
+        public static void Color(ushort red, ushort green, ushort blue)
+        {
+            glColor3us(red, green, blue);
+        }
         /// <summary>
         /// Sets the current color.
         /// </summary>
@@ -1638,34 +1641,34 @@ namespace Mesher.GraphicsCore
         {
             glColor4us(red, green, blue, alpha);
         }
-		/// <summary>
-		/// Sets the current color.
-		/// </summary>
-		/// <param name="red">Red color component (between 0 and 1).</param>
-		/// <param name="green">Green color component (between 0 and 1).</param>
-		/// <param name="blue">Blue color component (between 0 and 1).</param>
-		/// <param name="alpha">Alpha color component (between 0 and 1).</param>
-		public static void Color(float red, float green, float blue, float alpha)
-		{
-			glColor4f(red, green, blue, alpha);
-		}
-		/// <summary>
-		/// This function sets the current colour mask.
-		/// </summary>
-		/// <param name="red">Red component mask.</param>
-		/// <param name="green">Green component mask.</param>
-		/// <param name="blue">Blue component mask.</param>
-		/// <param name="alpha">Alpha component mask.</param>
-		public static void ColorMask(byte red, byte green, byte blue, byte alpha)
-		{
-			glColorMask(red, green, blue, alpha);
-		}
+        /// <summary>
+        /// Sets the current color.
+        /// </summary>
+        /// <param name="red">Red color component (between 0 and 1).</param>
+        /// <param name="green">Green color component (between 0 and 1).</param>
+        /// <param name="blue">Blue color component (between 0 and 1).</param>
+        /// <param name="alpha">Alpha color component (between 0 and 1).</param>
+        public static void Color(float red, float green, float blue, float alpha)
+        {
+            glColor4f(red, green, blue, alpha);
+        }
+        /// <summary>
+        /// This function sets the current colour mask.
+        /// </summary>
+        /// <param name="red">Red component mask.</param>
+        /// <param name="green">Green component mask.</param>
+        /// <param name="blue">Blue component mask.</param>
+        /// <param name="alpha">Alpha component mask.</param>
+        public static void ColorMask(byte red, byte green, byte blue, byte alpha)
+        {
+            glColorMask(red, green, blue, alpha);
+        }
         /// <summary>
         /// Cause a material color to track the current color.
         /// </summary>
         /// <param name="face">Specifies whether front, back, or both front and back material parameters should track the current color. Accepted values are OpenGL.FRONT, OpenGL.BACK, and OpenGL.FRONT_AND_BACK. The initial value is OpenGL.FRONT_AND_BACK.</param>
         /// <param name="mode">Specifies which	of several material parameters track the current color. Accepted values are	OpenGL.EMISSION, OpenGL.AMBIENT, OpenGL.DIFFUSE, OpenGL.SPECULAR and OpenGL.AMBIENT_AND_DIFFUSE. The initial value is OpenGL.AMBIENT_AND_DIFFUSE.</param>
-		public static void ColorMaterial (uint face, uint mode)
+		public static void ColorMaterial(uint face, uint mode)
         {
             glColorMaterial(face, mode);
         }
@@ -1676,7 +1679,7 @@ namespace Mesher.GraphicsCore
         /// <param name="type">Specifies the data type of each color component in the array. Symbolic constants OpenGL.BYTE, OpenGL.UNSIGNED_BYTE, OpenGL.SHORT, OpenGL.UNSIGNED_SHORT, OpenGL.INT, OpenGL.UNSIGNED_INT, OpenGL.FLOAT and OpenGL.DOUBLE are accepted.</param>
         /// <param name="stride">Specifies the byte offset between consecutive colors. If stride is 0, (the initial value), the colors are understood to be tightly packed in the array.</param>
         /// <param name="pointer">Specifies a pointer to the first component of the first color element in the array.</param>
-		public static void ColorPointer (int size, uint type, int stride,  IntPtr pointer)
+		public static void ColorPointer(int size, uint type, int stride, IntPtr pointer)
         {
             glColorPointer(size, type, stride, pointer);
         }
@@ -1688,7 +1691,7 @@ namespace Mesher.GraphicsCore
         /// <param name="width">Specify the dimensions of the rectangular region of pixels to be copied. Both must be nonnegative.</param>
         /// <param name="height">Specify the dimensions of the rectangular region of pixels to be copied. Both must be nonnegative.</param>
         /// <param name="type">Specifies whether color values, depth values, or stencil values are to be copied. Symbolic constants OpenGL.COLOR, OpenGL.DEPTH, and OpenGL.STENCIL are accepted.</param>
-		public static void CopyPixels (int x, int y, int width, int height, uint type)
+		public static void CopyPixels(int x, int y, int width, int height, uint type)
         {
             glCopyPixels(x, y, width, height, type);
         }
@@ -1702,7 +1705,7 @@ namespace Mesher.GraphicsCore
         /// <param name="y">Specify the window coordinates of the left corner of the row of pixels to be copied.</param>
         /// <param name="width">Specifies the width of the texture image. Must be 0 or 2^n = (2 * border) for some integer n. The height of the texture image is 1.</param>
         /// <param name="border">Specifies the width of the border. Must be either 0 or 1.</param>
-		public static void CopyTexImage1D (uint target, int level, uint internalFormat, int x, int y, int width, int border)
+		public static void CopyTexImage1D(uint target, int level, uint internalFormat, int x, int y, int width, int border)
         {
             glCopyTexImage1D(target, level, internalFormat, x, y, width, border);
         }
@@ -1717,7 +1720,7 @@ namespace Mesher.GraphicsCore
         /// <param name="width">Specifies the width of the texture image.</param>
         /// <param name="height">Specifies the height of the texture image.</param>
         /// <param name="border">Specifies the width of the border. Must be either 0 or 1.</param>
-		public static void CopyTexImage2D (uint target, int level, uint internalFormat, int x, int y, int width, int height, int border)
+		public static void CopyTexImage2D(uint target, int level, uint internalFormat, int x, int y, int width, int height, int border)
         {
             glCopyTexImage2D(target, level, internalFormat, x, y, width, height, border);
         }
@@ -1730,7 +1733,7 @@ namespace Mesher.GraphicsCore
         /// <param name="x">Specify the window coordinates of the left corner of the row of pixels to be copied.</param>
         /// <param name="y">Specify the window coordinates of the left corner of the row of pixels to be copied.</param>
         /// <param name="width">Specifies the width of the texture image.</param>
-		public static void CopyTexSubImage1D (uint target, int level, int xoffset, int x, int y, int width)
+		public static void CopyTexSubImage1D(uint target, int level, int xoffset, int x, int y, int width)
         {
             glCopyTexSubImage1D(target, level, xoffset, x, y, width);
         }
@@ -1745,7 +1748,7 @@ namespace Mesher.GraphicsCore
         /// <param name="y">Specify the window coordinates of the left corner of the row of pixels to be copied.</param>
         /// <param name="width">Specifies the width of the texture image.</param>
         /// <param name="height">Specifies the height of the texture image.</param>
-		public static void CopyTexSubImage2D (uint target, int level, int xoffset, int yoffset, int x, int y, int width, int height)
+		public static void CopyTexSubImage2D(uint target, int level, int xoffset, int yoffset, int x, int y, int width, int height)
         {
             glCopyTexSubImage2D(target, level, xoffset, yoffset, x, y, width, height);
         }
@@ -1753,105 +1756,105 @@ namespace Mesher.GraphicsCore
         /// Specify whether front- or back-facing facets can be culled.
         /// </summary>
         /// <param name="mode">Specifies whether front- or back-facing facets are candidates for culling. Symbolic constants OpenGL.FRONT, OpenGL.BACK, and OpenGL.FRONT_AND_BACK are accepted. The initial	value is OpenGL.BACK.</param>
-		public static void CullFace (uint mode)
+		public static void CullFace(uint mode)
         {
             glCullFace(mode);
         }
-		/// <summary>
-		/// This function draws a sphere from the quadric object.
-		/// </summary>
-		/// <param name="qobj">The quadric object.</param>
-		/// <param name="baseRadius">Radius at the base.</param>
-		/// <param name="topRadius">Radius at the top.</param>
-		/// <param name="height">Height of cylinder.</param>
-		/// <param name="slices">Cylinder slices.</param>
-		/// <param name="stacks">Cylinder stacks.</param>
-		public static void Cylinder(IntPtr qobj, double baseRadius, double topRadius, double height,int slices, int stacks)
-		{
-			gluCylinder(qobj, baseRadius, topRadius, height, slices, stacks);
-		}
-		/// <summary>
-		/// This function deletes a list, or a range of lists.
-		/// </summary>
-		/// <param name="list">The list to delete.</param>
-		/// <param name="range">The range of lists (often just 1).</param>
-		public static void DeleteLists(uint list, int range)
-		{
-			glDeleteLists(list, range);
-		}
-		/// <summary>
-		/// This function deletes the underlying glu nurbs renderer.
-		/// </summary>
-		/// <param name="nurbsObject">The pointer to the nurbs object.</param>
-		public static void DeleteNurbsRenderer(IntPtr nurbsObject)
-		{
-			gluDeleteNurbsRenderer(nurbsObject);
-		}
-		/// <summary>
-		/// This function deletes a set of Texture objects.
-		/// </summary>
-		/// <param name="n">Number of textures to delete.</param>
-		/// <param name="textures">The array containing the names of the textures to delete.</param>
-		public static void DeleteTextures (int n,  uint []textures)
-		{
-			glDeleteTextures(n, textures);
-		}
-		/// <summary>
-		/// Call this function to delete an OpenGL Quadric object.
-		/// </summary>
-		/// <param name="quadric"></param>
-		public static void DeleteQuadric(IntPtr quadric)
-		{
-			gluDeleteQuadric(quadric);
-		}
-		/// <summary>
-		/// This function sets the current depth buffer comparison function, the default it LESS.
-		/// </summary>
-		/// <param name="func">The comparison function to set.</param>
-		public static void DepthFunc(uint func)
-		{
-			glDepthFunc(func);
-		}
-		/// <summary>
-		/// This function sets the depth mask.
-		/// </summary>
-		/// <param name="flag">The depth mask flag, normally 1.</param>
-		public static void DepthMask(byte flag)
-		{
-			glDepthMask(flag);
-		}
+        /// <summary>
+        /// This function draws a sphere from the quadric object.
+        /// </summary>
+        /// <param name="qobj">The quadric object.</param>
+        /// <param name="baseRadius">Radius at the base.</param>
+        /// <param name="topRadius">Radius at the top.</param>
+        /// <param name="height">Height of cylinder.</param>
+        /// <param name="slices">Cylinder slices.</param>
+        /// <param name="stacks">Cylinder stacks.</param>
+        public static void Cylinder(IntPtr qobj, double baseRadius, double topRadius, double height, int slices, int stacks)
+        {
+            gluCylinder(qobj, baseRadius, topRadius, height, slices, stacks);
+        }
+        /// <summary>
+        /// This function deletes a list, or a range of lists.
+        /// </summary>
+        /// <param name="list">The list to delete.</param>
+        /// <param name="range">The range of lists (often just 1).</param>
+        public static void DeleteLists(uint list, int range)
+        {
+            glDeleteLists(list, range);
+        }
+        /// <summary>
+        /// This function deletes the underlying glu nurbs renderer.
+        /// </summary>
+        /// <param name="nurbsObject">The pointer to the nurbs object.</param>
+        public static void DeleteNurbsRenderer(IntPtr nurbsObject)
+        {
+            gluDeleteNurbsRenderer(nurbsObject);
+        }
+        /// <summary>
+        /// This function deletes a set of Texture objects.
+        /// </summary>
+        /// <param name="n">Number of textures to delete.</param>
+        /// <param name="textures">The array containing the names of the textures to delete.</param>
+        public static void DeleteTextures(int n, uint[] textures)
+        {
+            glDeleteTextures(n, textures);
+        }
+        /// <summary>
+        /// Call this function to delete an OpenGL Quadric object.
+        /// </summary>
+        /// <param name="quadric"></param>
+        public static void DeleteQuadric(IntPtr quadric)
+        {
+            gluDeleteQuadric(quadric);
+        }
+        /// <summary>
+        /// This function sets the current depth buffer comparison function, the default it LESS.
+        /// </summary>
+        /// <param name="func">The comparison function to set.</param>
+        public static void DepthFunc(uint func)
+        {
+            glDepthFunc(func);
+        }
+        /// <summary>
+        /// This function sets the depth mask.
+        /// </summary>
+        /// <param name="flag">The depth mask flag, normally 1.</param>
+        public static void DepthMask(byte flag)
+        {
+            glDepthMask(flag);
+        }
         /// <summary>
         /// Specify mapping of depth values from normalized device coordinates	to window coordinates.
         /// </summary>
         /// <param name="zNear">Specifies the mapping of the near clipping plane to window coordinates. The initial value is 0.</param>
         /// <param name="zFar">Specifies the mapping of the near clipping plane to window coordinates. The initial value is 1.</param>
-		public static void DepthRange (double zNear, double zFar)
+		public static void DepthRange(double zNear, double zFar)
         {
             glDepthRange(zNear, zFar);
         }
-		/// <summary>
-		/// Call this function to disable an OpenGL capability.
-		/// </summary>
-		/// <param name="cap">The capability to disable.</param>
-		public static void Disable(uint cap)
-		{
-			glDisable(cap);
-		}
-		/// <summary>
-		/// This function disables a client state array, such as a vertex array.
-		/// </summary>
-		/// <param name="array">The array to disable.</param>
-		public static void DisableClientState (uint array)
-		{
-			glDisableClientState(array);
-		}
+        /// <summary>
+        /// Call this function to disable an OpenGL capability.
+        /// </summary>
+        /// <param name="cap">The capability to disable.</param>
+        public static void Disable(uint cap)
+        {
+            glDisable(cap);
+        }
+        /// <summary>
+        /// This function disables a client state array, such as a vertex array.
+        /// </summary>
+        /// <param name="array">The array to disable.</param>
+        public static void DisableClientState(uint array)
+        {
+            glDisableClientState(array);
+        }
         /// <summary>
         /// Render	primitives from	array data.
         /// </summary>
         /// <param name="mode">Specifies what kind of primitives to render. Symbolic constants OpenGL.POINTS, OpenGL.LINE_STRIP, OpenGL.LINE_LOOP, OpenGL.LINES, OpenGL.TRIANGLE_STRIP, OpenGL.TRIANGLE_FAN, OpenGL.TRIANGLES, OpenGL.QUAD_STRIP, OpenGL.QUADS, and OpenGL.POLYGON are accepted.</param>
         /// <param name="first">Specifies the starting	index in the enabled arrays.</param>
         /// <param name="count">Specifies the number of indices to be rendered.</param>
-		public static void DrawArrays (uint mode, int first, int count)
+		public static void DrawArrays(uint mode, int first, int count)
         {
             glDrawArrays(mode, first, count);
         }
@@ -1859,7 +1862,7 @@ namespace Mesher.GraphicsCore
         /// Specify which color buffers are to be drawn into.
         /// </summary>
         /// <param name="mode">Specifies up to	four color buffers to be drawn into. Symbolic constants OpenGL.NONE, OpenGL.FRONT_LEFT, OpenGL.FRONT_RIGHT,	OpenGL.BACK_LEFT, OpenGL.BACK_RIGHT, OpenGL.FRONT, OpenGL.BACK, OpenGL.LEFT, OpenGL.RIGHT, OpenGL.FRONT_AND_BACK, and OpenGL.AUXi, where i is between 0 and (OpenGL.AUX_BUFFERS - 1), are accepted (OpenGL.AUX_BUFFERS is not the upper limit; use glGet to query the number of	available aux buffers.)  The initial value is OpenGL.FRONT for single- buffered contexts, and OpenGL.BACK for double-buffered contexts.</param>
-		public static void DrawBuffer (uint mode)
+		public static void DrawBuffer(uint mode)
         {
             glDrawBuffer(mode);
         }
@@ -1893,7 +1896,7 @@ namespace Mesher.GraphicsCore
         /// <param name="pixels">Pixel data buffer.</param>
         public static void DrawPixels(int width, int height, uint format, float[] pixels)
         {
-          glDrawPixels(width, height, format, GL_FLOAT, pixels);
+            glDrawPixels(width, height, format, GL_FLOAT, pixels);
         }
         /// <summary>
         /// Draws a rectangle of pixel data at the current raster position.
@@ -1904,7 +1907,7 @@ namespace Mesher.GraphicsCore
         /// <param name="pixels">Pixel data buffer.</param>
         public static void DrawPixels(int width, int height, uint format, uint[] pixels)
         {
-          glDrawPixels(width, height, format, GL_UNSIGNED_INT, pixels);
+            glDrawPixels(width, height, format, GL_UNSIGNED_INT, pixels);
         }
         /// <summary>
         /// Draws a rectangle of pixel data at the current raster position.
@@ -1915,7 +1918,7 @@ namespace Mesher.GraphicsCore
         /// <param name="pixels">Pixel data buffer.</param>
         public static void DrawPixels(int width, int height, uint format, ushort[] pixels)
         {
-          glDrawPixels(width, height, format, GL_UNSIGNED_SHORT, pixels);
+            glDrawPixels(width, height, format, GL_UNSIGNED_SHORT, pixels);
         }
         /// <summary>
         /// Draws a rectangle of pixel data at the current raster position.
@@ -1926,7 +1929,7 @@ namespace Mesher.GraphicsCore
         /// <param name="pixels">Pixel data buffer.</param>
         public static void DrawPixels(int width, int height, uint format, byte[] pixels)
         {
-          glDrawPixels(width, height, format, GL_UNSIGNED_BYTE, pixels);
+            glDrawPixels(width, height, format, GL_UNSIGNED_BYTE, pixels);
         }
         /// <summary>
         /// Draws a rectangle of pixel data at the current raster position.
@@ -1938,13 +1941,13 @@ namespace Mesher.GraphicsCore
         /// <param name="pixels">Pixel data buffer.</param>
         public static void DrawPixels(int width, int height, uint format, uint type, IntPtr pixels)
         {
-          glDrawPixels(width, height, format, type, pixels);
+            glDrawPixels(width, height, format, type, pixels);
         }
         /// <summary>
         /// Flag edges as either boundary or nonboundary.
         /// </summary>
         /// <param name="flag">Specifies the current edge flag	value, either OpenGL.TRUE or OpenGL.FALSE. The initial value is OpenGL.TRUE.</param>
-		public static void EdgeFlag (byte flag)
+		public static void EdgeFlag(byte flag)
         {
             glEdgeFlag(flag);
         }
@@ -1953,7 +1956,7 @@ namespace Mesher.GraphicsCore
         /// </summary>
         /// <param name="stride">Specifies the byte offset between consecutive edge flags. If stride is	0 (the initial value), the edge	flags are understood to	be tightly packed in the array.</param>
         /// <param name="pointer">Specifies a pointer to the first edge flag in the array.</param>
-		public static void EdgeFlagPointer (int stride,  int[] pointer)
+		public static void EdgeFlagPointer(int stride, int[] pointer)
         {
             glEdgeFlagPointer(stride, pointer);
         }
@@ -1961,99 +1964,99 @@ namespace Mesher.GraphicsCore
         /// Flag edges as either boundary or nonboundary.
         /// </summary>
         /// <param name="flag">Specifies a pointer to an array that contains a single boolean element,	which replaces the current edge	flag value.</param>
-		public static void EdgeFlag( byte []flag)
+		public static void EdgeFlag(byte[] flag)
         {
             glEdgeFlagv(flag);
         }
-		/// <summary>
-		/// Call this function to enable an OpenGL capability.
-		/// </summary>
-		/// <param name="cap">The capability you wish to enable.</param>
-		public static void Enable(uint cap)
-		{
-			glEnable(cap);
-		}
-		/// <summary>
-		/// This function enables one of the client state arrays, such as a vertex array.
-		/// </summary>
-		/// <param name="array">The array to enable.</param>
-		public static void EnableClientState(uint array)
-		{
-			glEnableClientState(array);
-		}
-		/// <summary>
-		/// This is not an imported OpenGL function, but very useful. If 'test' is
-		/// true, cap is enabled, otherwise, it's disable.
-		/// </summary>
-		/// <param name="cap">The capability you want to enable.</param>
-		/// <param name="test">The logical comparison.</param>
-		public static void EnableIf(uint cap, bool test)
-		{
-			if(test)	Enable(cap);
-			else		Disable(cap);
-		}
-		/// <summary>
-		/// Signals the End of drawing.
-		/// </summary>
-		public static void End()
-		{
-			glEnd();
+        /// <summary>
+        /// Call this function to enable an OpenGL capability.
+        /// </summary>
+        /// <param name="cap">The capability you wish to enable.</param>
+        public static void Enable(uint cap)
+        {
+            glEnable(cap);
+        }
+        /// <summary>
+        /// This function enables one of the client state arrays, such as a vertex array.
+        /// </summary>
+        /// <param name="array">The array to enable.</param>
+        public static void EnableClientState(uint array)
+        {
+            glEnableClientState(array);
+        }
+        /// <summary>
+        /// This is not an imported OpenGL function, but very useful. If 'test' is
+        /// true, cap is enabled, otherwise, it's disable.
+        /// </summary>
+        /// <param name="cap">The capability you want to enable.</param>
+        /// <param name="test">The logical comparison.</param>
+        public static void EnableIf(uint cap, bool test)
+        {
+            if (test) Enable(cap);
+            else Disable(cap);
+        }
+        /// <summary>
+        /// Signals the End of drawing.
+        /// </summary>
+        public static void End()
+        {
+            glEnd();
             //  Clear the begun flag.
             insideGLBegin = false;
             // This matches Begin()'s PreGLCall()
-		}
-    /// <summary>
-    /// This function ends the drawing of a NURBS curve.
-    /// </summary>
-    /// <param name="nurbsObject">The nurbs object.</param>
-		public static void EndCurve(IntPtr nurbsObject)
-		{
-			gluEndCurve(nurbsObject);
-		}
-		/// <summary>
-		/// Ends the current display list compilation.
-		/// </summary>
-		public static void EndList()
-		{
-			glEndList();
-		}
-    /// <summary>
-    /// This function ends the drawing of a NURBS surface.
-    /// </summary>
-    /// <param name="nurbsObject">The nurbs object.</param>
-		public static void EndSurface(IntPtr nurbsObject)
-		{
-			gluEndSurface(nurbsObject);
-		}
-		/// <summary>
-		/// Evaluate from the current evaluator.
-		/// </summary>
-		/// <param name="u">Domain coordinate.</param>
-		public static void EvalCoord1(double u)
-		{
-			glEvalCoord1d(u);
-		}
+        }
+        /// <summary>
+        /// This function ends the drawing of a NURBS curve.
+        /// </summary>
+        /// <param name="nurbsObject">The nurbs object.</param>
+        public static void EndCurve(IntPtr nurbsObject)
+        {
+            gluEndCurve(nurbsObject);
+        }
+        /// <summary>
+        /// Ends the current display list compilation.
+        /// </summary>
+        public static void EndList()
+        {
+            glEndList();
+        }
+        /// <summary>
+        /// This function ends the drawing of a NURBS surface.
+        /// </summary>
+        /// <param name="nurbsObject">The nurbs object.</param>
+        public static void EndSurface(IntPtr nurbsObject)
+        {
+            gluEndSurface(nurbsObject);
+        }
         /// <summary>
         /// Evaluate from the current evaluator.
         /// </summary>
         /// <param name="u">Domain coordinate.</param>
-		public static void EvalCoord1( double []u)
+        public static void EvalCoord1(double u)
+        {
+            glEvalCoord1d(u);
+        }
+        /// <summary>
+        /// Evaluate from the current evaluator.
+        /// </summary>
+        /// <param name="u">Domain coordinate.</param>
+		public static void EvalCoord1(double[] u)
         {
             glEvalCoord1dv(u);
         }
-		/// <summary>
-		/// Evaluate from the current evaluator.
-		/// </summary>
-		/// <param name="u">Domain coordinate.</param>
-		public static void EvalCoord1(float u)
-		{
-			glEvalCoord1f(u);
-		}
         /// <summary>
         /// Evaluate from the current evaluator.
         /// </summary>
         /// <param name="u">Domain coordinate.</param>
-		public static void EvalCoord1( float []u)
+        public static void EvalCoord1(float u)
+        {
+            glEvalCoord1f(u);
+        }
+        /// <summary>
+        /// Evaluate from the current evaluator.
+        /// </summary>
+        /// <param name="u">Domain coordinate.</param>
+		public static void EvalCoord1(float[] u)
         {
             glEvalCoord1fv(u);
         }
@@ -2091,28 +2094,28 @@ namespace Mesher.GraphicsCore
         {
             glEvalCoord2fv(u);
         }
-		/// <summary>
-		/// Evaluates a 'mesh' from the current evaluators.
-		/// </summary>
-		/// <param name="mode">Drawing mode, can be POINT or LINE.</param>
-		/// <param name="i1">Beginning of range.</param>
-		/// <param name="i2">End of range.</param>
-		public static void EvalMesh1(uint mode, int i1, int i2)
-		{
-			glEvalMesh1(mode, i1, i2);
-		}
-		/// <summary>
-		/// Evaluates a 'mesh' from the current evaluators.
-		/// </summary>
-		/// <param name="mode">Drawing mode, fill, point or line.</param>
-		/// <param name="i1">Beginning of range.</param>
-		/// <param name="i2">End of range.</param>
-		/// <param name="j1">Beginning of range.</param>
-		/// <param name="j2">End of range.</param>
-		public static void EvalMesh2(uint mode, int i1, int i2, int j1, int j2)
-		{
-			glEvalMesh2(mode, i1, i2, j1, j2);
-		}
+        /// <summary>
+        /// Evaluates a 'mesh' from the current evaluators.
+        /// </summary>
+        /// <param name="mode">Drawing mode, can be POINT or LINE.</param>
+        /// <param name="i1">Beginning of range.</param>
+        /// <param name="i2">End of range.</param>
+        public static void EvalMesh1(uint mode, int i1, int i2)
+        {
+            glEvalMesh1(mode, i1, i2);
+        }
+        /// <summary>
+        /// Evaluates a 'mesh' from the current evaluators.
+        /// </summary>
+        /// <param name="mode">Drawing mode, fill, point or line.</param>
+        /// <param name="i1">Beginning of range.</param>
+        /// <param name="i2">End of range.</param>
+        /// <param name="j1">Beginning of range.</param>
+        /// <param name="j2">End of range.</param>
+        public static void EvalMesh2(uint mode, int i1, int i2, int j1, int j2)
+        {
+            glEvalMesh2(mode, i1, i2, j1, j2);
+        }
         /// <summary>
         /// Generate and evaluate a single point in a mesh.
         /// </summary>
@@ -2130,169 +2133,169 @@ namespace Mesher.GraphicsCore
         {
             glEvalPoint2(i, j);
         }
-		/// <summary>
-		/// This function sets the feedback buffer, that will receive feedback data.
-		/// </summary>
-		/// <param name="size">Size of the buffer.</param>
-		/// <param name="type">Type of data in the buffer.</param>
-		/// <param name="buffer">The buffer itself.</param>
-		public static void FeedbackBuffer(int size, uint type, float []buffer)
-		{
-			glFeedbackBuffer(size, type, buffer);
-		}
-		/// <summary>
-		/// This function is similar to flush, but in a sense does it more, as it
-		/// executes all commands aon both the client and the server.
-		/// </summary>
-		public static void Finish()
-		{
-			glFinish();
-		}
-		/// <summary>
-		/// This forces OpenGL to execute any commands you have given it.
-		/// </summary>
-		public static void Flush()
-		{
-			glFlush();
-		}
-		/// <summary>
-		/// Sets a fog parameter.
-		/// </summary>
-		/// <param name="pname">The parameter to set.</param>
-		/// <param name="param">The value to set it to.</param>
-		public static void Fog(uint pname, float param)
-		{
-			glFogf(pname, param);
-		}
-		/// <summary>
-		/// Sets a fog parameter.
-		/// </summary>
-		/// <param name="pname">The parameter to set.</param>
-		/// <param name="parameters">The values to set it to.</param>
-		public static void Fog(uint pname,  float[] parameters)
-		{
-			glFogfv(pname, parameters);
-		}
-		/// <summary>
-		/// Sets a fog parameter.
-		/// </summary>
-		/// <param name="pname">The parameter to set.</param>
-		/// <param name="param">The value to set it to.</param>
-		public static void Fog(uint pname, int param)
-		{
-			glFogi(pname, param);
-		}
-		/// <summary>
-		/// Sets a fog parameter.
-		/// </summary>
-		/// <param name="pname">The parameter to set.</param>
-		/// <param name="parameters">The values to set it to.</param>
-		public static void Fog(uint pname,  int[] parameters)
-		{
-			glFogiv(pname, parameters);
-		}
-		/// <summary>
-		/// This function sets what defines a front face.
-		/// </summary>
-		/// <param name="mode">Winding mode, counter clockwise by default.</param>
-		public static void FrontFace(uint mode)
-		{
-			glFrontFace(mode);
-		}
-		/// <summary>
-		/// This function creates a frustrum transformation and mulitplies it to the current
-		/// matrix (which in most cases should be the projection matrix).
-		/// </summary>
-		/// <param name="left">Left clip position.</param>
-		/// <param name="right">Right clip position.</param>
-		/// <param name="bottom">Bottom clip position.</param>
-		/// <param name="top">Top clip position.</param>
-		/// <param name="zNear">Near clip position.</param>
-		/// <param name="zFar">Far clip position.</param>
-		public static void Frustum(double left, double right, double bottom, 
-			double top, double zNear, double zFar)
-		{
-			glFrustum(left, right, bottom, top, zNear, zFar);
-		}
-		/// <summary>
-		/// This function generates 'range' number of contiguos display list indices.
-		/// </summary>
-		/// <param name="range">The number of lists to generate.</param>
-		/// <returns>The first list.</returns>
-		public static uint GenLists(int range)
-		{
-			uint list = glGenLists(range);
-			return list;
-		}
-		/// <summary>
-		/// Create a set of unique texture names.
-		/// </summary>
-		/// <param name="n">Number of names to create.</param>
-		/// <param name="textures">Array to store the texture names.</param>
-		public static void GenTextures(int n, uint []textures)
-		{
-			glGenTextures(n, textures);
-		}
-		/// <summary>
-		/// This function queries OpenGL for data, and puts it in the buffer supplied.
-		/// </summary>
-		/// <param name="pname">The parameter to query.</param>
-		/// <param name="parameters"></param>
-		public static void GetBooleanv (uint pname, byte[] parameters)
-		{
-			glGetBooleanv(pname, parameters);
-		}
+        /// <summary>
+        /// This function sets the feedback buffer, that will receive feedback data.
+        /// </summary>
+        /// <param name="size">Size of the buffer.</param>
+        /// <param name="type">Type of data in the buffer.</param>
+        /// <param name="buffer">The buffer itself.</param>
+        public static void FeedbackBuffer(int size, uint type, float[] buffer)
+        {
+            glFeedbackBuffer(size, type, buffer);
+        }
+        /// <summary>
+        /// This function is similar to flush, but in a sense does it more, as it
+        /// executes all commands aon both the client and the server.
+        /// </summary>
+        public static void Finish()
+        {
+            glFinish();
+        }
+        /// <summary>
+        /// This forces OpenGL to execute any commands you have given it.
+        /// </summary>
+        public static void Flush()
+        {
+            glFlush();
+        }
+        /// <summary>
+        /// Sets a fog parameter.
+        /// </summary>
+        /// <param name="pname">The parameter to set.</param>
+        /// <param name="param">The value to set it to.</param>
+        public static void Fog(uint pname, float param)
+        {
+            glFogf(pname, param);
+        }
+        /// <summary>
+        /// Sets a fog parameter.
+        /// </summary>
+        /// <param name="pname">The parameter to set.</param>
+        /// <param name="parameters">The values to set it to.</param>
+        public static void Fog(uint pname, float[] parameters)
+        {
+            glFogfv(pname, parameters);
+        }
+        /// <summary>
+        /// Sets a fog parameter.
+        /// </summary>
+        /// <param name="pname">The parameter to set.</param>
+        /// <param name="param">The value to set it to.</param>
+        public static void Fog(uint pname, int param)
+        {
+            glFogi(pname, param);
+        }
+        /// <summary>
+        /// Sets a fog parameter.
+        /// </summary>
+        /// <param name="pname">The parameter to set.</param>
+        /// <param name="parameters">The values to set it to.</param>
+        public static void Fog(uint pname, int[] parameters)
+        {
+            glFogiv(pname, parameters);
+        }
+        /// <summary>
+        /// This function sets what defines a front face.
+        /// </summary>
+        /// <param name="mode">Winding mode, counter clockwise by default.</param>
+        public static void FrontFace(uint mode)
+        {
+            glFrontFace(mode);
+        }
+        /// <summary>
+        /// This function creates a frustrum transformation and mulitplies it to the current
+        /// matrix (which in most cases should be the projection matrix).
+        /// </summary>
+        /// <param name="left">Left clip position.</param>
+        /// <param name="right">Right clip position.</param>
+        /// <param name="bottom">Bottom clip position.</param>
+        /// <param name="top">Top clip position.</param>
+        /// <param name="zNear">Near clip position.</param>
+        /// <param name="zFar">Far clip position.</param>
+        public static void Frustum(double left, double right, double bottom,
+            double top, double zNear, double zFar)
+        {
+            glFrustum(left, right, bottom, top, zNear, zFar);
+        }
+        /// <summary>
+        /// This function generates 'range' number of contiguos display list indices.
+        /// </summary>
+        /// <param name="range">The number of lists to generate.</param>
+        /// <returns>The first list.</returns>
+        public static uint GenLists(int range)
+        {
+            uint list = glGenLists(range);
+            return list;
+        }
+        /// <summary>
+        /// Create a set of unique texture names.
+        /// </summary>
+        /// <param name="n">Number of names to create.</param>
+        /// <param name="textures">Array to store the texture names.</param>
+        public static void GenTextures(int n, uint[] textures)
+        {
+            glGenTextures(n, textures);
+        }
+        /// <summary>
+        /// This function queries OpenGL for data, and puts it in the buffer supplied.
+        /// </summary>
+        /// <param name="pname">The parameter to query.</param>
+        /// <param name="parameters"></param>
+        public static void GetBooleanv(uint pname, byte[] parameters)
+        {
+            glGetBooleanv(pname, parameters);
+        }
         /// <summary>
         /// Return the coefficients of the specified clipping plane.
         /// </summary>
         /// <param name="plane">Specifies a	clipping plane.	 The number of clipping planes depends on the implementation, but at least six clipping planes are supported. They are identified by symbolic names of the form OpenGL.CLIP_PLANEi where 0 Less Than i Less Than OpenGL.MAX_CLIP_PLANES.</param>
         /// <param name="equation">Returns four double-precision values that are the coefficients of the plane equation of plane in eye coordinates. The initial value is (0, 0, 0, 0).</param>
-		public static void GetClipPlane (uint plane, double []equation)
+		public static void GetClipPlane(uint plane, double[] equation)
         {
             glGetClipPlane(plane, equation);
         }
-		/// <summary>
-		/// This function queries OpenGL for data, and puts it in the buffer supplied.
-		/// </summary>
-		/// <param name="pname">The parameter to query.</param>
-		/// <param name="parameters">The buffer to put that data into.</param>
-		public static void GetDouble(uint pname, double []parameters)
-		{
-			glGetDoublev(pname, parameters);
-		}
-		/// <summary>
-		/// Get the current OpenGL error code.
-		/// </summary>
-		/// <returns>The current OpenGL error code.</returns>
-		public static uint GetError()
-		{
-			return glGetError();
-		}
-		/// <summary>
-		/// This this function to query OpenGL values.
-		/// </summary>
-		/// <param name="pname">The parameter to query.</param>
-		/// <param name="parameters">The parameters</param>
-		public static void GetFloat(uint pname, float[] parameters)
-		{
-			glGetFloatv(pname, parameters);
-		}
-		/// <summary>
-		/// Use this function to query OpenGL parameter values.
-		/// </summary>
-		/// <param name="pname">The Parameter to query</param>
-		/// <param name="parameters">An array to put the values into.</param>
-		public static void GetInteger(uint pname, int[] parameters)
-		{
-			glGetIntegerv(pname, parameters);
-		}
+        /// <summary>
+        /// This function queries OpenGL for data, and puts it in the buffer supplied.
+        /// </summary>
+        /// <param name="pname">The parameter to query.</param>
+        /// <param name="parameters">The buffer to put that data into.</param>
+        public static void GetDouble(uint pname, double[] parameters)
+        {
+            glGetDoublev(pname, parameters);
+        }
+        /// <summary>
+        /// Get the current OpenGL error code.
+        /// </summary>
+        /// <returns>The current OpenGL error code.</returns>
+        public static uint GetError()
+        {
+            return glGetError();
+        }
+        /// <summary>
+        /// This this function to query OpenGL values.
+        /// </summary>
+        /// <param name="pname">The parameter to query.</param>
+        /// <param name="parameters">The parameters</param>
+        public static void GetFloat(uint pname, float[] parameters)
+        {
+            glGetFloatv(pname, parameters);
+        }
+        /// <summary>
+        /// Use this function to query OpenGL parameter values.
+        /// </summary>
+        /// <param name="pname">The Parameter to query</param>
+        /// <param name="parameters">An array to put the values into.</param>
+        public static void GetInteger(uint pname, int[] parameters)
+        {
+            glGetIntegerv(pname, parameters);
+        }
         /// <summary>
         /// Return light source parameter values.
         /// </summary>
         /// <param name="light">Specifies a light source. The number of possible lights depends on the implementation, but at least eight lights are supported. They are identified by symbolic names of the form OpenGL.LIGHTi where i ranges from 0 to the value of OpenGL.GL_MAX_LIGHTS - 1.</param>
         /// <param name="pname">Specifies a light source parameter for light.</param>
         /// <param name="parameters">Returns the requested data.</param>
-		public static void GetLight(uint light, uint pname, float []parameters)
+		public static void GetLight(uint light, uint pname, float[] parameters)
         {
             glGetLightfv(light, pname, parameters);
         }
@@ -2312,7 +2315,7 @@ namespace Mesher.GraphicsCore
         /// <param name="target">Specifies the symbolic name of a map.</param>
         /// <param name="query">Specifies which parameter to return.</param>
         /// <param name="v">Returns the requested data.</param>
-		public static void GetMap(uint target, uint query, double []v)
+		public static void GetMap(uint target, uint query, double[] v)
         {
             glGetMapdv(target, query, v);
         }
@@ -2322,7 +2325,7 @@ namespace Mesher.GraphicsCore
         /// <param name="target">Specifies the symbolic name of a map.</param>
         /// <param name="query">Specifies which parameter to return.</param>
         /// <param name="v">Returns the requested data.</param>
-		public static void GetMap(uint target, uint query, float []v)
+		public static void GetMap(uint target, uint query, float[] v)
         {
             glGetMapfv(target, query, v);
         }
@@ -2332,7 +2335,7 @@ namespace Mesher.GraphicsCore
         /// <param name="target">Specifies the symbolic name of a map.</param>
         /// <param name="query">Specifies which parameter to return.</param>
         /// <param name="v">Returns the requested data.</param>
-		public static void GetMap(uint target, uint query, int []v)
+		public static void GetMap(uint target, uint query, int[] v)
         {
             glGetMapiv(target, query, v);
         }
@@ -2361,7 +2364,7 @@ namespace Mesher.GraphicsCore
         /// </summary>
         /// <param name="map">Specifies the	name of	the pixel map to return.</param>
         /// <param name="values">Returns the pixel map	contents.</param>
-		public static void GetPixelMap(uint map, float []values)
+		public static void GetPixelMap(uint map, float[] values)
         {
             glGetPixelMapfv(map, values);
         }
@@ -2370,7 +2373,7 @@ namespace Mesher.GraphicsCore
         /// </summary>
         /// <param name="map">Specifies the	name of	the pixel map to return.</param>
         /// <param name="values">Returns the pixel map	contents.</param>
-		public static void GetPixelMap(uint map, uint []values)
+		public static void GetPixelMap(uint map, uint[] values)
         {
             glGetPixelMapuiv(map, values);
         }
@@ -2379,7 +2382,7 @@ namespace Mesher.GraphicsCore
         /// </summary>
         /// <param name="map">Specifies the	name of	the pixel map to return.</param>
         /// <param name="values">Returns the pixel map	contents.</param>
-		public static void GetPixelMap(uint map, ushort []values)
+		public static void GetPixelMap(uint map, ushort[] values)
         {
             glGetPixelMapusv(map, values);
         }
@@ -2388,7 +2391,7 @@ namespace Mesher.GraphicsCore
         /// </summary>
         /// <param name="pname">Specifies the array or buffer pointer to be returned.</param>
         /// <param name="parameters">Returns the pointer value specified by parameters.</param>
-		public static void GetPointerv (uint pname, int[] parameters)
+		public static void GetPointerv(uint pname, int[] parameters)
         {
             glGetPointerv(pname, parameters);
         }
@@ -2396,7 +2399,7 @@ namespace Mesher.GraphicsCore
         /// Return the polygon stipple pattern.
         /// </summary>
         /// <param name="mask">Returns the stipple pattern. The initial value is all 1's.</param>
-		public static void GetPolygonStipple (byte []mask)
+		public static void GetPolygonStipple(byte[] mask)
         {
             glGetPolygonStipple(mask);
         }
@@ -2405,19 +2408,19 @@ namespace Mesher.GraphicsCore
         /// </summary>
         /// <param name="name">Specifies a symbolic constant, one of OpenGL.VENDOR, OpenGL.RENDERER, OpenGL.VERSION, or OpenGL.EXTENSIONS.</param>
         /// <returns>Pointer to the specified string.</returns>
-		public static unsafe string GetString (uint name)
-		{
-			sbyte* pStr = glGetString(name);
-			var str = new string(pStr);
+		public static unsafe string GetString(uint name)
+        {
+            sbyte* pStr = glGetString(name);
+            var str = new string(pStr);
             return str;
-		}
+        }
         /// <summary>
         /// Return texture environment parameters.
         /// </summary>
         /// <param name="target">Specifies a texture environment.  Must be OpenGL.TEXTURE_ENV.</param>
         /// <param name="pname">Specifies the	symbolic name of a texture environment parameter.  Accepted values are OpenGL.TEXTURE_ENV_MODE, and OpenGL.TEXTURE_ENV_COLOR.</param>
         /// <param name="parameters">Returns the requested	data.</param>
-		public static void GetTexEnv(uint target, uint pname, float []parameters)
+		public static void GetTexEnv(uint target, uint pname, float[] parameters)
         {
             glGetTexEnvfv(target, pname, parameters);
         }
@@ -2437,7 +2440,7 @@ namespace Mesher.GraphicsCore
         /// <param name="coord">Specifies a texture coordinate. Must be one of OpenGL.S, OpenGL.T, OpenGL.R, or OpenGL.Q.</param>
         /// <param name="pname">Specifies the symbolic name of the texture-coordinate generation function. Must be OpenGL.TEXTURE_GEN_MODE.</param>
         /// <param name="parameters">Specifies a single-valued texture generation parameter, one of OpenGL.OBJECT_LINEAR, OpenGL.EYE_LINEAR, or OpenGL.SPHERE_MAP.</param>
-        public static void GetTexGen(uint coord, uint pname, double[] parameters) 
+        public static void GetTexGen(uint coord, uint pname, double[] parameters)
         {
             glGetTexGendv(coord, pname, parameters);
         }
@@ -2469,7 +2472,7 @@ namespace Mesher.GraphicsCore
         /// <param name="format">Specifies a pixel format for the returned data.</param>
         /// <param name="type">Specifies a pixel type for the returned data.</param>
         /// <param name="pixels">Returns the texture image.  Should be	a pointer to an array of the type specified by type.</param>
-		public static void GetTexImage (uint target, int level, uint format, uint type, int []pixels)
+		public static void GetTexImage(uint target, int level, uint format, uint type, int[] pixels)
         {
             glGetTexImage(target, level, format, type, pixels);
         }
@@ -2480,7 +2483,7 @@ namespace Mesher.GraphicsCore
         /// <param name="level">Specifies the level-of-detail	number of the desired image.  Level	0 is the base image level.  Level n is the nth mipmap reduction image.</param>
         /// <param name="pname">Specifies the symbolic name of a texture parameter.</param>
         /// <param name="parameters">Returns the requested	data.</param>
-		public static void GetTexLevelParameter(uint target, int level, uint pname, float []parameters)
+		public static void GetTexLevelParameter(uint target, int level, uint pname, float[] parameters)
         {
             glGetTexLevelParameterfv(target, level, pname, parameters);
         }
@@ -2501,7 +2504,7 @@ namespace Mesher.GraphicsCore
         /// <param name="target">Specifies the symbolic name of the target texture.</param>
         /// <param name="pname">Specifies the symbolic name of a texture parameter.</param>
         /// <param name="parameters">Returns the texture parameters.</param>
-        public static void GetTexParameter(uint target, uint pname, float[] parameters) 
+        public static void GetTexParameter(uint target, uint pname, float[] parameters)
         {
             glGetTexParameterfv(target, pname, parameters);
         }
@@ -2520,7 +2523,7 @@ namespace Mesher.GraphicsCore
         /// </summary>
         /// <param name="target">Specifies a symbolic constant indicating the behavior to be controlled.</param>
         /// <param name="mode">Specifies a symbolic constant indicating the desired behavior.</param>
-		public static void Hint (uint target, uint mode)
+		public static void Hint(uint target, uint mode)
         {
             glHint(target, mode);
         }
@@ -2528,7 +2531,7 @@ namespace Mesher.GraphicsCore
         /// Control	the writing of individual bits in the color	index buffers.
         /// </summary>
         /// <param name="mask">Specifies a bit	mask to	enable and disable the writing of individual bits in the color index buffers. Initially, the mask is all 1's.</param>
-		public static void IndexMask (uint mask)
+		public static void IndexMask(uint mask)
         {
             glIndexMask(mask);
         }
@@ -2538,7 +2541,7 @@ namespace Mesher.GraphicsCore
         /// <param name="type">Specifies the data type of each color index in the array.  Symbolic constants OpenGL.UNSIGNED_BYTE, OpenGL.SHORT, OpenGL.INT, OpenGL.FLOAT, and OpenGL.DOUBLE are accepted.</param>
         /// <param name="stride">Specifies the byte offset between consecutive color indexes.  If stride is 0 (the initial value), the color indexes are understood	to be tightly packed in the array.</param>
         /// <param name="pointer">Specifies a pointer to the first index in the array.</param>
-		public static void IndexPointer (uint type, int stride,  int[] pointer)
+		public static void IndexPointer(uint type, int stride, int[] pointer)
         {
             glIndexPointer(type, stride, pointer);
         }
@@ -2622,129 +2625,129 @@ namespace Mesher.GraphicsCore
         {
             glIndexubv(c);
         }
-		/// <summary>
-		/// This function initialises the select buffer names.
-		/// </summary>
-		public static void InitNames()
-		{
-			glInitNames();
-		}
+        /// <summary>
+        /// This function initialises the select buffer names.
+        /// </summary>
+        public static void InitNames()
+        {
+            glInitNames();
+        }
         /// <summary>
         /// Simultaneously specify and enable several interleaved arrays.
         /// </summary>
         /// <param name="format">Specifies the type of array to enable.</param>
         /// <param name="stride">Specifies the offset in bytes between each aggregate array element.</param>
         /// <param name="pointer">The array.</param>
-		public static void InterleavedArrays (uint format, int stride,  int[] pointer)
+		public static void InterleavedArrays(uint format, int stride, int[] pointer)
         {
             glInterleavedArrays(format, stride, pointer);
         }
-		/// <summary>
-		/// Use this function to query if a certain OpenGL function is enabled or not.
-		/// </summary>
-		/// <param name="cap">The capability to test.</param>
-		/// <returns>True if the capability is enabled, otherwise, false.</returns>
-		public static bool IsEnabled (uint cap)
-		{
-			byte e = glIsEnabled(cap);
-			return e != 0;
-		}
-		/// <summary>
-		/// This function determines whether a specified value is a display list.
-		/// </summary>
-		/// <param name="list">The value to test.</param>
-		/// <returns>TRUE if it is a list, FALSE otherwise.</returns>
-		public static byte IsList(uint list)
-		{
-			byte islist = glIsList(list);
-			return islist;
-		}
+        /// <summary>
+        /// Use this function to query if a certain OpenGL function is enabled or not.
+        /// </summary>
+        /// <param name="cap">The capability to test.</param>
+        /// <returns>True if the capability is enabled, otherwise, false.</returns>
+        public static bool IsEnabled(uint cap)
+        {
+            byte e = glIsEnabled(cap);
+            return e != 0;
+        }
+        /// <summary>
+        /// This function determines whether a specified value is a display list.
+        /// </summary>
+        /// <param name="list">The value to test.</param>
+        /// <returns>TRUE if it is a list, FALSE otherwise.</returns>
+        public static byte IsList(uint list)
+        {
+            byte islist = glIsList(list);
+            return islist;
+        }
         /// <summary>
         /// Determine if a name corresponds	to a texture.
         /// </summary>
         /// <param name="texture">Specifies a value that may be the name of a texture.</param>
         /// <returns>True if texture is a texture object.</returns>
-		public static byte IsTexture (uint texture)
+		public static byte IsTexture(uint texture)
         {
             byte returnValue = glIsTexture(texture);
             return returnValue;
         }
-		/// <summary>
-		/// This function sets a parameter of the lighting model.
-		/// </summary>
-		/// <param name="pname">The name of the parameter.</param>
-		/// <param name="param">The parameter to set it to.</param>
-		public static void LightModel(uint pname, float param)
-		{
-			glLightModelf(pname, param);
-		}
-		/// <summary>
-		/// This function sets a parameter of the lighting model.
-		/// </summary>
-		/// <param name="pname">The name of the parameter.</param>
-		/// <param name="parameters">The parameter to set it to.</param>
-		public static void LightModel(uint pname,  float[] parameters)
-		{
-			glLightModelfv(pname, parameters);
-		}
-		/// <summary>
-		/// This function sets a parameter of the lighting model.
-		/// </summary>
-		/// <param name="pname">The name of the parameter.</param>
-		/// <param name="param">The parameter to set it to.</param>
-		public static void LightModel(uint pname, int param)
-		{
-			glLightModeli(pname, param);
-		}
-		/// <summary>
-		/// This function sets a parameter of the lighting model.
-		/// </summary>
-		/// <param name="pname">The name of the parameter.</param>
-		/// <param name="parameters">The parameter to set it to.</param>
-		public static void LightModel (uint pname, int[] parameters)
-		{
-			glLightModeliv(pname, parameters);
-		}
-		/// <summary>
-		/// Set the parameter (pname) of the light 'light'.
-		/// </summary>
-		/// <param name="light">The light you wish to set parameters for.</param>
-		/// <param name="pname">The parameter you want to set.</param>
-		/// <param name="param">The value that you want to set the parameter to.</param>
-		public static void Light(uint light, uint pname, float param)
-		{
-			glLightf(light, pname, param);
-		}
-		/// <summary>
-		/// Set the parameter (pname) of the light 'light'.
-		/// </summary>
-		/// <param name="light">The light you wish to set parameters for.</param>
-		/// <param name="pname">The parameter you want to set.</param>
-		/// <param name="parameters">The value that you want to set the parameter to.</param>
-		public static void Light(uint light, uint pname,  float[] parameters)
-		{
-			glLightfv(light, pname, parameters);
-		}
-		/// <summary>
-		/// Set the parameter (pname) of the light 'light'.
-		/// </summary>
-		/// <param name="light">The light you wish to set parameters for.</param>
-		/// <param name="pname">The parameter you want to set.</param>
-		/// <param name="param">The value that you want to set the parameter to.</param>
-		public static void Light(uint light, uint pname, int param)
-		{
-			glLighti(light, pname, param);
-		}
+        /// <summary>
+        /// This function sets a parameter of the lighting model.
+        /// </summary>
+        /// <param name="pname">The name of the parameter.</param>
+        /// <param name="param">The parameter to set it to.</param>
+        public static void LightModel(uint pname, float param)
+        {
+            glLightModelf(pname, param);
+        }
+        /// <summary>
+        /// This function sets a parameter of the lighting model.
+        /// </summary>
+        /// <param name="pname">The name of the parameter.</param>
+        /// <param name="parameters">The parameter to set it to.</param>
+        public static void LightModel(uint pname, float[] parameters)
+        {
+            glLightModelfv(pname, parameters);
+        }
+        /// <summary>
+        /// This function sets a parameter of the lighting model.
+        /// </summary>
+        /// <param name="pname">The name of the parameter.</param>
+        /// <param name="param">The parameter to set it to.</param>
+        public static void LightModel(uint pname, int param)
+        {
+            glLightModeli(pname, param);
+        }
+        /// <summary>
+        /// This function sets a parameter of the lighting model.
+        /// </summary>
+        /// <param name="pname">The name of the parameter.</param>
+        /// <param name="parameters">The parameter to set it to.</param>
+        public static void LightModel(uint pname, int[] parameters)
+        {
+            glLightModeliv(pname, parameters);
+        }
+        /// <summary>
+        /// Set the parameter (pname) of the light 'light'.
+        /// </summary>
+        /// <param name="light">The light you wish to set parameters for.</param>
+        /// <param name="pname">The parameter you want to set.</param>
+        /// <param name="param">The value that you want to set the parameter to.</param>
+        public static void Light(uint light, uint pname, float param)
+        {
+            glLightf(light, pname, param);
+        }
+        /// <summary>
+        /// Set the parameter (pname) of the light 'light'.
+        /// </summary>
+        /// <param name="light">The light you wish to set parameters for.</param>
+        /// <param name="pname">The parameter you want to set.</param>
+        /// <param name="parameters">The value that you want to set the parameter to.</param>
+        public static void Light(uint light, uint pname, float[] parameters)
+        {
+            glLightfv(light, pname, parameters);
+        }
+        /// <summary>
+        /// Set the parameter (pname) of the light 'light'.
+        /// </summary>
+        /// <param name="light">The light you wish to set parameters for.</param>
+        /// <param name="pname">The parameter you want to set.</param>
+        /// <param name="param">The value that you want to set the parameter to.</param>
+        public static void Light(uint light, uint pname, int param)
+        {
+            glLighti(light, pname, param);
+        }
         /// <summary>
         /// Set the parameter (pname) of the light 'light'.
         /// </summary>
         /// <param name="light">The light you wish to set parameters for.</param>
         /// <param name="pname">The parameter you want to set.</param>
         /// <param name="parameters">The parameters.</param>
-		public static void Light(uint light, uint pname,  int []parameters)
-		{
-			glLightiv(light, pname, parameters);
-		}
+		public static void Light(uint light, uint pname, int[] parameters)
+        {
+            glLightiv(light, pname, parameters);
+        }
         /// <summary>
         /// Specify the line stipple pattern.
         /// </summary>
@@ -2754,34 +2757,34 @@ namespace Mesher.GraphicsCore
         {
             glLineStipple(factor, pattern);
         }
-		/// <summary>
-		/// Set's the current width of lines.
-		/// </summary>
-		/// <param name="width">New line width to set.</param>
-		public static void LineWidth(float width)
-		{
-			glLineWidth(width);
-		}
+        /// <summary>
+        /// Set's the current width of lines.
+        /// </summary>
+        /// <param name="width">New line width to set.</param>
+        public static void LineWidth(float width)
+        {
+            glLineWidth(width);
+        }
         /// <summary>
         /// Set the display-list base for glCallLists.
         /// </summary>
         /// <param name="listbase">Specifies an integer offset that will be added to glCallLists offsets to generate display-list names. The initial value is 0.</param>
-		public static void ListBase (uint listbase)
+		public static void ListBase(uint listbase)
         {
             glListBase(listbase);
         }
-		/// <summary>
-		/// Call this function to load the identity matrix into the current matrix stack.
-		/// </summary>
-		public static void LoadIdentity()
-		{
-			glLoadIdentity();
-		}
+        /// <summary>
+        /// Call this function to load the identity matrix into the current matrix stack.
+        /// </summary>
+        public static void LoadIdentity()
+        {
+            glLoadIdentity();
+        }
         /// <summary>
         /// Replace the current matrix with the specified matrix.
         /// </summary>
         /// <param name="m">Specifies a pointer to 16 consecutive values, which are used as the elements of a 4x4 column-major matrix.</param>
-		public static void LoadMatrix( double []m)
+		public static void LoadMatrix(double[] m)
         {
             glLoadMatrixd(m);
         }
@@ -2793,204 +2796,204 @@ namespace Mesher.GraphicsCore
         {
             glLoadMatrixf(m);
         }
-		/// <summary>
-		/// This function replaces the name at the top of the selection names stack
-		/// with 'name'.
-		/// </summary>
-		/// <param name="name">The name to replace it with.</param>
-		public static void LoadName (uint name)
-		{
-			glLoadName(name);
-		}
+        /// <summary>
+        /// This function replaces the name at the top of the selection names stack
+        /// with 'name'.
+        /// </summary>
+        /// <param name="name">The name to replace it with.</param>
+        public static void LoadName(uint name)
+        {
+            glLoadName(name);
+        }
         /// <summary>
         /// Specify a logical pixel operation for color index rendering.
         /// </summary>
         /// <param name="opcode">Specifies a symbolic constant	that selects a logical operation.</param>
-		public static void LogicOp (uint opcode)
+		public static void LogicOp(uint opcode)
         {
             glLogicOp(opcode);
         }
-		/// <summary>
-		/// This function transforms the projection matrix so that it looks at a certain
-		/// point, from a certain point.
-		/// </summary>
-		/// <param name="eyex">Position of the eye.</param>
-		/// <param name="eyey">Position of the eye.</param>
-		/// <param name="eyez">Position of the eye.</param>
-		/// <param name="centerx">Point to look at.</param>
-		/// <param name="centery">Point to look at.</param>
-		/// <param name="centerz">Point to look at.</param>
-		/// <param name="upx">'Up' Vector X Component.</param>
-		/// <param name="upy">'Up' Vector Y Component.</param>
-		/// <param name="upz">'Up' Vector Z Component.</param>
-		public static void LookAt(double eyex, double eyey, double eyez, 
-			double centerx, double centery, double centerz, 
-			double upx, double upy, double upz)
-		{
-			gluLookAt(eyex, eyey, eyez, centerx, centery, centerz, upx, upy, upz);
-		}
-		/// <summary>
-		/// Defines a 1D evaluator.
-		/// </summary>
-		/// <param name="target">What the control points represent (e.g. MAP1_VERTEX_3).</param>
-		/// <param name="u1">Range of the variable 'u'.</param>
-		/// <param name="u2">Range of the variable 'u'.</param>
-		/// <param name="stride">Offset between beginning of one control point, and beginning of next.</param>
-		/// <param name="order">The degree plus one, should agree with the number of control points.</param>
-		/// <param name="points">The data for the points.</param>
-		public static void Map1(uint target, double u1, double u2, int stride, int order,  double []points)
-		{
-			glMap1d(target, u1, u2, stride, order, points);
-		}
-		/// <summary>
-		/// Defines a 1D evaluator.
-		/// </summary>
-		/// <param name="target">What the control points represent (e.g. MAP1_VERTEX_3).</param>
-		/// <param name="u1">Range of the variable 'u'.</param>
-		/// <param name="u2">Range of the variable 'u'.</param>
-		/// <param name="stride">Offset between beginning of one control point, and beginning of next.</param>
-		/// <param name="order">The degree plus one, should agree with the number of control points.</param>
-		/// <param name="points">The data for the points.</param>
-		public static void Map1(uint target, float u1, float u2, int stride, int order,  float []points)
-		{
-			glMap1f(target, u1, u2, stride, order, points);
-		}
-		/// <summary>
-		/// Defines a 2D evaluator.
-		/// </summary>
-		/// <param name="target">What the control points represent (e.g. MAP2_VERTEX_3).</param>
-		/// <param name="u1">Range of the variable 'u'.</param>
-		/// <param name="u2">Range of the variable 'u.</param>
-		/// <param name="ustride">Offset between beginning of one control point and the next.</param>
-		/// <param name="uorder">The degree plus one.</param>
-		/// <param name="v1">Range of the variable 'v'.</param>
-		/// <param name="v2">Range of the variable 'v'.</param>
-		/// <param name="vstride">Offset between beginning of one control point and the next.</param>
-		/// <param name="vorder">The degree plus one.</param>
-		/// <param name="points">The data for the points.</param>
-		public static void Map2(uint target, double u1, double u2, int ustride, int uorder, double v1, double v2, int vstride, int vorder,  double []points)
-		{
-			glMap2d(target, u1, u2, ustride, uorder, v1, v2, vstride, vorder, points);
-		}
-		/// <summary>
-		/// Defines a 2D evaluator.
-		/// </summary>
-		/// <param name="target">What the control points represent (e.g. MAP2_VERTEX_3).</param>
-		/// <param name="u1">Range of the variable 'u'.</param>
-		/// <param name="u2">Range of the variable 'u.</param>
-		/// <param name="ustride">Offset between beginning of one control point and the next.</param>
-		/// <param name="uorder">The degree plus one.</param>
-		/// <param name="v1">Range of the variable 'v'.</param>
-		/// <param name="v2">Range of the variable 'v'.</param>
-		/// <param name="vstride">Offset between beginning of one control point and the next.</param>
-		/// <param name="vorder">The degree plus one.</param>
-		/// <param name="points">The data for the points.</param>
-		public static void Map2(uint target, float u1, float u2, int ustride, int uorder, float v1, float v2, int vstride, int vorder,  float []points)
-		{
-			glMap2f(target, u1, u2, ustride, uorder, v1, v2, vstride, vorder, points);
-		}
-		/// <summary>
-		/// This function defines a grid that goes from u1 to u1 in n steps, evenly spaced.
-		/// </summary>
-		/// <param name="un">Number of steps.</param>
-		/// <param name="u1">Range of variable 'u'.</param>
-		/// <param name="u2">Range of variable 'u'.</param>
-		public static void MapGrid1(int un, double u1, double u2)
-		{
-			glMapGrid1d(un, u1, u2);
-		}
-		/// <summary>
-		/// This function defines a grid that goes from u1 to u1 in n steps, evenly spaced.
-		/// </summary>
-		/// <param name="un">Number of steps.</param>
-		/// <param name="u1">Range of variable 'u'.</param>
-		/// <param name="u2">Range of variable 'u'.</param>
-		public static void MapGrid1(int un, float u1, float u2)
-		{
-			glMapGrid1d(un, u1, u2);
-		}
-		/// <summary>
-		/// This function defines a grid that goes from u1 to u1 in n steps, evenly spaced,
-		/// and the same for v.
-		/// </summary>
-		/// <param name="un">Number of steps.</param>
-		/// <param name="u1">Range of variable 'u'.</param>
-		/// <param name="u2">Range of variable 'u'.</param>
-		/// <param name="vn">Number of steps.</param>
-		/// <param name="v1">Range of variable 'v'.</param>
-		/// <param name="v2">Range of variable 'v'.</param>
-		public static void MapGrid2(int un, double u1, double u2, int vn, double v1, double v2)
-		{
-			glMapGrid2d(un, u1, u2, vn, v1, v2);
-		}
-		/// <summary>
-		/// This function defines a grid that goes from u1 to u1 in n steps, evenly spaced,
-		/// and the same for v.
-		/// </summary>
-		/// <param name="un">Number of steps.</param>
-		/// <param name="u1">Range of variable 'u'.</param>
-		/// <param name="u2">Range of variable 'u'.</param>
-		/// <param name="vn">Number of steps.</param>
-		/// <param name="v1">Range of variable 'v'.</param>
-		/// <param name="v2">Range of variable 'v'.</param>
-		public static void MapGrid2(int un, float u1, float u2, int vn, float v1, float v2)
-		{
-			glMapGrid2f(un, u1, u2, vn, v1, v2);
-		}
-		/// <summary>
-		/// This function sets a material parameter.
-		/// </summary>
-		/// <param name="face">What faces is this parameter for (i.e front/back etc).</param>
-		/// <param name="pname">What parameter you want to set.</param>
-		/// <param name="param">The value to set 'pname' to.</param>
-		public static void Material(uint face, uint pname, float param)
-		{
-			glMaterialf(face, pname, param);
-		}
-		/// <summary>
-		/// This function sets a material parameter.
-		/// </summary>
-		/// <param name="face">What faces is this parameter for (i.e front/back etc).</param>
-		/// <param name="pname">What parameter you want to set.</param>
-		/// <param name="parameters">The value to set 'pname' to.</param>
-		public static void Material(uint face, uint pname,  float[] parameters)
-		{
-			glMaterialfv(face, pname, parameters);
-		}
-		/// <summary>
-		/// This function sets a material parameter.
-		/// </summary>
-		/// <param name="face">What faces is this parameter for (i.e front/back etc).</param>
-		/// <param name="pname">What parameter you want to set.</param>
-		/// <param name="param">The value to set 'pname' to.</param>
-		public static void Material(uint face, uint pname, int param)
-		{
-			glMateriali(face, pname, param);
-		}
-		/// <summary>
-		/// This function sets a material parameter.
-		/// </summary>
-		/// <param name="face">What faces is this parameter for (i.e front/back etc).</param>
-		/// <param name="pname">What parameter you want to set.</param>
-		/// <param name="parameters">The value to set 'pname' to.</param>
-		public static void Material(uint face, uint pname,  int[] parameters)
-		{
-			glMaterialiv(face, pname, parameters);
-		}
-		/// <summary>
-		/// Set the current matrix mode (the matrix that matrix operations will be 
-		/// performed on).
-		/// </summary>
-		/// <param name="mode">The mode, normally PROJECTION or MODELVIEW.</param>
-		public static void MatrixMode (uint mode)
-		{
-			glMatrixMode(mode);
-		}
+        /// <summary>
+        /// This function transforms the projection matrix so that it looks at a certain
+        /// point, from a certain point.
+        /// </summary>
+        /// <param name="eyex">Position of the eye.</param>
+        /// <param name="eyey">Position of the eye.</param>
+        /// <param name="eyez">Position of the eye.</param>
+        /// <param name="centerx">Point to look at.</param>
+        /// <param name="centery">Point to look at.</param>
+        /// <param name="centerz">Point to look at.</param>
+        /// <param name="upx">'Up' Vector X Component.</param>
+        /// <param name="upy">'Up' Vector Y Component.</param>
+        /// <param name="upz">'Up' Vector Z Component.</param>
+        public static void LookAt(double eyex, double eyey, double eyez,
+            double centerx, double centery, double centerz,
+            double upx, double upy, double upz)
+        {
+            gluLookAt(eyex, eyey, eyez, centerx, centery, centerz, upx, upy, upz);
+        }
+        /// <summary>
+        /// Defines a 1D evaluator.
+        /// </summary>
+        /// <param name="target">What the control points represent (e.g. MAP1_VERTEX_3).</param>
+        /// <param name="u1">Range of the variable 'u'.</param>
+        /// <param name="u2">Range of the variable 'u'.</param>
+        /// <param name="stride">Offset between beginning of one control point, and beginning of next.</param>
+        /// <param name="order">The degree plus one, should agree with the number of control points.</param>
+        /// <param name="points">The data for the points.</param>
+        public static void Map1(uint target, double u1, double u2, int stride, int order, double[] points)
+        {
+            glMap1d(target, u1, u2, stride, order, points);
+        }
+        /// <summary>
+        /// Defines a 1D evaluator.
+        /// </summary>
+        /// <param name="target">What the control points represent (e.g. MAP1_VERTEX_3).</param>
+        /// <param name="u1">Range of the variable 'u'.</param>
+        /// <param name="u2">Range of the variable 'u'.</param>
+        /// <param name="stride">Offset between beginning of one control point, and beginning of next.</param>
+        /// <param name="order">The degree plus one, should agree with the number of control points.</param>
+        /// <param name="points">The data for the points.</param>
+        public static void Map1(uint target, float u1, float u2, int stride, int order, float[] points)
+        {
+            glMap1f(target, u1, u2, stride, order, points);
+        }
+        /// <summary>
+        /// Defines a 2D evaluator.
+        /// </summary>
+        /// <param name="target">What the control points represent (e.g. MAP2_VERTEX_3).</param>
+        /// <param name="u1">Range of the variable 'u'.</param>
+        /// <param name="u2">Range of the variable 'u.</param>
+        /// <param name="ustride">Offset between beginning of one control point and the next.</param>
+        /// <param name="uorder">The degree plus one.</param>
+        /// <param name="v1">Range of the variable 'v'.</param>
+        /// <param name="v2">Range of the variable 'v'.</param>
+        /// <param name="vstride">Offset between beginning of one control point and the next.</param>
+        /// <param name="vorder">The degree plus one.</param>
+        /// <param name="points">The data for the points.</param>
+        public static void Map2(uint target, double u1, double u2, int ustride, int uorder, double v1, double v2, int vstride, int vorder, double[] points)
+        {
+            glMap2d(target, u1, u2, ustride, uorder, v1, v2, vstride, vorder, points);
+        }
+        /// <summary>
+        /// Defines a 2D evaluator.
+        /// </summary>
+        /// <param name="target">What the control points represent (e.g. MAP2_VERTEX_3).</param>
+        /// <param name="u1">Range of the variable 'u'.</param>
+        /// <param name="u2">Range of the variable 'u.</param>
+        /// <param name="ustride">Offset between beginning of one control point and the next.</param>
+        /// <param name="uorder">The degree plus one.</param>
+        /// <param name="v1">Range of the variable 'v'.</param>
+        /// <param name="v2">Range of the variable 'v'.</param>
+        /// <param name="vstride">Offset between beginning of one control point and the next.</param>
+        /// <param name="vorder">The degree plus one.</param>
+        /// <param name="points">The data for the points.</param>
+        public static void Map2(uint target, float u1, float u2, int ustride, int uorder, float v1, float v2, int vstride, int vorder, float[] points)
+        {
+            glMap2f(target, u1, u2, ustride, uorder, v1, v2, vstride, vorder, points);
+        }
+        /// <summary>
+        /// This function defines a grid that goes from u1 to u1 in n steps, evenly spaced.
+        /// </summary>
+        /// <param name="un">Number of steps.</param>
+        /// <param name="u1">Range of variable 'u'.</param>
+        /// <param name="u2">Range of variable 'u'.</param>
+        public static void MapGrid1(int un, double u1, double u2)
+        {
+            glMapGrid1d(un, u1, u2);
+        }
+        /// <summary>
+        /// This function defines a grid that goes from u1 to u1 in n steps, evenly spaced.
+        /// </summary>
+        /// <param name="un">Number of steps.</param>
+        /// <param name="u1">Range of variable 'u'.</param>
+        /// <param name="u2">Range of variable 'u'.</param>
+        public static void MapGrid1(int un, float u1, float u2)
+        {
+            glMapGrid1d(un, u1, u2);
+        }
+        /// <summary>
+        /// This function defines a grid that goes from u1 to u1 in n steps, evenly spaced,
+        /// and the same for v.
+        /// </summary>
+        /// <param name="un">Number of steps.</param>
+        /// <param name="u1">Range of variable 'u'.</param>
+        /// <param name="u2">Range of variable 'u'.</param>
+        /// <param name="vn">Number of steps.</param>
+        /// <param name="v1">Range of variable 'v'.</param>
+        /// <param name="v2">Range of variable 'v'.</param>
+        public static void MapGrid2(int un, double u1, double u2, int vn, double v1, double v2)
+        {
+            glMapGrid2d(un, u1, u2, vn, v1, v2);
+        }
+        /// <summary>
+        /// This function defines a grid that goes from u1 to u1 in n steps, evenly spaced,
+        /// and the same for v.
+        /// </summary>
+        /// <param name="un">Number of steps.</param>
+        /// <param name="u1">Range of variable 'u'.</param>
+        /// <param name="u2">Range of variable 'u'.</param>
+        /// <param name="vn">Number of steps.</param>
+        /// <param name="v1">Range of variable 'v'.</param>
+        /// <param name="v2">Range of variable 'v'.</param>
+        public static void MapGrid2(int un, float u1, float u2, int vn, float v1, float v2)
+        {
+            glMapGrid2f(un, u1, u2, vn, v1, v2);
+        }
+        /// <summary>
+        /// This function sets a material parameter.
+        /// </summary>
+        /// <param name="face">What faces is this parameter for (i.e front/back etc).</param>
+        /// <param name="pname">What parameter you want to set.</param>
+        /// <param name="param">The value to set 'pname' to.</param>
+        public static void Material(uint face, uint pname, float param)
+        {
+            glMaterialf(face, pname, param);
+        }
+        /// <summary>
+        /// This function sets a material parameter.
+        /// </summary>
+        /// <param name="face">What faces is this parameter for (i.e front/back etc).</param>
+        /// <param name="pname">What parameter you want to set.</param>
+        /// <param name="parameters">The value to set 'pname' to.</param>
+        public static void Material(uint face, uint pname, float[] parameters)
+        {
+            glMaterialfv(face, pname, parameters);
+        }
+        /// <summary>
+        /// This function sets a material parameter.
+        /// </summary>
+        /// <param name="face">What faces is this parameter for (i.e front/back etc).</param>
+        /// <param name="pname">What parameter you want to set.</param>
+        /// <param name="param">The value to set 'pname' to.</param>
+        public static void Material(uint face, uint pname, int param)
+        {
+            glMateriali(face, pname, param);
+        }
+        /// <summary>
+        /// This function sets a material parameter.
+        /// </summary>
+        /// <param name="face">What faces is this parameter for (i.e front/back etc).</param>
+        /// <param name="pname">What parameter you want to set.</param>
+        /// <param name="parameters">The value to set 'pname' to.</param>
+        public static void Material(uint face, uint pname, int[] parameters)
+        {
+            glMaterialiv(face, pname, parameters);
+        }
+        /// <summary>
+        /// Set the current matrix mode (the matrix that matrix operations will be 
+        /// performed on).
+        /// </summary>
+        /// <param name="mode">The mode, normally PROJECTION or MODELVIEW.</param>
+        public static void MatrixMode(uint mode)
+        {
+            glMatrixMode(mode);
+        }
         /// <summary>
         /// Multiply the current matrix with the specified matrix.
         /// </summary>
         /// <param name="m">Points to 16 consecutive values that are used as the elements of a 4x4 column-major matrix.</param>
-		public static void MultMatrix( double []m)
+		public static void MultMatrix(double[] m)
         {
             glMultMatrixd(m);
         }
@@ -2998,37 +3001,37 @@ namespace Mesher.GraphicsCore
         /// Multiply the current matrix with the specified matrix.
         /// </summary>
         /// <param name="m">Points to 16 consecutive values that are used as the elements of a 4x4 column-major matrix.</param>
-		public static void MultMatrix( float []m)
+		public static void MultMatrix(float[] m)
         {
             glMultMatrixf(m);
         }
-		/// <summary>
-		/// This function starts compiling a new display list.
-		/// </summary>
-		/// <param name="list">The list to compile.</param>
-		/// <param name="mode">Either COMPILE or COMPILE_AND_EXECUTE.</param>
-		public static void NewList(uint list, uint mode)
-		{
-			glNewList(list, mode);
-		}
-		/// <summary>
-		/// This function creates a new glu NURBS renderer object.
-		/// </summary>
-		/// <returns>A Pointer to the NURBS renderer.</returns>
-		public static IntPtr NewNurbsRenderer()
-		{
-			IntPtr nurbs = gluNewNurbsRenderer();
-			return nurbs;
-		}
-		/// <summary>
-		/// This function creates a new OpenGL Quadric Object.
-		/// </summary>
-		/// <returns>The pointer to the Quadric Object.</returns>
-		public static IntPtr NewQuadric()
-		{
-			IntPtr quad = gluNewQuadric();
-			return quad;
-		}
+        /// <summary>
+        /// This function starts compiling a new display list.
+        /// </summary>
+        /// <param name="list">The list to compile.</param>
+        /// <param name="mode">Either COMPILE or COMPILE_AND_EXECUTE.</param>
+        public static void NewList(uint list, uint mode)
+        {
+            glNewList(list, mode);
+        }
+        /// <summary>
+        /// This function creates a new glu NURBS renderer object.
+        /// </summary>
+        /// <returns>A Pointer to the NURBS renderer.</returns>
+        public static IntPtr NewNurbsRenderer()
+        {
+            IntPtr nurbs = gluNewNurbsRenderer();
+            return nurbs;
+        }
+        /// <summary>
+        /// This function creates a new OpenGL Quadric Object.
+        /// </summary>
+        /// <returns>The pointer to the Quadric Object.</returns>
+        public static IntPtr NewQuadric()
+        {
+            IntPtr quad = gluNewQuadric();
+            return quad;
+        }
         /// <summary>
         /// Set the current normal.
         /// </summary>
@@ -3075,13 +3078,13 @@ namespace Mesher.GraphicsCore
         {
             glNormal3f(nx, ny, nz);
         }
-		/// <summary>
-		/// This function sets the current normal.
-		/// </summary>
-		/// <param name="v">The normal.</param>
-		public static void Normal(float[] v)
-		{
-			glNormal3fv(v);
+        /// <summary>
+        /// This function sets the current normal.
+        /// </summary>
+        /// <param name="v">The normal.</param>
+        public static void Normal(float[] v)
+        {
+            glNormal3fv(v);
         }
         /// <summary>
         /// Set the current normal.
@@ -3129,145 +3132,145 @@ namespace Mesher.GraphicsCore
         {
             glNormalPointer(type, stride, pointer);
         }
-		/// <summary>
-		/// Set's the pointer to the normal array.
-		/// </summary>
-		/// <param name="type">The type of data.</param>
-		/// <param name="stride">The space in bytes between each normal.</param>
-		/// <param name="pointer">The normals.</param>
-		public static void NormalPointer(uint type, int stride, float[] pointer)
-		{
-			glNormalPointer(type, stride, pointer);
-		}
-		/// <summary>
-		/// This function defines a NURBS Curve.
-		/// </summary>
-		/// <param name="nurbsObject">The NURBS object.</param>
-		/// <param name="knotsCount">The number of knots.</param>
-		/// <param name="knots">The knots themselves.</param>
-		/// <param name="stride">The stride, i.e. distance between vertices in the 
-		/// control points array.</param>
-		/// <param name="controlPointsArray">The array of control points.</param>
-		/// <param name="order">The order of the polynomial.</param>
-		/// <param name="type">The type of data to generate.</param>
-		public static void NurbsCurve(IntPtr nurbsObject, int knotsCount, float[] knots, 
-			int stride, float[] controlPointsArray, int order, uint type)
-		{
-			gluNurbsCurve(nurbsObject, knotsCount, knots, stride, controlPointsArray,
-				order, type);
-		}
-		/// <summary>
-		/// This function sets a NURBS property.
-		/// </summary>
-		/// <param name="nurbsObject">The object to set the property for.</param>
-		/// <param name="property">The property to set.</param>
-		/// <param name="value">The new value of the property.</param>
-		public static void NurbsProperty(IntPtr nurbsObject, int property, float value)
-		{
-			gluNurbsProperty(nurbsObject, property, value);
-		}
-    /// <summary>
-    /// This function defines a NURBS surface.
-    /// </summary>
-    /// <param name="nurbsObject">The NURBS object.</param>
-    /// <param name="sknotsCount">The sknots count.</param>
-    /// <param name="sknots">The s-knots.</param>
-    /// <param name="tknotsCount">The number of t-knots.</param>
-    /// <param name="tknots">The t-knots.</param>
-    /// <param name="sStride">The distance between s vertices.</param>
-    /// <param name="tStride">The distance between t vertices.</param>
-    /// <param name="controlPointsArray">The control points.</param>
-    /// <param name="sOrder">The order of the s polynomial.</param>
-    /// <param name="tOrder">The order of the t polynomial.</param>
-    /// <param name="type">The type of data to generate.</param>
-		public static void NurbsSurface(IntPtr nurbsObject, int sknotsCount, float[] sknots, 
-			int tknotsCount, float[] tknots, int sStride, int tStride, 
-			float[] controlPointsArray, int sOrder, int tOrder, uint type)
-		{
-			gluNurbsSurface(nurbsObject, sknotsCount, sknots, tknotsCount, tknots,
-				sStride, tStride, controlPointsArray, sOrder, tOrder, type);
-		}
-		/// <summary>
-		/// This function creates an orthographic projection matrix (i.e one with no 
-		/// perspective) and multiplies it to the current matrix stack, which would
-		/// normally be 'PROJECTION'.
-		/// </summary>
-		/// <param name="left">Left clipping plane.</param>
-		/// <param name="right">Right clipping plane.</param>
-		/// <param name="bottom">Bottom clipping plane.</param>
-		/// <param name="top">Top clipping plane.</param>
-		/// <param name="zNear">Near clipping plane.</param>
-		/// <param name="zFar">Far clipping plane.</param>
-		public static void Ortho(double left, double right, double bottom, 
-			double top, double zNear, double zFar)
-		{
-			glOrtho(left, right, bottom, top, zNear, zFar);
-		}
-		/// <summary>
-		/// This function creates an orthographic project based on a screen size.
-		/// </summary>
-		/// <param name="left">Left of the screen. (Normally 0).</param>
-		/// <param name="right">Right of the screen.(Normally width).</param>
-		/// <param name="bottom">Bottom of the screen (normally 0).</param>
-		/// <param name="top">Top of the screen (normally height).</param>
-		public static void Ortho2D(double left, double right, double bottom, double top)
-		{
-			gluOrtho2D(left, right, bottom, top);
-		}
-		/// <summary>
-		/// This function draws a partial disk from the quadric object.
-		/// </summary>
-		/// <param name="qobj">The Quadric objec.t</param>
-		/// <param name="innerRadius">Radius of the inside of the disk.</param>
-		/// <param name="outerRadius">Radius of the outside of the disk.</param>
-		/// <param name="slices">The slices.</param>
-		/// <param name="loops">The loops.</param>
-		/// <param name="startAngle">Starting angle.</param>
-		/// <param name="sweepAngle">Sweep angle.</param>
-		public static void PartialDisk(IntPtr qobj,double innerRadius,double outerRadius, int slices, int loops, double startAngle, double sweepAngle)
-		{
-			gluPartialDisk(qobj, innerRadius, outerRadius, slices, loops, startAngle, sweepAngle);
-		}
+        /// <summary>
+        /// Set's the pointer to the normal array.
+        /// </summary>
+        /// <param name="type">The type of data.</param>
+        /// <param name="stride">The space in bytes between each normal.</param>
+        /// <param name="pointer">The normals.</param>
+        public static void NormalPointer(uint type, int stride, float[] pointer)
+        {
+            glNormalPointer(type, stride, pointer);
+        }
+        /// <summary>
+        /// This function defines a NURBS Curve.
+        /// </summary>
+        /// <param name="nurbsObject">The NURBS object.</param>
+        /// <param name="knotsCount">The number of knots.</param>
+        /// <param name="knots">The knots themselves.</param>
+        /// <param name="stride">The stride, i.e. distance between vertices in the 
+        /// control points array.</param>
+        /// <param name="controlPointsArray">The array of control points.</param>
+        /// <param name="order">The order of the polynomial.</param>
+        /// <param name="type">The type of data to generate.</param>
+        public static void NurbsCurve(IntPtr nurbsObject, int knotsCount, float[] knots,
+            int stride, float[] controlPointsArray, int order, uint type)
+        {
+            gluNurbsCurve(nurbsObject, knotsCount, knots, stride, controlPointsArray,
+                order, type);
+        }
+        /// <summary>
+        /// This function sets a NURBS property.
+        /// </summary>
+        /// <param name="nurbsObject">The object to set the property for.</param>
+        /// <param name="property">The property to set.</param>
+        /// <param name="value">The new value of the property.</param>
+        public static void NurbsProperty(IntPtr nurbsObject, int property, float value)
+        {
+            gluNurbsProperty(nurbsObject, property, value);
+        }
+        /// <summary>
+        /// This function defines a NURBS surface.
+        /// </summary>
+        /// <param name="nurbsObject">The NURBS object.</param>
+        /// <param name="sknotsCount">The sknots count.</param>
+        /// <param name="sknots">The s-knots.</param>
+        /// <param name="tknotsCount">The number of t-knots.</param>
+        /// <param name="tknots">The t-knots.</param>
+        /// <param name="sStride">The distance between s vertices.</param>
+        /// <param name="tStride">The distance between t vertices.</param>
+        /// <param name="controlPointsArray">The control points.</param>
+        /// <param name="sOrder">The order of the s polynomial.</param>
+        /// <param name="tOrder">The order of the t polynomial.</param>
+        /// <param name="type">The type of data to generate.</param>
+        public static void NurbsSurface(IntPtr nurbsObject, int sknotsCount, float[] sknots,
+            int tknotsCount, float[] tknots, int sStride, int tStride,
+            float[] controlPointsArray, int sOrder, int tOrder, uint type)
+        {
+            gluNurbsSurface(nurbsObject, sknotsCount, sknots, tknotsCount, tknots,
+                sStride, tStride, controlPointsArray, sOrder, tOrder, type);
+        }
+        /// <summary>
+        /// This function creates an orthographic projection matrix (i.e one with no 
+        /// perspective) and multiplies it to the current matrix stack, which would
+        /// normally be 'PROJECTION'.
+        /// </summary>
+        /// <param name="left">Left clipping plane.</param>
+        /// <param name="right">Right clipping plane.</param>
+        /// <param name="bottom">Bottom clipping plane.</param>
+        /// <param name="top">Top clipping plane.</param>
+        /// <param name="zNear">Near clipping plane.</param>
+        /// <param name="zFar">Far clipping plane.</param>
+        public static void Ortho(double left, double right, double bottom,
+            double top, double zNear, double zFar)
+        {
+            glOrtho(left, right, bottom, top, zNear, zFar);
+        }
+        /// <summary>
+        /// This function creates an orthographic project based on a screen size.
+        /// </summary>
+        /// <param name="left">Left of the screen. (Normally 0).</param>
+        /// <param name="right">Right of the screen.(Normally width).</param>
+        /// <param name="bottom">Bottom of the screen (normally 0).</param>
+        /// <param name="top">Top of the screen (normally height).</param>
+        public static void Ortho2D(double left, double right, double bottom, double top)
+        {
+            gluOrtho2D(left, right, bottom, top);
+        }
+        /// <summary>
+        /// This function draws a partial disk from the quadric object.
+        /// </summary>
+        /// <param name="qobj">The Quadric objec.t</param>
+        /// <param name="innerRadius">Radius of the inside of the disk.</param>
+        /// <param name="outerRadius">Radius of the outside of the disk.</param>
+        /// <param name="slices">The slices.</param>
+        /// <param name="loops">The loops.</param>
+        /// <param name="startAngle">Starting angle.</param>
+        /// <param name="sweepAngle">Sweep angle.</param>
+        public static void PartialDisk(IntPtr qobj, double innerRadius, double outerRadius, int slices, int loops, double startAngle, double sweepAngle)
+        {
+            gluPartialDisk(qobj, innerRadius, outerRadius, slices, loops, startAngle, sweepAngle);
+        }
         /// <summary>
         /// Place a marker in the feedback buffer.
         /// </summary>
         /// <param name="token">Specifies a marker value to be placed in the feedback buffer following a OpenGL.PASS_THROUGH_TOKEN.</param>
-		public static void PassThrough (float token)
+		public static void PassThrough(float token)
         {
             glPassThrough(token);
         }
-		/// <summary>
-		/// This function creates a perspective matrix and multiplies it to the current
-		/// matrix stack (which in most cases should be 'PROJECTION').
-		/// </summary>
-		/// <param name="fovy">Field of view angle (human eye = 60 Degrees).</param>
-		/// <param name="aspect">Apsect Ratio (width of screen divided by height of screen).</param>
-		/// <param name="zNear">Near clipping plane (normally 1).</param>
-		/// <param name="zFar">Far clipping plane.</param>
-		public static void Perspective(double fovy, double aspect, double zNear, double zFar)
-		{
-			gluPerspective(fovy, aspect, zNear, zFar);
-		}
-		/// <summary>
-		/// This function creates a 'pick matrix' normally used for selecting objects that
-		/// are at a certain point on the screen.
-		/// </summary>
-		/// <param name="x">X Point.</param>
-		/// <param name="y">Y Point.</param>
-		/// <param name="width">Width of point to test (4 is normal).</param>
-		/// <param name="height">Height of point to test (4 is normal).</param>
-		/// <param name="viewport">The current viewport.</param>
-		public static void PickMatrix(double x, double y, double width, double height, int[] viewport)
-		{
-			gluPickMatrix(x, y, width, height, viewport);
-		}
+        /// <summary>
+        /// This function creates a perspective matrix and multiplies it to the current
+        /// matrix stack (which in most cases should be 'PROJECTION').
+        /// </summary>
+        /// <param name="fovy">Field of view angle (human eye = 60 Degrees).</param>
+        /// <param name="aspect">Apsect Ratio (width of screen divided by height of screen).</param>
+        /// <param name="zNear">Near clipping plane (normally 1).</param>
+        /// <param name="zFar">Far clipping plane.</param>
+        public static void Perspective(double fovy, double aspect, double zNear, double zFar)
+        {
+            gluPerspective(fovy, aspect, zNear, zFar);
+        }
+        /// <summary>
+        /// This function creates a 'pick matrix' normally used for selecting objects that
+        /// are at a certain point on the screen.
+        /// </summary>
+        /// <param name="x">X Point.</param>
+        /// <param name="y">Y Point.</param>
+        /// <param name="width">Width of point to test (4 is normal).</param>
+        /// <param name="height">Height of point to test (4 is normal).</param>
+        /// <param name="viewport">The current viewport.</param>
+        public static void PickMatrix(double x, double y, double width, double height, int[] viewport)
+        {
+            gluPickMatrix(x, y, width, height, viewport);
+        }
         /// <summary>
         /// Set up pixel transfer maps.
         /// </summary>
         /// <param name="map">Specifies a symbolic	map name.</param>
         /// <param name="mapsize">Specifies the size of the map being defined.</param>
         /// <param name="values">Specifies an	array of mapsize values.</param>
-		public static void PixelMap(uint map, int mapsize,  float[] values)
+		public static void PixelMap(uint map, int mapsize, float[] values)
         {
             glPixelMapfv(map, mapsize, values);
         }
@@ -3342,33 +3345,33 @@ namespace Mesher.GraphicsCore
         /// </summary>
         /// <param name="xfactor">Specify the x and y zoom factors for pixel write operations.</param>
         /// <param name="yfactor">Specify the x and y zoom factors for pixel write operations.</param>
-		public static void PixelZoom (float xfactor, float yfactor)
+		public static void PixelZoom(float xfactor, float yfactor)
         {
             glPixelZoom(xfactor, yfactor);
         }
-		/// <summary>
-		/// The size of points to be rasterised.
-		/// </summary>
-		/// <param name="size">Size in pixels.</param>
-		public static void PointSize(float size)
-		{
-			glPointSize(size);
-		}
-		/// <summary>
-		/// This sets the current drawing mode of polygons (points, lines, filled).
-		/// </summary>
-		/// <param name="face">The faces this applies to (front, back or both).</param>
-		/// <param name="mode">The mode to set to (points, lines, or filled).</param>
-		public static void PolygonMode(uint face, uint mode)
-		{
-			glPolygonMode(face, mode);
-		}
+        /// <summary>
+        /// The size of points to be rasterised.
+        /// </summary>
+        /// <param name="size">Size in pixels.</param>
+        public static void PointSize(float size)
+        {
+            glPointSize(size);
+        }
+        /// <summary>
+        /// This sets the current drawing mode of polygons (points, lines, filled).
+        /// </summary>
+        /// <param name="face">The faces this applies to (front, back or both).</param>
+        /// <param name="mode">The mode to set to (points, lines, or filled).</param>
+        public static void PolygonMode(uint face, uint mode)
+        {
+            glPolygonMode(face, mode);
+        }
         /// <summary>
         /// Set	the scale and units used to calculate depth	values.
         /// </summary>
         /// <param name="factor">Specifies a scale factor that	is used	to create a variable depth offset for each polygon. The initial value is 0.</param>
         /// <param name="units">Is multiplied by an implementation-specific value to create a constant depth offset. The initial value is 0.</param>
-		public static void PolygonOffset (float factor, float units)
+		public static void PolygonOffset(float factor, float units)
         {
             glPolygonOffset(factor, units);
         }
@@ -3376,133 +3379,133 @@ namespace Mesher.GraphicsCore
         /// Set the polygon stippling pattern.
         /// </summary>
         /// <param name="mask">Specifies a pointer to a 32x32 stipple pattern that will be unpacked from memory in the same way that glDrawPixels unpacks pixels.</param>
-		public static void PolygonStipple ( byte []mask)
+		public static void PolygonStipple(byte[] mask)
         {
             glPolygonStipple(mask);
         }
-		/// <summary>
-		/// This function restores the attribute stack to the state it was when
-		/// PushAttrib was called.
-		/// </summary>
-		public static void PopAttrib()
-		{
-			glPopAttrib();
-		}
+        /// <summary>
+        /// This function restores the attribute stack to the state it was when
+        /// PushAttrib was called.
+        /// </summary>
+        public static void PopAttrib()
+        {
+            glPopAttrib();
+        }
         /// <summary>
         /// Pop the client attribute stack.
         /// </summary>
-		public static void PopClientAttrib ()
+		public static void PopClientAttrib()
         {
             glPopClientAttrib();
         }
-		/// <summary>
-		/// Restore the previously saved state of the current matrix stack.
-		/// </summary>
-		public static void PopMatrix()
-		{            
-			glPopMatrix();
-		}
-		/// <summary>
-		/// This takes the top name off the selection names stack.
-		/// </summary>
-		public static void PopName()
-		{
-			glPopName();
-		}
+        /// <summary>
+        /// Restore the previously saved state of the current matrix stack.
+        /// </summary>
+        public static void PopMatrix()
+        {
+            glPopMatrix();
+        }
+        /// <summary>
+        /// This takes the top name off the selection names stack.
+        /// </summary>
+        public static void PopName()
+        {
+            glPopName();
+        }
         /// <summary>
         /// Set texture residence priority.
         /// </summary>
         /// <param name="n">Specifies the number of textures to be prioritized.</param>
         /// <param name="textures">Specifies an array containing the names of the textures to be prioritized.</param>
         /// <param name="priorities">Specifies	an array containing the	texture priorities. A priority given in an element of priorities applies to the	texture	named by the corresponding element of textures.</param>
-		public static void PrioritizeTextures (int n,  uint []textures,  float []priorities)
+		public static void PrioritizeTextures(int n, uint[] textures, float[] priorities)
         {
             glPrioritizeTextures(n, textures, priorities);
         }
-		/// <summary>
-		/// This function Maps the specified object coordinates into window coordinates.
-		/// </summary>
-		/// <param name="objx">The object's x coord.</param>
-		/// <param name="objy">The object's y coord.</param>
-		/// <param name="objz">The object's z coord.</param>
-		/// <param name="modelMatrix">The modelview matrix.</param>
-		/// <param name="projMatrix">The projection matrix.</param>
-		/// <param name="viewport">The viewport.</param>
-		/// <param name="winx">The window x coord.</param>
-		/// <param name="winy">The Window y coord.</param>
-		/// <param name="winz">The Window z coord.</param>
-		public static void Project(double objx, double objy, double objz, double[] modelMatrix, double[] projMatrix, int[] viewport, double[] winx, double[] winy, double[] winz)
-		{
-			gluProject(objx, objy, objz, modelMatrix, projMatrix, viewport, winx, winy, winz);
-		}		
-		/// <summary>
-		/// Save the current state of the attribute groups specified by 'mask'.
-		/// </summary>
-		/// <param name="mask">The attibute groups to save.</param>
-		public static void PushAttrib(uint mask)
-		{
-			glPushAttrib(mask);
-		}
+        /// <summary>
+        /// This function Maps the specified object coordinates into window coordinates.
+        /// </summary>
+        /// <param name="objx">The object's x coord.</param>
+        /// <param name="objy">The object's y coord.</param>
+        /// <param name="objz">The object's z coord.</param>
+        /// <param name="modelMatrix">The modelview matrix.</param>
+        /// <param name="projMatrix">The projection matrix.</param>
+        /// <param name="viewport">The viewport.</param>
+        /// <param name="winx">The window x coord.</param>
+        /// <param name="winy">The Window y coord.</param>
+        /// <param name="winz">The Window z coord.</param>
+        public static void Project(double objx, double objy, double objz, double[] modelMatrix, double[] projMatrix, int[] viewport, double[] winx, double[] winy, double[] winz)
+        {
+            gluProject(objx, objy, objz, modelMatrix, projMatrix, viewport, winx, winy, winz);
+        }
+        /// <summary>
+        /// Save the current state of the attribute groups specified by 'mask'.
+        /// </summary>
+        /// <param name="mask">The attibute groups to save.</param>
+        public static void PushAttrib(uint mask)
+        {
+            glPushAttrib(mask);
+        }
         /// <summary>
         /// Push the client attribute stack.
         /// </summary>
         /// <param name="mask">Specifies a mask that indicates	which attributes to save.</param>
-		public static void PushClientAttrib (uint mask)
+		public static void PushClientAttrib(uint mask)
         {
             glPushClientAttrib(mask);
         }
-		/// <summary>
-		/// Save the current state of the current matrix stack.
-		/// </summary>
-		public static void PushMatrix()
-		{
-			glPushMatrix();
-		}
-		/// <summary>
-		/// This function adds a new name to the selection buffer.
-		/// </summary>
-		/// <param name="name">The name to add.</param>
-		public static void PushName(uint name)
-		{
-			glPushName(name);
-		}
-		/// <summary>
-		/// This set's the Generate Normals propery of the specified Quadric object.
-		/// </summary>
-		/// <param name="quadricObject">The quadric object.</param>
-		/// <param name="normals">The type of normals to generate.</param>
-		public static void QuadricNormals(IntPtr quadricObject, uint normals)
-		{
-			gluQuadricNormals(quadricObject, normals);
-		}
-		/// <summary>
-		/// This function sets the type of texture coordinates being generated by
-		/// the specified quadric object.
-		/// </summary>
-		/// <param name="quadricObject">The quadric object.</param>
-		/// <param name="textureCoords">The type of coordinates to generate.</param>
-		public static void QuadricTexture(IntPtr quadricObject, int textureCoords)
-		{
-			gluQuadricTexture(quadricObject, textureCoords);
-		}
-		/// <summary>
-		/// This sets the orientation for the quadric object.
-		/// </summary>
-		/// <param name="quadricObject">The quadric object.</param>
-		/// <param name="orientation">The orientation.</param>
-		public static void QuadricOrientation(IntPtr quadricObject, int orientation)
-		{
-			gluQuadricOrientation(quadricObject, orientation);
-		}
-		/// <summary>
-		/// This sets the current drawstyle for the Quadric Object.
-		/// </summary>
-		/// <param name="quadObject">The quadric object.</param>
-		/// <param name="drawStyle">The draw style.</param>
-		public static void QuadricDrawStyle (IntPtr quadObject, uint drawStyle)
-		{
-			gluQuadricDrawStyle(quadObject, drawStyle);
-		}
+        /// <summary>
+        /// Save the current state of the current matrix stack.
+        /// </summary>
+        public static void PushMatrix()
+        {
+            glPushMatrix();
+        }
+        /// <summary>
+        /// This function adds a new name to the selection buffer.
+        /// </summary>
+        /// <param name="name">The name to add.</param>
+        public static void PushName(uint name)
+        {
+            glPushName(name);
+        }
+        /// <summary>
+        /// This set's the Generate Normals propery of the specified Quadric object.
+        /// </summary>
+        /// <param name="quadricObject">The quadric object.</param>
+        /// <param name="normals">The type of normals to generate.</param>
+        public static void QuadricNormals(IntPtr quadricObject, uint normals)
+        {
+            gluQuadricNormals(quadricObject, normals);
+        }
+        /// <summary>
+        /// This function sets the type of texture coordinates being generated by
+        /// the specified quadric object.
+        /// </summary>
+        /// <param name="quadricObject">The quadric object.</param>
+        /// <param name="textureCoords">The type of coordinates to generate.</param>
+        public static void QuadricTexture(IntPtr quadricObject, int textureCoords)
+        {
+            gluQuadricTexture(quadricObject, textureCoords);
+        }
+        /// <summary>
+        /// This sets the orientation for the quadric object.
+        /// </summary>
+        /// <param name="quadricObject">The quadric object.</param>
+        /// <param name="orientation">The orientation.</param>
+        public static void QuadricOrientation(IntPtr quadricObject, int orientation)
+        {
+            gluQuadricOrientation(quadricObject, orientation);
+        }
+        /// <summary>
+        /// This sets the current drawstyle for the Quadric Object.
+        /// </summary>
+        /// <param name="quadObject">The quadric object.</param>
+        /// <param name="drawStyle">The draw style.</param>
+        public static void QuadricDrawStyle(IntPtr quadObject, uint drawStyle)
+        {
+            gluQuadricDrawStyle(quadObject, drawStyle);
+        }
         /// <summary>
         /// This function sets the current raster position.
         /// </summary>
@@ -3516,7 +3519,7 @@ namespace Mesher.GraphicsCore
         /// This function sets the current raster position.
         /// </summary>
         /// <param name="v">The coordinate.</param>
-        public static void RasterPos(double[] v) 
+        public static void RasterPos(double[] v)
         {
             if (v.Length == 2)
                 glRasterPos2dv(v);
@@ -3547,14 +3550,14 @@ namespace Mesher.GraphicsCore
             else
                 glRasterPos4fv(v);
         }
-		/// <summary>
-		/// This function sets the current raster position.
-		/// </summary>
-		/// <param name="x">X coordinate.</param>
-		/// <param name="y">Y coordinate.</param>
-		public static void RasterPos(int x, int y)
-		{
-			glRasterPos2i(x, y);
+        /// <summary>
+        /// This function sets the current raster position.
+        /// </summary>
+        /// <param name="x">X coordinate.</param>
+        /// <param name="y">Y coordinate.</param>
+        public static void RasterPos(int x, int y)
+        {
+            glRasterPos2i(x, y);
         }
         /// <summary>
         /// This function sets the current raster position.
@@ -3693,7 +3696,7 @@ namespace Mesher.GraphicsCore
         /// <param name="format">Specifies the format of the pixel data. The following symbolic values are accepted: OpenGL.COLOR_INDEX, OpenGL.STENCIL_INDEX, OpenGL.DEPTH_COMPONENT, OpenGL.RED, OpenGL.GREEN, OpenGL.BLUE, OpenGL.ALPHA, OpenGL.RGB, OpenGL.RGBA, OpenGL.LUMINANCE and OpenGL.LUMINANCE_ALPHA.</param>
         /// <param name="type">Specifies the data type of the pixel data.Must be one of OpenGL.UNSIGNED_BYTE, OpenGL.BYTE, OpenGL.BITMAP, OpenGL.UNSIGNED_SHORT, OpenGL.SHORT, OpenGL.UNSIGNED_INT, OpenGL.INT or OpenGL.FLOAT.</param>
         /// <param name="pixels">Storage for the pixel data received.</param>
-		public static void ReadPixels(int x, int y, int width, int height, uint format, 
+		public static void ReadPixels(int x, int y, int width, int height, uint format,
             uint type, byte[] pixels)
         {
             glReadPixels(x, y, width, height, format, type, pixels);
@@ -3713,155 +3716,155 @@ namespace Mesher.GraphicsCore
         {
             glReadPixels(x, y, width, height, format, type, pixels);
         }
-		/// <summary>
-		/// Draw a rectangle from two coordinates (top-left and bottom-right).
-		/// </summary>
-		/// <param name="x1">Top-Left X value.</param>
-		/// <param name="y1">Top-Left Y value.</param>
-		/// <param name="x2">Bottom-Right X Value.</param>
-		/// <param name="y2">Bottom-Right Y Value.</param>
-		public static void Rect(double x1, double y1, double x2, double y2)
-		{
-			glRectd(x1, y1, x2, y2);
-		}
-		/// <summary>
-		/// Draw a rectangle from two coordinates, expressed as arrays, e.g
-		/// Rect(new float[] {0, 0}, new float[] {10, 10});
-		/// </summary>
-		/// <param name="v1">Top-Left point.</param>
-		/// <param name="v2">Bottom-Right point.</param>
-		public static void Rect( double []v1,  double []v2)
-		{
-			glRectdv(v1, v2);
-		}
-		/// <summary>
-		/// Draw a rectangle from two coordinates (top-left and bottom-right).
-		/// </summary>
-		/// <param name="x1">Top-Left X value.</param>
-		/// <param name="y1">Top-Left Y value.</param>
-		/// <param name="x2">Bottom-Right X Value.</param>
-		/// <param name="y2">Bottom-Right Y Value.</param>
-		public static void Rect(float x1, float y1, float x2, float y2)
-		{
-			glRectd(x1, y1, x2, y2);
-		}
-		/// <summary>
-		/// Draw a rectangle from two coordinates, expressed as arrays, e.g
-		/// Rect(new float[] {0, 0}, new float[] {10, 10});
-		/// </summary>
-		/// <param name="v1">Top-Left point.</param>
-		/// <param name="v2">Bottom-Right point.</param>
-		public static void Rect(float []v1,  float []v2)
-		{
-			glRectfv(v1, v2);
-		}
-		/// <summary>
-		/// Draw a rectangle from two coordinates (top-left and bottom-right).
-		/// </summary>
-		/// <param name="x1">Top-Left X value.</param>
-		/// <param name="y1">Top-Left Y value.</param>
-		/// <param name="x2">Bottom-Right X Value.</param>
-		/// <param name="y2">Bottom-Right Y Value.</param>
-		public static void Rect(int x1, int y1, int x2, int y2)
-		{
-			glRecti(x1, y1, x2, y2);
-		}
-		/// <summary>
-		/// Draw a rectangle from two coordinates, expressed as arrays, e.g
-		/// Rect(new float[] {0, 0}, new float[] {10, 10});
-		/// </summary>
-		/// <param name="v1">Top-Left point.</param>
-		/// <param name="v2">Bottom-Right point.</param>
-		public static void Rect( int []v1,  int []v2)
-		{
-			glRectiv(v1, v2);
-		}
-		/// <summary>
-		/// Draw a rectangle from two coordinates (top-left and bottom-right).
-		/// </summary>
-		/// <param name="x1">Top-Left X value.</param>
-		/// <param name="y1">Top-Left Y value.</param>
-		/// <param name="x2">Bottom-Right X Value.</param>
-		/// <param name="y2">Bottom-Right Y Value.</param>
-		public static void Rect(short x1, short y1, short x2, short y2)
-		{
-			glRects(x1, y1, x2, y2);
-		}
-		/// <summary>
-		/// Draw a rectangle from two coordinates, expressed as arrays, e.g
-		/// Rect(new float[] {0, 0}, new float[] {10, 10});
-		/// </summary>
-		/// <param name="v1">Top-Left point.</param>
-		/// <param name="v2">Bottom-Right point.</param>
-		public static void Rect(short []v1, short []v2)
-		{
-			glRectsv(v1, v2);
-		}
-		/// <summary>
-		/// This function sets the current render mode (render, feedback or select).
-		/// </summary>
-		/// <param name="mode">The Render mode (RENDER, SELECT or FEEDBACK).</param>
-		/// <returns>The hits that selection or feedback caused..</returns>
-		public static int RenderMode(uint mode)
-		{
-			int hits = glRenderMode(mode);
-			return hits;
-		}
-		/// <summary>
-		/// This function applies a rotation transformation to the current matrix.
-		/// </summary>
-		/// <param name="angle">The angle to rotate.</param>
-		/// <param name="x">Amount along x.</param>
-		/// <param name="y">Amount along y.</param>
-		/// <param name="z">Amount along z.</param>
-		public static void Rotate(double angle, double x, double y, double z)
-		{
-			glRotated(angle, x, y, z);
-		}
-		/// <summary>
-		/// This function applies a rotation transformation to the current matrix.
-		/// </summary>
-		/// <param name="angle">The angle to rotate.</param>
-		/// <param name="x">Amount along x.</param>
-		/// <param name="y">Amount along y.</param>
-		/// <param name="z">Amount along z.</param>
-		public static void Rotate(float angle, float x, float y, float z)
-		{
-			glRotatef(angle, x, y, z);
-		}
-		/// <summary>
-		/// This function quickly does three rotations, one about each axis, with the
-		/// given angles (it's not an OpenGL function, but very useful).
-		/// </summary>
-		/// <param name="anglex">The angle to rotate about x.</param>
-		/// <param name="angley">The angle to rotate about y.</param>
-		/// <param name="anglez">The angle to rotate about z.</param>
-		public static void Rotate(float anglex, float angley, float anglez)
-		{
-			glRotatef(anglex, 1, 0, 0);
-			glRotatef(angley, 0, 1, 0);
-			glRotatef(anglez, 0, 0, 1);
-		}
-		/// <summary>
-		/// This function applies a scale transformation to the current matrix.
-		/// </summary>
-		/// <param name="x">The amount to scale along x.</param>
-		/// <param name="y">The amount to scale along y.</param>
-		/// <param name="z">The amount to scale along z.</param>
-		public static void Scale(double x, double y, double z)
-		{
-			glScaled(x, y, z);
-		}
-		/// <summary>
-		/// This function applies a scale transformation to the current matrix.
-		/// </summary>
-		/// <param name="x">The amount to scale along x.</param>
-		/// <param name="y">The amount to scale along y.</param>
-		/// <param name="z">The amount to scale along z.</param>
-		public static void Scale(float x, float y, float z)
-		{
-			glScalef(x, y, z);
-		}
+        /// <summary>
+        /// Draw a rectangle from two coordinates (top-left and bottom-right).
+        /// </summary>
+        /// <param name="x1">Top-Left X value.</param>
+        /// <param name="y1">Top-Left Y value.</param>
+        /// <param name="x2">Bottom-Right X Value.</param>
+        /// <param name="y2">Bottom-Right Y Value.</param>
+        public static void Rect(double x1, double y1, double x2, double y2)
+        {
+            glRectd(x1, y1, x2, y2);
+        }
+        /// <summary>
+        /// Draw a rectangle from two coordinates, expressed as arrays, e.g
+        /// Rect(new float[] {0, 0}, new float[] {10, 10});
+        /// </summary>
+        /// <param name="v1">Top-Left point.</param>
+        /// <param name="v2">Bottom-Right point.</param>
+        public static void Rect(double[] v1, double[] v2)
+        {
+            glRectdv(v1, v2);
+        }
+        /// <summary>
+        /// Draw a rectangle from two coordinates (top-left and bottom-right).
+        /// </summary>
+        /// <param name="x1">Top-Left X value.</param>
+        /// <param name="y1">Top-Left Y value.</param>
+        /// <param name="x2">Bottom-Right X Value.</param>
+        /// <param name="y2">Bottom-Right Y Value.</param>
+        public static void Rect(float x1, float y1, float x2, float y2)
+        {
+            glRectd(x1, y1, x2, y2);
+        }
+        /// <summary>
+        /// Draw a rectangle from two coordinates, expressed as arrays, e.g
+        /// Rect(new float[] {0, 0}, new float[] {10, 10});
+        /// </summary>
+        /// <param name="v1">Top-Left point.</param>
+        /// <param name="v2">Bottom-Right point.</param>
+        public static void Rect(float[] v1, float[] v2)
+        {
+            glRectfv(v1, v2);
+        }
+        /// <summary>
+        /// Draw a rectangle from two coordinates (top-left and bottom-right).
+        /// </summary>
+        /// <param name="x1">Top-Left X value.</param>
+        /// <param name="y1">Top-Left Y value.</param>
+        /// <param name="x2">Bottom-Right X Value.</param>
+        /// <param name="y2">Bottom-Right Y Value.</param>
+        public static void Rect(int x1, int y1, int x2, int y2)
+        {
+            glRecti(x1, y1, x2, y2);
+        }
+        /// <summary>
+        /// Draw a rectangle from two coordinates, expressed as arrays, e.g
+        /// Rect(new float[] {0, 0}, new float[] {10, 10});
+        /// </summary>
+        /// <param name="v1">Top-Left point.</param>
+        /// <param name="v2">Bottom-Right point.</param>
+        public static void Rect(int[] v1, int[] v2)
+        {
+            glRectiv(v1, v2);
+        }
+        /// <summary>
+        /// Draw a rectangle from two coordinates (top-left and bottom-right).
+        /// </summary>
+        /// <param name="x1">Top-Left X value.</param>
+        /// <param name="y1">Top-Left Y value.</param>
+        /// <param name="x2">Bottom-Right X Value.</param>
+        /// <param name="y2">Bottom-Right Y Value.</param>
+        public static void Rect(short x1, short y1, short x2, short y2)
+        {
+            glRects(x1, y1, x2, y2);
+        }
+        /// <summary>
+        /// Draw a rectangle from two coordinates, expressed as arrays, e.g
+        /// Rect(new float[] {0, 0}, new float[] {10, 10});
+        /// </summary>
+        /// <param name="v1">Top-Left point.</param>
+        /// <param name="v2">Bottom-Right point.</param>
+        public static void Rect(short[] v1, short[] v2)
+        {
+            glRectsv(v1, v2);
+        }
+        /// <summary>
+        /// This function sets the current render mode (render, feedback or select).
+        /// </summary>
+        /// <param name="mode">The Render mode (RENDER, SELECT or FEEDBACK).</param>
+        /// <returns>The hits that selection or feedback caused..</returns>
+        public static int RenderMode(uint mode)
+        {
+            int hits = glRenderMode(mode);
+            return hits;
+        }
+        /// <summary>
+        /// This function applies a rotation transformation to the current matrix.
+        /// </summary>
+        /// <param name="angle">The angle to rotate.</param>
+        /// <param name="x">Amount along x.</param>
+        /// <param name="y">Amount along y.</param>
+        /// <param name="z">Amount along z.</param>
+        public static void Rotate(double angle, double x, double y, double z)
+        {
+            glRotated(angle, x, y, z);
+        }
+        /// <summary>
+        /// This function applies a rotation transformation to the current matrix.
+        /// </summary>
+        /// <param name="angle">The angle to rotate.</param>
+        /// <param name="x">Amount along x.</param>
+        /// <param name="y">Amount along y.</param>
+        /// <param name="z">Amount along z.</param>
+        public static void Rotate(float angle, float x, float y, float z)
+        {
+            glRotatef(angle, x, y, z);
+        }
+        /// <summary>
+        /// This function quickly does three rotations, one about each axis, with the
+        /// given angles (it's not an OpenGL function, but very useful).
+        /// </summary>
+        /// <param name="anglex">The angle to rotate about x.</param>
+        /// <param name="angley">The angle to rotate about y.</param>
+        /// <param name="anglez">The angle to rotate about z.</param>
+        public static void Rotate(float anglex, float angley, float anglez)
+        {
+            glRotatef(anglex, 1, 0, 0);
+            glRotatef(angley, 0, 1, 0);
+            glRotatef(anglez, 0, 0, 1);
+        }
+        /// <summary>
+        /// This function applies a scale transformation to the current matrix.
+        /// </summary>
+        /// <param name="x">The amount to scale along x.</param>
+        /// <param name="y">The amount to scale along y.</param>
+        /// <param name="z">The amount to scale along z.</param>
+        public static void Scale(double x, double y, double z)
+        {
+            glScaled(x, y, z);
+        }
+        /// <summary>
+        /// This function applies a scale transformation to the current matrix.
+        /// </summary>
+        /// <param name="x">The amount to scale along x.</param>
+        /// <param name="y">The amount to scale along y.</param>
+        /// <param name="z">The amount to scale along z.</param>
+        public static void Scale(float x, float y, float z)
+        {
+            glScalef(x, y, z);
+        }
         /// <summary>
         /// Define the scissor box.
         /// </summary>
@@ -3869,196 +3872,196 @@ namespace Mesher.GraphicsCore
         /// <param name="y">Specify the lower left corner of the scissor box. Initially (0, 0).</param>
         /// <param name="width">Specify the width and height of the scissor box. When a GL context is first attached to a window, width and height are set to the dimensions of that window.</param>
         /// <param name="height">Specify the width and height of the scissor box. When a GL context is first attached to a window, width and height are set to the dimensions of that window.</param>
-		public static void Scissor (int x, int y, int width, int height)
+		public static void Scissor(int x, int y, int width, int height)
         {
             glScissor(x, y, width, height);
         }
-		/// <summary>
-		/// This function sets the current select buffer.
-		/// </summary>
-		/// <param name="size">The size of the buffer you are passing.</param>
-		/// <param name="buffer">The buffer itself.</param>
-		public static void SelectBuffer(int size, uint[] buffer)
-		{
-			glSelectBuffer(size, buffer);
-		}
+        /// <summary>
+        /// This function sets the current select buffer.
+        /// </summary>
+        /// <param name="size">The size of the buffer you are passing.</param>
+        /// <param name="buffer">The buffer itself.</param>
+        public static void SelectBuffer(int size, uint[] buffer)
+        {
+            glSelectBuffer(size, buffer);
+        }
         /// <summary>
         /// Select flat or smooth shading.
         /// </summary>
         /// <param name="mode">Specifies a symbolic value representing a shading technique. Accepted values are OpenGL.FLAT and OpenGL.SMOOTH. The default is OpenGL.SMOOTH.</param>
-		public static void ShadeModel (uint mode)
+		public static void ShadeModel(uint mode)
         {
             glShadeModel(mode);
         }
-		/// <summary>
-		/// This function draws a sphere from a Quadric Object.
-		/// </summary>
-		/// <param name="qobj">The quadric object.</param>
-		/// <param name="radius">Sphere radius.</param>
-		/// <param name="slices">Slices of the sphere.</param>
-		/// <param name="stacks">Stakcs of the sphere.</param>
-		public static void Sphere(IntPtr qobj, double radius, int slices, int stacks)
-		{
-			gluSphere(qobj, radius, slices, stacks);
-		}
-		/// <summary>
-		/// This function sets the current stencil buffer function.
-		/// </summary>
-		/// <param name="func">The function type.</param>
-		/// <param name="reference">The function reference.</param>
-		/// <param name="mask">The function mask.</param>
-		public static void StencilFunc(uint func, int reference, uint mask)
-		{
-			glStencilFunc(func, reference, mask);
-		}
-		/// <summary>
-		/// This function sets the stencil buffer mask.
-		/// </summary>
-		/// <param name="mask">The mask.</param>
-		public static void StencilMask(uint mask)
-		{
-			glStencilMask(mask);
-		}
-		/// <summary>
-		/// This function sets the stencil buffer operation.
-		/// </summary>
-		/// <param name="fail">Fail operation.</param>
-		/// <param name="zfail">Depth fail component.</param>
-		/// <param name="zpass">Depth pass component.</param>
-		public static void StencilOp(uint fail, uint zfail, uint zpass)
-		{
-			glStencilOp(fail, zfail, zpass);
-		}
-		/// <summary>
-		/// This function sets the current texture coordinates.
-		/// </summary>
-		/// <param name="s">Texture Coordinate.</param>
-		public static void TexCoord(double s)
-		{
-			glTexCoord1d(s);
-		}
-		/// <summary>
-		/// This function sets the current texture coordinates.
-		/// </summary>
-		/// <param name="v">Array of 1,2,3 or 4 Texture Coordinates.</param>
-		public static void TexCoord(double []v)
-		{
-			if(v.Length == 1)
-				glTexCoord1dv(v);
-			else if(v.Length == 2)
-				glTexCoord2dv(v);
-			else if(v.Length == 3)
-				glTexCoord3dv(v);
-			else if(v.Length == 4)
-				glTexCoord4dv(v);
-		}
-		/// <summary>
-		/// This function sets the current texture coordinates.
-		/// </summary>
-		/// <param name="s">Texture Coordinate.</param>
-		public static void TexCoord(float s)
-		{
-			glTexCoord1f(s);
-		}
-		/// <summary>
-		/// This function sets the current texture coordinates. WARNING: if you
-		/// can call something more explicit, like TexCoord2f then call that, it's
-		/// much faster.
-		/// </summary>
-		/// <param name="v">Array of 1,2,3 or 4 Texture Coordinates.</param>
-		public static void TexCoord(float[] v)
-		{
-			if(v.Length == 1)
-				glTexCoord1fv(v);
-			else if(v.Length == 2)
-				glTexCoord2fv(v);
-			else if(v.Length == 3)
-				glTexCoord3fv(v);
-			else if(v.Length == 4)
-				glTexCoord4fv(v);
-		}
-		/// <summary>
-		/// This function sets the current texture coordinates.
-		/// </summary>
-		/// <param name="s">Texture Coordinate.</param>
-		public static void TexCoord(int s)
-		{
-			glTexCoord1i(s);
-		}
-		/// <summary>
-		/// This function sets the current texture coordinates.
-		/// </summary>
-		/// <param name="v">Array of 1,2,3 or 4 Texture Coordinates.</param>
-		public static void TexCoord(int[] v)
-		{
-			if(v.Length == 1)
-				glTexCoord1iv(v);
-			else if(v.Length == 2)
-				glTexCoord2iv(v);
-			else if(v.Length == 3)
-				glTexCoord3iv(v);
-			else if(v.Length == 4)
-				glTexCoord4iv(v);
-		}
-		/// <summary>
-		/// This function sets the current texture coordinates.
-		/// </summary>
-		/// <param name="s">Texture Coordinate.</param>
-		public static void TexCoord(short s)
-		{
-			glTexCoord1s(s);
-		}
-		/// <summary>
-		/// This function sets the current texture coordinates.
-		/// </summary>
-		/// <param name="v">Array of 1,2,3 or 4 Texture Coordinates.</param>
-		public static void TexCoord(short[] v)
-		{
-			if(v.Length == 1)
-				glTexCoord1sv(v);
-			else if(v.Length == 2)
-				glTexCoord2sv(v);
-			else if(v.Length == 3)
-				glTexCoord3sv(v);
-			else if(v.Length == 4)
-				glTexCoord4sv(v);
-		}
-		/// <summary>
-		/// This function sets the current texture coordinates.
-		/// </summary>
-		/// <param name="s">Texture Coordinate.</param>
-		/// <param name="t">Texture Coordinate.</param>
-		public static void TexCoord(double s, double t)
-		{
-			glTexCoord2d(s, t);
-		}
-		/// <summary>
-		/// This function sets the current texture coordinates.
-		/// </summary>
-		/// <param name="s">Texture Coordinate.</param>
-		/// <param name="t">Texture Coordinate.</param>
-		public static void TexCoord(float s, float t)
-		{
-			glTexCoord2f(s, t);
-		}
-		/// <summary>
-		/// This function sets the current texture coordinates.
-		/// </summary>
-		/// <param name="s">Texture Coordinate.</param>
-		/// <param name="t">Texture Coordinate.</param>
-		public static void TexCoord(int s, int t)
-		{
-			glTexCoord2i(s, t);
-		}
-		/// <summary>
-		/// This function sets the current texture coordinates.
-		/// </summary>
-		/// <param name="s">Texture Coordinate.</param>
-		/// <param name="t">Texture Coordinate.</param>
-		public static void TexCoord(short s, short t)
-		{
-			glTexCoord2s(s, t);
-		}
+        /// <summary>
+        /// This function draws a sphere from a Quadric Object.
+        /// </summary>
+        /// <param name="qobj">The quadric object.</param>
+        /// <param name="radius">Sphere radius.</param>
+        /// <param name="slices">Slices of the sphere.</param>
+        /// <param name="stacks">Stakcs of the sphere.</param>
+        public static void Sphere(IntPtr qobj, double radius, int slices, int stacks)
+        {
+            gluSphere(qobj, radius, slices, stacks);
+        }
+        /// <summary>
+        /// This function sets the current stencil buffer function.
+        /// </summary>
+        /// <param name="func">The function type.</param>
+        /// <param name="reference">The function reference.</param>
+        /// <param name="mask">The function mask.</param>
+        public static void StencilFunc(uint func, int reference, uint mask)
+        {
+            glStencilFunc(func, reference, mask);
+        }
+        /// <summary>
+        /// This function sets the stencil buffer mask.
+        /// </summary>
+        /// <param name="mask">The mask.</param>
+        public static void StencilMask(uint mask)
+        {
+            glStencilMask(mask);
+        }
+        /// <summary>
+        /// This function sets the stencil buffer operation.
+        /// </summary>
+        /// <param name="fail">Fail operation.</param>
+        /// <param name="zfail">Depth fail component.</param>
+        /// <param name="zpass">Depth pass component.</param>
+        public static void StencilOp(uint fail, uint zfail, uint zpass)
+        {
+            glStencilOp(fail, zfail, zpass);
+        }
+        /// <summary>
+        /// This function sets the current texture coordinates.
+        /// </summary>
+        /// <param name="s">Texture Coordinate.</param>
+        public static void TexCoord(double s)
+        {
+            glTexCoord1d(s);
+        }
+        /// <summary>
+        /// This function sets the current texture coordinates.
+        /// </summary>
+        /// <param name="v">Array of 1,2,3 or 4 Texture Coordinates.</param>
+        public static void TexCoord(double[] v)
+        {
+            if (v.Length == 1)
+                glTexCoord1dv(v);
+            else if (v.Length == 2)
+                glTexCoord2dv(v);
+            else if (v.Length == 3)
+                glTexCoord3dv(v);
+            else if (v.Length == 4)
+                glTexCoord4dv(v);
+        }
+        /// <summary>
+        /// This function sets the current texture coordinates.
+        /// </summary>
+        /// <param name="s">Texture Coordinate.</param>
+        public static void TexCoord(float s)
+        {
+            glTexCoord1f(s);
+        }
+        /// <summary>
+        /// This function sets the current texture coordinates. WARNING: if you
+        /// can call something more explicit, like TexCoord2f then call that, it's
+        /// much faster.
+        /// </summary>
+        /// <param name="v">Array of 1,2,3 or 4 Texture Coordinates.</param>
+        public static void TexCoord(float[] v)
+        {
+            if (v.Length == 1)
+                glTexCoord1fv(v);
+            else if (v.Length == 2)
+                glTexCoord2fv(v);
+            else if (v.Length == 3)
+                glTexCoord3fv(v);
+            else if (v.Length == 4)
+                glTexCoord4fv(v);
+        }
+        /// <summary>
+        /// This function sets the current texture coordinates.
+        /// </summary>
+        /// <param name="s">Texture Coordinate.</param>
+        public static void TexCoord(int s)
+        {
+            glTexCoord1i(s);
+        }
+        /// <summary>
+        /// This function sets the current texture coordinates.
+        /// </summary>
+        /// <param name="v">Array of 1,2,3 or 4 Texture Coordinates.</param>
+        public static void TexCoord(int[] v)
+        {
+            if (v.Length == 1)
+                glTexCoord1iv(v);
+            else if (v.Length == 2)
+                glTexCoord2iv(v);
+            else if (v.Length == 3)
+                glTexCoord3iv(v);
+            else if (v.Length == 4)
+                glTexCoord4iv(v);
+        }
+        /// <summary>
+        /// This function sets the current texture coordinates.
+        /// </summary>
+        /// <param name="s">Texture Coordinate.</param>
+        public static void TexCoord(short s)
+        {
+            glTexCoord1s(s);
+        }
+        /// <summary>
+        /// This function sets the current texture coordinates.
+        /// </summary>
+        /// <param name="v">Array of 1,2,3 or 4 Texture Coordinates.</param>
+        public static void TexCoord(short[] v)
+        {
+            if (v.Length == 1)
+                glTexCoord1sv(v);
+            else if (v.Length == 2)
+                glTexCoord2sv(v);
+            else if (v.Length == 3)
+                glTexCoord3sv(v);
+            else if (v.Length == 4)
+                glTexCoord4sv(v);
+        }
+        /// <summary>
+        /// This function sets the current texture coordinates.
+        /// </summary>
+        /// <param name="s">Texture Coordinate.</param>
+        /// <param name="t">Texture Coordinate.</param>
+        public static void TexCoord(double s, double t)
+        {
+            glTexCoord2d(s, t);
+        }
+        /// <summary>
+        /// This function sets the current texture coordinates.
+        /// </summary>
+        /// <param name="s">Texture Coordinate.</param>
+        /// <param name="t">Texture Coordinate.</param>
+        public static void TexCoord(float s, float t)
+        {
+            glTexCoord2f(s, t);
+        }
+        /// <summary>
+        /// This function sets the current texture coordinates.
+        /// </summary>
+        /// <param name="s">Texture Coordinate.</param>
+        /// <param name="t">Texture Coordinate.</param>
+        public static void TexCoord(int s, int t)
+        {
+            glTexCoord2i(s, t);
+        }
+        /// <summary>
+        /// This function sets the current texture coordinates.
+        /// </summary>
+        /// <param name="s">Texture Coordinate.</param>
+        /// <param name="t">Texture Coordinate.</param>
+        public static void TexCoord(short s, short t)
+        {
+            glTexCoord2s(s, t);
+        }
         /// <summary>
         /// This function sets the current texture coordinates.
         /// </summary>
@@ -4154,17 +4157,17 @@ namespace Mesher.GraphicsCore
         {
             glTexCoordPointer(size, type, stride, pointer);
         }
-		/// <summary>
-		/// This function sets the texture coord array.
-		/// </summary>
-		/// <param name="size">The number of coords per set.</param>
-		/// <param name="type">The type of data.</param>
-		/// <param name="stride">The number of bytes between coords.</param>
-		/// <param name="pointer">The coords.</param>
-		public static void TexCoordPointer(int size, uint type, int stride, float[] pointer)
-		{
-			glTexCoordPointer(size, type, stride, pointer);
-		}
+        /// <summary>
+        /// This function sets the texture coord array.
+        /// </summary>
+        /// <param name="size">The number of coords per set.</param>
+        /// <param name="type">The type of data.</param>
+        /// <param name="stride">The number of bytes between coords.</param>
+        /// <param name="pointer">The coords.</param>
+        public static void TexCoordPointer(int size, uint type, int stride, float[] pointer)
+        {
+            glTexCoordPointer(size, type, stride, pointer);
+        }
         /// <summary>
         /// Set texture environment parameters.
         /// </summary>
@@ -4221,7 +4224,7 @@ namespace Mesher.GraphicsCore
         /// <param name="coord">Specifies a texture coordinate. Must be one of OpenGL.S, OpenGL.T, OpenGL.R, or OpenGL.Q.</param>
         /// <param name="pname">Specifies the symbolic name of the texture-coordinate generation function or function parameters. Must be OpenGL.TEXTURE_GEN_MODE, OpenGL.OBJECT_PLANE, or OpenGL.EYE_PLANE.</param>
         /// <param name="parameters">Specifies a pointer to an array of texture generation parameters. If pname is OpenGL.TEXTURE_GEN_MODE, then the array must contain a single symbolic constant, one of OpenGL.OBJECT_LINEAR, OpenGL.EYE_LINEAR, or OpenGL.SPHERE_MAP. Otherwise, params holds the coefficients for the texture-coordinate generation function specified by pname.</param>
-        public static void TexGen(uint coord, uint pname, double[] parameters) 
+        public static void TexGen(uint coord, uint pname, double[] parameters)
         {
             glTexGendv(coord, pname, parameters);
         }
@@ -4265,37 +4268,37 @@ namespace Mesher.GraphicsCore
         {
             glTexGeniv(coord, pname, parameters);
         }
-		/// <summary>
-		/// This function sets the image for the currently binded texture.
-		/// </summary>
-		/// <param name="target">The type of texture, TEXTURE_2D or PROXY_TEXTURE_2D.</param>
-		/// <param name="level">For mip-map textures, ordinary textures should be '0'.</param>
-		/// <param name="internalformat">The format of the data you are want OpenGL to create, e.g  RGB16.</param>
-		/// <param name="width">The width of the texture image (must be a power of 2, e.g 64).</param>
-		/// <param name="border">The width of the border (0 or 1).</param>
-		/// <param name="format">The format of the data you are passing, e.g. RGBA.</param>
-		/// <param name="type">The type of data you are passing, e.g GL_BYTE.</param>
-		/// <param name="pixels">The actual pixel data.</param>
-		public static void TexImage1D(uint target, int level, uint internalformat, int width, int border, uint format, uint type,  byte[] pixels)
-		{
-			glTexImage1D(target, level, internalformat, width, border, format, type, pixels);
-		}
-		/// <summary>
-		/// This function sets the image for the currently binded texture.
-		/// </summary>
-		/// <param name="target">The type of texture, TEXTURE_2D or PROXY_TEXTURE_2D.</param>
-		/// <param name="level">For mip-map textures, ordinary textures should be '0'.</param>
-		/// <param name="internalformat">The format of the data you are want OpenGL to create, e.g  RGB16.</param>
-		/// <param name="width">The width of the texture image (must be a power of 2, e.g 64).</param>
-		/// <param name="height">The height of the texture image (must be a power of 2, e.g 32).</param>
-		/// <param name="border">The width of the border (0 or 1).</param>
-		/// <param name="format">The format of the data you are passing, e.g. RGBA.</param>
-		/// <param name="type">The type of data you are passing, e.g GL_BYTE.</param>
-		/// <param name="pixels">The actual pixel data.</param>
-		public static void TexImage2D(uint target, int level, uint internalformat, int width, int height, int border, uint format, uint type, byte[] pixels)
-		{
-			glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
-		}
+        /// <summary>
+        /// This function sets the image for the currently binded texture.
+        /// </summary>
+        /// <param name="target">The type of texture, TEXTURE_2D or PROXY_TEXTURE_2D.</param>
+        /// <param name="level">For mip-map textures, ordinary textures should be '0'.</param>
+        /// <param name="internalformat">The format of the data you are want OpenGL to create, e.g  RGB16.</param>
+        /// <param name="width">The width of the texture image (must be a power of 2, e.g 64).</param>
+        /// <param name="border">The width of the border (0 or 1).</param>
+        /// <param name="format">The format of the data you are passing, e.g. RGBA.</param>
+        /// <param name="type">The type of data you are passing, e.g GL_BYTE.</param>
+        /// <param name="pixels">The actual pixel data.</param>
+        public static void TexImage1D(uint target, int level, uint internalformat, int width, int border, uint format, uint type, byte[] pixels)
+        {
+            glTexImage1D(target, level, internalformat, width, border, format, type, pixels);
+        }
+        /// <summary>
+        /// This function sets the image for the currently binded texture.
+        /// </summary>
+        /// <param name="target">The type of texture, TEXTURE_2D or PROXY_TEXTURE_2D.</param>
+        /// <param name="level">For mip-map textures, ordinary textures should be '0'.</param>
+        /// <param name="internalformat">The format of the data you are want OpenGL to create, e.g  RGB16.</param>
+        /// <param name="width">The width of the texture image (must be a power of 2, e.g 64).</param>
+        /// <param name="height">The height of the texture image (must be a power of 2, e.g 32).</param>
+        /// <param name="border">The width of the border (0 or 1).</param>
+        /// <param name="format">The format of the data you are passing, e.g. RGBA.</param>
+        /// <param name="type">The type of data you are passing, e.g GL_BYTE.</param>
+        /// <param name="pixels">The actual pixel data.</param>
+        public static void TexImage2D(uint target, int level, uint internalformat, int width, int height, int border, uint format, uint type, byte[] pixels)
+        {
+            glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
+        }
         /// <summary>
         /// This function sets the image for the currently binded texture.
         /// </summary>
@@ -4312,46 +4315,46 @@ namespace Mesher.GraphicsCore
         {
             glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
         }
-		/// <summary>
-		///	This function sets the parameters for the currently binded texture object.
-		/// </summary>
-		/// <param name="target">The type of texture you are setting the parameter to, e.g. TEXTURE_2D</param>
-		/// <param name="pname">The parameter to set.</param>
-		/// <param name="param">The value to set it to.</param>
-		public static void TexParameter(uint target, uint pname, float param)
-		{
-			glTexParameterf(target, pname, param);
-		}
-		/// <summary>
-		///	This function sets the parameters for the currently binded texture object.
-		/// </summary>
-		/// <param name="target">The type of texture you are setting the parameter to, e.g. TEXTURE_2D</param>
-		/// <param name="pname">The parameter to set.</param>
-		/// <param name="parameters">The value to set it to.</param>
-		public static void TexParameter(uint target, uint pname, float[] parameters)
-		{
-			glTexParameterfv(target, pname, parameters);
-		}
-		/// <summary>
-		///	This function sets the parameters for the currently binded texture object.
-		/// </summary>
-		/// <param name="target">The type of texture you are setting the parameter to, e.g. TEXTURE_2D</param>
-		/// <param name="pname">The parameter to set.</param>
-		/// <param name="param">The value to set it to.</param>
-		public static void TexParameter(uint target, uint pname, int param)
-		{
-			glTexParameteri(target, pname, param);
-		}
-		/// <summary>
-		///	This function sets the parameters for the currently binded texture object.
-		/// </summary>
-		/// <param name="target">The type of texture you are setting the parameter to, e.g. TEXTURE_2D</param>
-		/// <param name="pname">The parameter to set.</param>
-		/// <param name="parameters">The value to set it to.</param>
-		public static void TexParameter(uint target, uint pname, int[] parameters)
-		{
-			glTexParameteriv(target, pname, parameters);
-		}
+        /// <summary>
+        ///	This function sets the parameters for the currently binded texture object.
+        /// </summary>
+        /// <param name="target">The type of texture you are setting the parameter to, e.g. TEXTURE_2D</param>
+        /// <param name="pname">The parameter to set.</param>
+        /// <param name="param">The value to set it to.</param>
+        public static void TexParameter(uint target, uint pname, float param)
+        {
+            glTexParameterf(target, pname, param);
+        }
+        /// <summary>
+        ///	This function sets the parameters for the currently binded texture object.
+        /// </summary>
+        /// <param name="target">The type of texture you are setting the parameter to, e.g. TEXTURE_2D</param>
+        /// <param name="pname">The parameter to set.</param>
+        /// <param name="parameters">The value to set it to.</param>
+        public static void TexParameter(uint target, uint pname, float[] parameters)
+        {
+            glTexParameterfv(target, pname, parameters);
+        }
+        /// <summary>
+        ///	This function sets the parameters for the currently binded texture object.
+        /// </summary>
+        /// <param name="target">The type of texture you are setting the parameter to, e.g. TEXTURE_2D</param>
+        /// <param name="pname">The parameter to set.</param>
+        /// <param name="param">The value to set it to.</param>
+        public static void TexParameter(uint target, uint pname, int param)
+        {
+            glTexParameteri(target, pname, param);
+        }
+        /// <summary>
+        ///	This function sets the parameters for the currently binded texture object.
+        /// </summary>
+        /// <param name="target">The type of texture you are setting the parameter to, e.g. TEXTURE_2D</param>
+        /// <param name="pname">The parameter to set.</param>
+        /// <param name="parameters">The value to set it to.</param>
+        public static void TexParameter(uint target, uint pname, int[] parameters)
+        {
+            glTexParameteriv(target, pname, parameters);
+        }
         /// <summary>
         /// Specify a two-dimensional texture subimage.
         /// </summary>
@@ -4382,75 +4385,75 @@ namespace Mesher.GraphicsCore
         {
             glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels);
         }
-		/// <summary>
-		/// This function applies a translation transformation to the current matrix.
-		/// </summary>
-		/// <param name="x">The amount to translate along the x axis.</param>
-		/// <param name="y">The amount to translate along the y axis.</param>
-		/// <param name="z">The amount to translate along the z axis.</param>
-		public static void Translate(double x, double y, double z)
-		{
-			glTranslated(x, y, z);
-		}
-		/// <summary>
-		/// This function applies a translation transformation to the current matrix.
-		/// </summary>
-		/// <param name="x">The amount to translate along the x axis.</param>
-		/// <param name="y">The amount to translate along the y axis.</param>
-		/// <param name="z">The amount to translate along the z axis.</param>
-		public static void Translate(float x, float y, float z)
-		{
-			glTranslatef(x, y, z);
-		}
-		/// <summary>
-		/// This function turns a screen Coordinate into a world coordinate.
-		/// </summary>
-		/// <param name="winx">Screen Coordinate.</param>
-		/// <param name="winy">Screen Coordinate.</param>
-		/// <param name="winz">Screen Coordinate.</param>
-		/// <param name="modelMatrix">Current ModelView matrix.</param>
-		/// <param name="projMatrix">Current Projection matrix.</param>
-		/// <param name="viewport">Current Viewport.</param>
-		/// <param name="objx">The world coordinate.</param>
-		/// <param name="objy">The world coordinate.</param>
-		/// <param name="objz">The world coordinate.</param>
-		public static void UnProject(double winx, double winy, double winz, 
-			double[] modelMatrix, double[] projMatrix, int[] viewport, 
-			ref double objx, ref double objy, ref double objz)
-		{
-			gluUnProject(winx, winy, winz, modelMatrix, projMatrix, viewport,
-				ref objx, ref objy, ref objz);
-		}
-		/// <summary>
-		/// This is a convenience function. It calls UnProject with the current 
-		/// viewport, modelview and persective matricies, saving you from getting them.
-		/// To use you own matricies, all the other version of UnProject.
-		/// </summary>
-		/// <param name="winx">X Coordinate (Screen Coordinate).</param>
-		/// <param name="winy">Y Coordinate (Screen Coordinate).</param>
-		/// <param name="winz">Z Coordinate (Screen Coordinate).</param>
-		/// <returns>The world coordinate.</returns>
-		public static Vertex UnProject(double winx, double winy, double winz)
-		{
-			var modelview = new double[16];
-			var projection = new double[16];
-			var viewport = new int[4];
+        /// <summary>
+        /// This function applies a translation transformation to the current matrix.
+        /// </summary>
+        /// <param name="x">The amount to translate along the x axis.</param>
+        /// <param name="y">The amount to translate along the y axis.</param>
+        /// <param name="z">The amount to translate along the z axis.</param>
+        public static void Translate(double x, double y, double z)
+        {
+            glTranslated(x, y, z);
+        }
+        /// <summary>
+        /// This function applies a translation transformation to the current matrix.
+        /// </summary>
+        /// <param name="x">The amount to translate along the x axis.</param>
+        /// <param name="y">The amount to translate along the y axis.</param>
+        /// <param name="z">The amount to translate along the z axis.</param>
+        public static void Translate(float x, float y, float z)
+        {
+            glTranslatef(x, y, z);
+        }
+        /// <summary>
+        /// This function turns a screen Coordinate into a world coordinate.
+        /// </summary>
+        /// <param name="winx">Screen Coordinate.</param>
+        /// <param name="winy">Screen Coordinate.</param>
+        /// <param name="winz">Screen Coordinate.</param>
+        /// <param name="modelMatrix">Current ModelView matrix.</param>
+        /// <param name="projMatrix">Current Projection matrix.</param>
+        /// <param name="viewport">Current Viewport.</param>
+        /// <param name="objx">The world coordinate.</param>
+        /// <param name="objy">The world coordinate.</param>
+        /// <param name="objz">The world coordinate.</param>
+        public static void UnProject(double winx, double winy, double winz,
+            double[] modelMatrix, double[] projMatrix, int[] viewport,
+            ref double objx, ref double objy, ref double objz)
+        {
+            gluUnProject(winx, winy, winz, modelMatrix, projMatrix, viewport,
+                ref objx, ref objy, ref objz);
+        }
+        /// <summary>
+        /// This is a convenience function. It calls UnProject with the current 
+        /// viewport, modelview and persective matricies, saving you from getting them.
+        /// To use you own matricies, all the other version of UnProject.
+        /// </summary>
+        /// <param name="winx">X Coordinate (Screen Coordinate).</param>
+        /// <param name="winy">Y Coordinate (Screen Coordinate).</param>
+        /// <param name="winz">Z Coordinate (Screen Coordinate).</param>
+        /// <returns>The world coordinate.</returns>
+        public static Vertex UnProject(double winx, double winy, double winz)
+        {
+            var modelview = new double[16];
+            var projection = new double[16];
+            var viewport = new int[4];
             GetDouble(GL_MODELVIEW_MATRIX, modelview);
             GetDouble(GL_PROJECTION_MATRIX, projection);
             GetInteger(GL_VIEWPORT, viewport);
             var result = new double[3];
             gluUnProject(winx, winy, winz, modelview, projection, viewport, ref result[0], ref result[1], ref result[2]);
             return new Vertex((float)result[0], (float)result[1], (float)result[2]);
-		}
-		/// <summary>
-		/// Set the current vertex (must be called between 'Begin' and 'End').
-		/// </summary>
-		/// <param name="x">X Value.</param>
-		/// <param name="y">Y Value.</param>
-		public static void Vertex(double x, double y)
-		{
-			glVertex2d(x, y);
-		}
+        }
+        /// <summary>
+        /// Set the current vertex (must be called between 'Begin' and 'End').
+        /// </summary>
+        /// <param name="x">X Value.</param>
+        /// <param name="y">Y Value.</param>
+        public static void Vertex(double x, double y)
+        {
+            glVertex2d(x, y);
+        }
         /// <summary>
         /// Set the current vertex (must be called between 'Begin' and 'End').
         /// </summary>
@@ -4517,39 +4520,39 @@ namespace Mesher.GraphicsCore
             else if (v.Length == 4)
                 glVertex4sv(v);
         }
-		/// <summary>
-		/// Set the current vertex (must be called between 'Begin' and 'End').
-		/// </summary>
-		/// <param name="x">X Value.</param>
-		/// <param name="y">Y Value.</param>
-		/// <param name="z">Z Value.</param>
-		public static void Vertex(double x, double y, double z)
-		{
-			glVertex3d(x, y, z);
-		}
-		/// <summary>
-		/// Set the current vertex (must be called between 'Begin' and 'End').
-		/// </summary>
-		/// <param name="x">X Value.</param>
-		/// <param name="y">Y Value.</param>
-		/// <param name="z">Z Value.</param>
-		public static void Vertex(float x, float y, float z)
-		{
-			glVertex3f(x, y, z);
-		}
-		/// <summary>
-		/// Sets the current vertex (must be called between 'Begin' and 'End').
-		/// </summary>
-		/// <param name="v">An array of 2, 3 or 4 floats.</param>
-		public static void Vertex(float []v)
-		{
-			if(v.Length == 2)
-				glVertex2fv(v);
-			else if(v.Length == 3)
-				glVertex3fv(v);
-			else if(v.Length == 4)
-				glVertex4fv(v);
-		}
+        /// <summary>
+        /// Set the current vertex (must be called between 'Begin' and 'End').
+        /// </summary>
+        /// <param name="x">X Value.</param>
+        /// <param name="y">Y Value.</param>
+        /// <param name="z">Z Value.</param>
+        public static void Vertex(double x, double y, double z)
+        {
+            glVertex3d(x, y, z);
+        }
+        /// <summary>
+        /// Set the current vertex (must be called between 'Begin' and 'End').
+        /// </summary>
+        /// <param name="x">X Value.</param>
+        /// <param name="y">Y Value.</param>
+        /// <param name="z">Z Value.</param>
+        public static void Vertex(float x, float y, float z)
+        {
+            glVertex3f(x, y, z);
+        }
+        /// <summary>
+        /// Sets the current vertex (must be called between 'Begin' and 'End').
+        /// </summary>
+        /// <param name="v">An array of 2, 3 or 4 floats.</param>
+        public static void Vertex(float[] v)
+        {
+            if (v.Length == 2)
+                glVertex2fv(v);
+            else if (v.Length == 3)
+                glVertex3fv(v);
+            else if (v.Length == 4)
+                glVertex4fv(v);
+        }
         /// <summary>
         /// Set the current vertex (must be called between 'Begin' and 'End').
         /// </summary>
@@ -4614,17 +4617,17 @@ namespace Mesher.GraphicsCore
         {
             glVertex4s(x, y, z, w);
         }
-		/// <summary>
-		/// This function sets the address of the vertex pointer array.
-		/// </summary>
-		/// <param name="size">The number of coords per vertex.</param>
-		/// <param name="type">The data type.</param>
-		/// <param name="stride">The byte offset between vertices.</param>
-		/// <param name="pointer">The array.</param>
-		public static void VertexPointer(int size, uint type, int stride, IntPtr pointer)
-		{
-			glVertexPointer(size, type, stride, pointer);
-		}
+        /// <summary>
+        /// This function sets the address of the vertex pointer array.
+        /// </summary>
+        /// <param name="size">The number of coords per vertex.</param>
+        /// <param name="type">The data type.</param>
+        /// <param name="stride">The byte offset between vertices.</param>
+        /// <param name="pointer">The array.</param>
+        public static void VertexPointer(int size, uint type, int stride, IntPtr pointer)
+        {
+            glVertexPointer(size, type, stride, pointer);
+        }
         /// <summary>
         /// This function sets the address of the vertex pointer array.
         /// </summary>
@@ -4665,19 +4668,19 @@ namespace Mesher.GraphicsCore
         {
             glVertexPointer(size, GL_DOUBLE, stride, pointer);
         }
-		/// <summary>
-		/// This sets the viewport of the current Render Context. Normally x and y are 0
-		/// and the width and height are just those of the control/graphics you are drawing
-		/// to.
-		/// </summary>
-		/// <param name="x">Top-Left point of the viewport.</param>
-		/// <param name="y">Top-Left point of the viewport.</param>
-		/// <param name="width">Width of the viewport.</param>
-		/// <param name="height">Height of the viewport.</param>
-		public static void Viewport (int x, int y, int width, int height)
-		{
-			glViewport(x, y, width, height);
-		}
+        /// <summary>
+        /// This sets the viewport of the current Render Context. Normally x and y are 0
+        /// and the width and height are just those of the control/graphics you are drawing
+        /// to.
+        /// </summary>
+        /// <param name="x">Top-Left point of the viewport.</param>
+        /// <param name="y">Top-Left point of the viewport.</param>
+        /// <param name="width">Width of the viewport.</param>
+        /// <param name="height">Height of the viewport.</param>
+        public static void Viewport(int x, int y, int width, int height)
+        {
+            glViewport(x, y, width, height);
+        }
         /// <summary>
         /// Produce an error string from a GL or GLU error code.
         /// </summary>
@@ -4895,8 +4898,8 @@ namespace Mesher.GraphicsCore
         {
             gluGetNurbsProperty(nobj, property, value);
         }
-		#endregion
-		#region Error Checking
+        #endregion
+        #region Error Checking
         /// <summary>
         /// Gets the error description for a given error code.
         /// </summary>
@@ -4924,23 +4927,23 @@ namespace Mesher.GraphicsCore
                     return "Unknown Error";
             }
         }
-		#endregion
-		#region Utility Functions
-		/// <summary>
-		/// This function transforms a windows point into an OpenGL point,
-		/// which is measured from the bottom left of the screen.
-		/// </summary>
-		/// <param name="x">The x coord.</param>
-		/// <param name="y">The y coord.</param>
-		public static void GDItoOpenGL(ref int x, ref int y)
-		{
-			//	Create an array that will be the viewport.
-			var viewport = new int[4];
-			//	Get the viewport, then convert the mouse point to an opengl point.
-			GetInteger(GL_VIEWPORT, viewport);
-			y = viewport[3] - y;
-		}
-		#endregion
+        #endregion
+        #region Utility Functions
+        /// <summary>
+        /// This function transforms a windows point into an OpenGL point,
+        /// which is measured from the bottom left of the screen.
+        /// </summary>
+        /// <param name="x">The x coord.</param>
+        /// <param name="y">The y coord.</param>
+        public static void GDItoOpenGL(ref int x, ref int y)
+        {
+            //	Create an array that will be the viewport.
+            var viewport = new int[4];
+            //	Get the viewport, then convert the mouse point to an opengl point.
+            GetInteger(GL_VIEWPORT, viewport);
+            y = viewport[3] - y;
+        }
+        #endregion
         #region Member Variables
         /// <summary>
         /// Set to true if we're inside glBegin.
@@ -4953,31 +4956,31 @@ namespace Mesher.GraphicsCore
         /// </summary>
         /// <value>The vendor.</value>
         public static string Vendor
-		{
+        {
             get { return GetString(GL_VENDOR); }
-		}
+        }
         /// <summary>
         /// Gets the renderer.
         /// </summary>
         /// <value>The renderer.</value>
         public static string Renderer
-		{
+        {
             get { return GetString(GL_RENDERER); }
-		}
+        }
         /// <summary>
         /// Gets the version.
         /// </summary>
         /// <value>The version.</value>
         public static string Version
-		{
+        {
             get { return GetString(GL_VERSION); }
-		}
+        }
         /// <summary>
         /// Gets the extensions.
         /// </summary>
         /// <value>The extensions.</value>
         public static string Extensions
-		{
+        {
             get { return GetString(GL_EXTENSIONS); }
         }
         #endregion
@@ -10320,894 +10323,5 @@ namespace Mesher.GraphicsCore
         public const uint GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET = 0x82D9;
         public const uint GL_MAX_VERTEX_ATTRIB_BINDINGS = 0x82DA;
         #endregion
-    }
-
-    /// <summary>
-    /// Useful functions imported from the Win32 SDK.
-    /// </summary>
-	public static class Win32
-    {
-        /// <summary>
-        /// Initializes the <see cref="Win32"/> class.
-        /// </summary>
-        static Win32()
-        {
-            //  Load the openGL library - without this wgl calls will fail.
-            IntPtr glLibrary = Win32.LoadLibrary(OpenGL32);
-        }
-
-        //  The names of the libraries we're importing.
-        public const string Kernel32 = "kernel32.dll";
-        public const string OpenGL32 = "opengl32.dll";
-        public const string Glu32 = "Glu32.dll";
-        public const string Gdi32 = "gdi32.dll";
-        public const string User32 = "user32.dll";
-
-        #region Kernel32 Functions
-
-        [DllImport(Kernel32, SetLastError = true)]
-        public static extern IntPtr LoadLibrary(string lpFileName);
-
-        #endregion
-
-        #region WGL Functions
-
-        /// <summary>
-        /// Gets the current render context.
-        /// </summary>
-        /// <returns>The current render context.</returns>
-        [DllImport(OpenGL32, SetLastError = true)]
-        public static extern IntPtr wglGetCurrentContext();
-
-        /// <summary>
-        /// Gets the current device context.
-        /// </summary>
-        /// <returns>The current device context.</returns>
-        [DllImport(OpenGL32, SetLastError = true)]
-        public static extern IntPtr wglGetCurrentDC();
-
-        /// <summary>
-        /// Make the specified render context current.
-        /// </summary>
-        /// <param name="hdc">The handle to the device context.</param>
-        /// <param name="hrc">The handle to the render context.</param>
-        /// <returns></returns>
-        [DllImport(OpenGL32, SetLastError = true)]
-        public static extern int wglMakeCurrent(IntPtr hdc, IntPtr hrc);
-
-        /// <summary>
-        /// Creates a render context from the device context.
-        /// </summary>
-        /// <param name="hdc">The handle to the device context.</param>
-        /// <returns>The handle to the render context.</returns>
-        [DllImport(OpenGL32, SetLastError = true)]
-        public static extern IntPtr wglCreateContext(IntPtr hdc);
-
-        /// <summary>
-        /// Deletes the render context.
-        /// </summary>
-        /// <param name="hrc">The handle to the render context.</param>
-        /// <returns></returns>
-        [DllImport(OpenGL32, SetLastError = true)]
-        public static extern int wglDeleteContext(IntPtr hrc);
-
-        /// <summary>
-        /// Gets a proc address.
-        /// </summary>
-        /// <param name="name">The name of the function.</param>
-        /// <returns>The address of the function.</returns>
-        [DllImport(OpenGL32, SetLastError = true)]
-        public static extern IntPtr wglGetProcAddress(string name);
-
-        /// <summary>
-        /// The wglUseFontBitmaps function creates a set of bitmap display lists for use in the current OpenGL rendering context. The set of bitmap display lists is based on the glyphs in the currently selected font in the device context. You can then use bitmaps to draw characters in an OpenGL image.
-        /// </summary>
-        /// <param name="hDC">Specifies the device context whose currently selected font will be used to form the glyph bitmap display lists in the current OpenGL rendering context..</param>
-        /// <param name="first">Specifies the first glyph in the run of glyphs that will be used to form glyph bitmap display lists.</param>
-        /// <param name="count">Specifies the number of glyphs in the run of glyphs that will be used to form glyph bitmap display lists. The function creates count display lists, one for each glyph in the run.</param>
-        /// <param name="listBase">Specifies a starting display list.</param>
-        /// <returns>If the function succeeds, the return value is TRUE. If the function fails, the return value is FALSE. To get extended error information, call GetLastError.</returns>
-        [DllImport(OpenGL32, SetLastError = true)]
-        public static extern bool wglUseFontBitmaps(IntPtr hDC, uint first, uint count, uint listBase);
-
-        /// <summary>
-        /// Link two render contexts so they share lists (buffer IDs, etc.)
-        /// </summary>
-        /// <param name="hrc1">The first context.</param>
-        /// <param name="hrc2">The second context.</param>
-        /// <returns>If the function succeeds, the return value is TRUE. If the function fails, the return value is FALSE. 
-        /// To get extended error information, call GetLastError.</returns>
-        [DllImport(OpenGL32, SetLastError = true)]
-        public static extern bool wglShareLists(IntPtr hrc1, IntPtr hrc2);
-
-        #endregion
-
-        #region PixelFormatDescriptor structure and flags.
-
-        [StructLayout(LayoutKind.Explicit)]
-        public class PIXELFORMATDESCRIPTOR
-        {
-            [FieldOffset(0)]
-            public UInt16 nSize;
-            [FieldOffset(2)]
-            public UInt16 nVersion;
-            [FieldOffset(4)]
-            public UInt32 dwFlags;
-            [FieldOffset(8)]
-            public Byte iPixelType;
-            [FieldOffset(9)]
-            public Byte cColorBits;
-            [FieldOffset(10)]
-            public Byte cRedBits;
-            [FieldOffset(11)]
-            public Byte cRedShift;
-            [FieldOffset(12)]
-            public Byte cGreenBits;
-            [FieldOffset(13)]
-            public Byte cGreenShift;
-            [FieldOffset(14)]
-            public Byte cBlueBits;
-            [FieldOffset(15)]
-            public Byte cBlueShift;
-            [FieldOffset(16)]
-            public Byte cAlphaBits;
-            [FieldOffset(17)]
-            public Byte cAlphaShift;
-            [FieldOffset(18)]
-            public Byte cAccumBits;
-            [FieldOffset(19)]
-            public Byte cAccumRedBits;
-            [FieldOffset(20)]
-            public Byte cAccumGreenBits;
-            [FieldOffset(21)]
-            public Byte cAccumBlueBits;
-            [FieldOffset(22)]
-            public Byte cAccumAlphaBits;
-            [FieldOffset(23)]
-            public Byte cDepthBits;
-            [FieldOffset(24)]
-            public Byte cStencilBits;
-            [FieldOffset(25)]
-            public Byte cAuxBuffers;
-            [FieldOffset(26)]
-            public SByte iLayerType;
-            [FieldOffset(27)]
-            public Byte bReserved;
-            [FieldOffset(28)]
-            public UInt32 dwLayerMask;
-            [FieldOffset(32)]
-            public UInt32 dwVisibleMask;
-            [FieldOffset(36)]
-            public UInt32 dwDamageMask;
-        }
-
-        public struct PixelFormatDescriptor
-        {
-            public ushort nSize;
-            public ushort nVersion;
-            public uint dwFlags;
-            public byte iPixelType;
-            public byte cColorBits;
-            public byte cRedBits;
-            public byte cRedShift;
-            public byte cGreenBits;
-            public byte cGreenShift;
-            public byte cBlueBits;
-            public byte cBlueShift;
-            public byte cAlphaBits;
-            public byte cAlphaShift;
-            public byte cAccumBits;
-            public byte cAccumRedBits;
-            public byte cAccumGreenBits;
-            public byte cAccumBlueBits;
-            public byte cAccumAlphaBits;
-            public byte cDepthBits;
-            public byte cStencilBits;
-            public byte cAuxBuffers;
-            public sbyte iLayerType;
-            public byte bReserved;
-            public uint dwLayerMask;
-            public uint dwVisibleMask;
-            public uint dwDamageMask;
-        }
-
-        public const byte PFD_TYPE_RGBA = 0;
-        public const byte PFD_TYPE_COLORINDEX = 1;
-
-        public const uint PFD_DOUBLEBUFFER = 1;
-        public const uint PFD_STEREO = 2;
-        public const uint PFD_DRAW_TO_WINDOW = 4;
-        public const uint PFD_DRAW_TO_BITMAP = 8;
-        public const uint PFD_SUPPORT_GDI = 16;
-        public const uint PFD_SUPPORT_OPENGL = 32;
-        public const uint PFD_GENERIC_FORMAT = 64;
-        public const uint PFD_NEED_PALETTE = 128;
-        public const uint PFD_NEED_SYSTEM_PALETTE = 256;
-        public const uint PFD_SWAP_EXCHANGE = 512;
-        public const uint PFD_SWAP_COPY = 1024;
-        public const uint PFD_SWAP_LAYER_BUFFERS = 2048;
-        public const uint PFD_GENERIC_ACCELERATED = 4096;
-        public const uint PFD_SUPPORT_DIRECTDRAW = 8192;
-
-        public const sbyte PFD_MAIN_PLANE = 0;
-        public const sbyte PFD_OVERLAY_PLANE = 1;
-        public const sbyte PFD_UNDERLAY_PLANE = -1;
-
-        public delegate IntPtr WndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
-
-        [DllImport(User32, SetLastError = true)]
-        public static extern IntPtr DefWindowProc(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam);
-
-        [DllImport(User32, SetLastError = true)]
-        public static extern IntPtr CreateWindowEx(
-           WindowStylesEx dwExStyle,
-           string lpClassName,
-           string lpWindowName,
-           WindowStyles dwStyle,
-           int x,
-           int y,
-           int nWidth,
-           int nHeight,
-           IntPtr hWndParent,
-           IntPtr hMenu,
-           IntPtr hInstance,
-           IntPtr lpParam);
-
-        [Flags]
-        public enum WindowStylesEx : uint
-        {
-            /// <summary>
-            /// Specifies that a window created with this style accepts drag-drop files.
-            /// </summary>
-            WS_EX_ACCEPTFILES = 0x00000010,
-            /// <summary>
-            /// Forces a top-level window onto the taskbar when the window is visible.
-            /// </summary>
-            WS_EX_APPWINDOW = 0x00040000,
-            /// <summary>
-            /// Specifies that a window has a border with a sunken edge.
-            /// </summary>
-            WS_EX_CLIENTEDGE = 0x00000200,
-            /// <summary>
-            /// Windows XP: Paints all descendants of a window in bottom-to-top painting order using double-buffering. For more information, see Remarks. This cannot be used if the window has a class style of either CS_OWNDC or CS_CLASSDC. 
-            /// </summary>
-            WS_EX_COMPOSITED = 0x02000000,
-            /// <summary>
-            /// Includes a question mark in the title bar of the window. When the user clicks the question mark, the cursor changes to a question mark with a pointer. If the user then clicks a child window, the child receives a WM_HELP message. The child window should pass the message to the parent window procedure, which should call the WinHelp function using the HELP_WM_HELP command. The Help application displays a pop-up window that typically contains help for the child window.
-            /// WS_EX_CONTEXTHELP cannot be used with the WS_MAXIMIZEBOX or WS_MINIMIZEBOX styles.
-            /// </summary>
-            WS_EX_CONTEXTHELP = 0x00000400,
-            /// <summary>
-            /// The window itself contains child windows that should take part in dialog box navigation. If this style is specified, the dialog manager recurses into children of this window when performing navigation operations such as handling the TAB key, an arrow key, or a keyboard mnemonic.
-            /// </summary>
-            WS_EX_CONTROLPARENT = 0x00010000,
-            /// <summary>
-            /// Creates a window that has a double border; the window can, optionally, be created with a title bar by specifying the WS_CAPTION style in the dwStyle parameter.
-            /// </summary>
-            WS_EX_DLGMODALFRAME = 0x00000001,
-            /// <summary>
-            /// Windows 2000/XP: Creates a layered window. Note that this cannot be used for child windows. Also, this cannot be used if the window has a class style of either CS_OWNDC or CS_CLASSDC. 
-            /// </summary>
-            WS_EX_LAYERED = 0x00080000,
-            /// <summary>
-            /// Arabic and Hebrew versions of Windows 98/Me, Windows 2000/XP: Creates a window whose horizontal origin is on the right edge. Increasing horizontal values advance to the left. 
-            /// </summary>
-            WS_EX_LAYOUTRTL = 0x00400000,
-            /// <summary>
-            /// Creates a window that has generic left-aligned properties. This is the default.
-            /// </summary>
-            WS_EX_LEFT = 0x00000000,
-            /// <summary>
-            /// If the shell language is Hebrew, Arabic, or another language that supports reading order alignment, the vertical scroll bar (if present) is to the left of the client area. For other languages, the style is ignored.
-            /// </summary>
-            WS_EX_LEFTSCROLLBAR = 0x00004000,
-            /// <summary>
-            /// The window text is displayed using left-to-right reading-order properties. This is the default.
-            /// </summary>
-            WS_EX_LTRREADING = 0x00000000,
-            /// <summary>
-            /// Creates a multiple-document interface (MDI) child window.
-            /// </summary>
-            WS_EX_MDICHILD = 0x00000040,
-            /// <summary>
-            /// Windows 2000/XP: A top-level window created with this style does not become the foreground window when the user clicks it. The system does not bring this window to the foreground when the user minimizes or closes the foreground window. 
-            /// To activate the window, use the SetActiveWindow or SetForegroundWindow function.
-            /// The window does not appear on the taskbar by default. To force the window to appear on the taskbar, use the WS_EX_APPWINDOW style.
-            /// </summary>
-            WS_EX_NOACTIVATE = 0x08000000,
-            /// <summary>
-            /// Windows 2000/XP: A window created with this style does not pass its window layout to its child windows.
-            /// </summary>
-            WS_EX_NOINHERITLAYOUT = 0x00100000,
-            /// <summary>
-            /// Specifies that a child window created with this style does not send the WM_PARENTNOTIFY message to its parent window when it is created or destroyed.
-            /// </summary>
-            WS_EX_NOPARENTNOTIFY = 0x00000004,
-            /// <summary>
-            /// Combines the WS_EX_CLIENTEDGE and WS_EX_WINDOWEDGE styles.
-            /// </summary>
-            WS_EX_OVERLAPPEDWINDOW = WS_EX_WINDOWEDGE | WS_EX_CLIENTEDGE,
-            /// <summary>
-            /// Combines the WS_EX_WINDOWEDGE, WS_EX_TOOLWINDOW, and WS_EX_TOPMOST styles.
-            /// </summary>
-            WS_EX_PALETTEWINDOW = WS_EX_WINDOWEDGE | WS_EX_TOOLWINDOW | WS_EX_TOPMOST,
-            /// <summary>
-            /// The window has generic "right-aligned" properties. This depends on the window class. This style has an effect only if the shell language is Hebrew, Arabic, or another language that supports reading-order alignment; otherwise, the style is ignored.
-            /// Using the WS_EX_RIGHT style for static or edit controls has the same effect as using the SS_RIGHT or ES_RIGHT style, respectively. Using this style with button controls has the same effect as using BS_RIGHT and BS_RIGHTBUTTON styles.
-            /// </summary>
-            WS_EX_RIGHT = 0x00001000,
-            /// <summary>
-            /// Vertical scroll bar (if present) is to the right of the client area. This is the default.
-            /// </summary>
-            WS_EX_RIGHTSCROLLBAR = 0x00000000,
-            /// <summary>
-            /// If the shell language is Hebrew, Arabic, or another language that supports reading-order alignment, the window text is displayed using right-to-left reading-order properties. For other languages, the style is ignored.
-            /// </summary>
-            WS_EX_RTLREADING = 0x00002000,
-            /// <summary>
-            /// Creates a window with a three-dimensional border style intended to be used for items that do not accept user input.
-            /// </summary>
-            WS_EX_STATICEDGE = 0x00020000,
-            /// <summary>
-            /// Creates a tool window; that is, a window intended to be used as a floating toolbar. A tool window has a title bar that is shorter than a normal title bar, and the window title is drawn using a smaller font. A tool window does not appear in the taskbar or in the dialog that appears when the user presses ALT+TAB. If a tool window has a system menu, its icon is not displayed on the title bar. However, you can display the system menu by right-clicking or by typing ALT+SPACE. 
-            /// </summary>
-            WS_EX_TOOLWINDOW = 0x00000080,
-            /// <summary>
-            /// Specifies that a window created with this style should be placed above all non-topmost windows and should stay above them, even when the window is deactivated. To add or remove this style, use the SetWindowPos function.
-            /// </summary>
-            WS_EX_TOPMOST = 0x00000008,
-            /// <summary>
-            /// Specifies that a window created with this style should not be painted until siblings beneath the window (that were created by the same thread) have been painted. The window appears transparent because the bits of underlying sibling windows have already been painted.
-            /// To achieve transparency without these restrictions, use the SetWindowRgn function.
-            /// </summary>
-            WS_EX_TRANSPARENT = 0x00000020,
-            /// <summary>
-            /// Specifies that a window has a border with a raised edge.
-            /// </summary>
-            WS_EX_WINDOWEDGE = 0x00000100
-        }
-
-        [Flags()]
-        public enum WindowStyles : uint
-        {
-            /// <summary>The window has a thin-line border.</summary>
-            WS_BORDER = 0x800000,
-
-            /// <summary>The window has a title bar (includes the WS_BORDER style).</summary>
-            WS_CAPTION = 0xc00000,
-
-            /// <summary>The window is a child window. A window with this style cannot have a menu bar. This style cannot be used with the WS_POPUP style.</summary>
-            WS_CHILD = 0x40000000,
-
-            /// <summary>Excludes the area occupied by child windows when drawing occurs within the parent window. This style is used when creating the parent window.</summary>
-            WS_CLIPCHILDREN = 0x2000000,
-
-            /// <summary>
-            /// Clips child windows relative to each other; that is, when a particular child window receives a WM_PAINT message, the WS_CLIPSIBLINGS style clips all other overlapping child windows out of the region of the child window to be updated.
-            /// If WS_CLIPSIBLINGS is not specified and child windows overlap, it is possible, when drawing within the client area of a child window, to draw within the client area of a neighboring child window.
-            /// </summary>
-            WS_CLIPSIBLINGS = 0x4000000,
-
-            /// <summary>The window is initially disabled. A disabled window cannot receive input from the user. To change this after a window has been created, use the EnableWindow function.</summary>
-            WS_DISABLED = 0x8000000,
-
-            /// <summary>The window has a border of a style typically used with dialog boxes. A window with this style cannot have a title bar.</summary>
-            WS_DLGFRAME = 0x400000,
-
-            /// <summary>
-            /// The window is the first control of a group of controls. The group consists of this first control and all controls defined after it, up to the next control with the WS_GROUP style.
-            /// The first control in each group usually has the WS_TABSTOP style so that the user can move from group to group. The user can subsequently change the keyboard focus from one control in the group to the next control in the group by using the direction keys.
-            /// You can turn this style on and off to change dialog box navigation. To change this style after a window has been created, use the SetWindowLong function.
-            /// </summary>
-            WS_GROUP = 0x20000,
-
-            /// <summary>The window has a horizontal scroll bar.</summary>
-            WS_HSCROLL = 0x100000,
-
-            /// <summary>The window is initially maximized.</summary> 
-            WS_MAXIMIZE = 0x1000000,
-
-            /// <summary>The window has a maximize button. Cannot be combined with the WS_EX_CONTEXTHELP style. The WS_SYSMENU style must also be specified.</summary> 
-            WS_MAXIMIZEBOX = 0x10000,
-
-            /// <summary>The window is initially minimized.</summary>
-            WS_MINIMIZE = 0x20000000,
-
-            /// <summary>The window has a minimize button. Cannot be combined with the WS_EX_CONTEXTHELP style. The WS_SYSMENU style must also be specified.</summary>
-            WS_MINIMIZEBOX = 0x20000,
-
-            /// <summary>The window is an overlapped window. An overlapped window has a title bar and a border.</summary>
-            WS_OVERLAPPED = 0x0,
-
-            /// <summary>The window is an overlapped window.</summary>
-            WS_OVERLAPPEDWINDOW = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_SIZEFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX,
-
-            /// <summary>The window is a pop-up window. This style cannot be used with the WS_CHILD style.</summary>
-            WS_POPUP = 0x80000000u,
-
-            /// <summary>The window is a pop-up window. The WS_CAPTION and WS_POPUPWINDOW styles must be combined to make the window menu visible.</summary>
-            WS_POPUPWINDOW = WS_POPUP | WS_BORDER | WS_SYSMENU,
-
-            /// <summary>The window has a sizing border.</summary>
-            WS_SIZEFRAME = 0x40000,
-
-            /// <summary>The window has a window menu on its title bar. The WS_CAPTION style must also be specified.</summary>
-            WS_SYSMENU = 0x80000,
-
-            /// <summary>
-            /// The window is a control that can receive the keyboard focus when the user presses the TAB key.
-            /// Pressing the TAB key changes the keyboard focus to the next control with the WS_TABSTOP style.  
-            /// You can turn this style on and off to change dialog box navigation. To change this style after a window has been created, use the SetWindowLong function.
-            /// For user-created windows and modeless dialogs to work with tab stops, alter the message loop to call the IsDialogMessage function.
-            /// </summary>
-            WS_TABSTOP = 0x10000,
-
-            /// <summary>The window is initially visible. This style can be turned on and off by using the ShowWindow or SetWindowPos function.</summary>
-            WS_VISIBLE = 0x10000000,
-
-            /// <summary>The window has a vertical scroll bar.</summary>
-            WS_VSCROLL = 0x200000
-        }
-
-
-        [Flags]
-        public enum ClassStyles : uint
-        {
-            ByteAlignClient = 0x1000,
-            ByteAlignWindow = 0x2000,
-            ClassDC = 0x40,
-            DoubleClicks = 0x8,
-            DropShadow = 0x20000,
-            GlobalClass = 0x4000,
-            HorizontalRedraw = 0x2,
-            NoClose = 0x200,
-            OwnDC = 0x20,
-            ParentDC = 0x80,
-            SaveBits = 0x800,
-            VerticalRedraw = 0x1
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct WNDCLASSEX
-        {
-            public uint cbSize;
-            public ClassStyles style;
-            [MarshalAs(UnmanagedType.FunctionPtr)]
-            public WndProc lpfnWndProc;
-            public int cbClsExtra;
-            public int cbWndExtra;
-            public IntPtr hInstance;
-            public IntPtr hIcon;
-            public IntPtr hCursor;
-            public IntPtr hbrBackground;
-            public string lpszMenuName;
-            public string lpszClassName;
-            public IntPtr hIconSm;
-
-            public void Init()
-            {
-                cbSize = (uint)Marshal.SizeOf(this);
-            }
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct BITMAPINFO
-        {
-            public Int32 biSize;
-            public Int32 biWidth;
-            public Int32 biHeight;
-            public Int16 biPlanes;
-            public Int16 biBitCount;
-            public Int32 biCompression;
-            public Int32 biSizeImage;
-            public Int32 biXPelsPerMeter;
-            public Int32 biYPelsPerMeter;
-            public Int32 biClrUsed;
-            public Int32 biClrImportant;
-
-            public void Init()
-            {
-                biSize = Marshal.SizeOf(this);
-            }
-        }
-
-        #endregion
-
-        #region Win32 Function Definitions.
-
-
-
-        //	Unmanaged functions from the Win32 graphics library.
-        [DllImport(Gdi32, SetLastError = true)]
-        public unsafe static extern int ChoosePixelFormat(IntPtr hDC,
-            [In, MarshalAs(UnmanagedType.LPStruct)] PIXELFORMATDESCRIPTOR ppfd);
-
-        [DllImport(Gdi32, SetLastError = true)]
-        public unsafe static extern int SetPixelFormat(IntPtr hDC, int iPixelFormat,
-            [In, MarshalAs(UnmanagedType.LPStruct)] PIXELFORMATDESCRIPTOR ppfd);
-
-        [DllImport(Gdi32, SetLastError = true)]
-        public static extern IntPtr GetStockObject(uint fnObject);
-
-        [DllImport(Gdi32, SetLastError = true)]
-        public static extern int SwapBuffers(IntPtr hDC);
-
-        [DllImport(Gdi32, SetLastError = true)]
-        public static extern bool BitBlt(IntPtr hDC, int x, int y, int width,
-            int height, IntPtr hDCSource, int sourceX, int sourceY, uint type);
-
-        [DllImport(Gdi32, SetLastError = true)]
-        public static extern IntPtr CreateDIBSection(IntPtr hdc, [In] ref BITMAPINFO pbmi,
-           uint pila, out IntPtr ppvBits, IntPtr hSection, uint dwOffset);
-
-        [DllImport(Gdi32, SetLastError = true)]
-        public static extern IntPtr SelectObject(IntPtr hdc, IntPtr hgdiobj);
-
-        [DllImport(Gdi32, SetLastError = true)]
-        public static extern bool DeleteObject(IntPtr hObject);
-
-        [DllImport(Gdi32, SetLastError = true)]
-        public static extern IntPtr CreateCompatibleDC(IntPtr hDC);
-
-        [DllImport(Gdi32, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool DeleteDC(IntPtr hDC);
-
-        [DllImport(Gdi32, SetLastError = true)]
-        public static extern IntPtr CreateFont(int nHeight, int nWidth, int nEscapement,
-           int nOrientation, uint fnWeight, uint fdwItalic, uint fdwUnderline, uint
-           fdwStrikeOut, uint fdwCharSet, uint fdwOutputPrecision, uint
-           fdwClipPrecision, uint fdwQuality, uint fdwPitchAndFamily, string lpszFace);
-
-        #endregion
-
-        #region User32 Functions
-
-        [DllImport(User32, SetLastError = true)]
-        public static extern IntPtr GetDC(IntPtr hWnd);
-
-        [DllImport(User32, SetLastError = true)]
-        public static extern int ReleaseDC(IntPtr hWnd, IntPtr hDC);
-
-        [DllImport(User32, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool DestroyWindow(IntPtr hWnd);
-
-        [DllImport(User32, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, SetWindowPosFlags uFlags);
-
-        [DllImport(User32, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.U2)]
-        public static extern short RegisterClassEx([In] ref WNDCLASSEX lpwcx);
-
-        #endregion
-
-        [Flags]
-        public enum SetWindowPosFlags : uint
-        {
-            SWP_ASYNCWINDOWPOS = 0x4000,
-            SWP_DEFERERASE = 0x2000,
-            SWP_DRAWFRAME = 0x0020,
-            SWP_FRAMECHANGED = 0x0020,
-            SWP_HIDEWINDOW = 0x0080,
-            SWP_NOACTIVATE = 0x0010,
-            SWP_NOCOPYBITS = 0x0100,
-            SWP_NOMOVE = 0x0002,
-            SWP_NOOWNERZORDER = 0x0200,
-            SWP_NOREDRAW = 0x0008,
-            SWP_NOREPOSITION = 0x0200,
-            SWP_NOSENDCHANGING = 0x0400,
-            SWP_NOSIZE = 0x0001,
-            SWP_NOZORDER = 0x0004,
-            SWP_SHOWWINDOW = 0x0040,
-        }
-
-        #region Windows Messages
-
-        public const int WM_ACTIVATE = 0x0006;
-        public const int WM_ACTIVATEAPP = 0x001C;
-        public const int WM_AFXFIRST = 0x0360;
-        public const int WM_AFXLAST = 0x037F;
-        public const int WM_APP = 0x8000;
-        public const int WM_ASKCBFORMATNAME = 0x030C;
-        public const int WM_CANCELJOURNAL = 0x004B;
-        public const int WM_CANCELMODE = 0x001F;
-        public const int WM_CAPTURECHANGED = 0x0215;
-        public const int WM_CHANGECBCHAIN = 0x030D;
-        public const int WM_CHANGEUISTATE = 0x0127;
-        public const int WM_CHAR = 0x0102;
-        public const int WM_CHARTOITEM = 0x002F;
-        public const int WM_CHILDACTIVATE = 0x0022;
-        public const int WM_CLEAR = 0x0303;
-        public const int WM_CLOSE = 0x0010;
-        public const int WM_COMMAND = 0x0111;
-        public const int WM_COMPACTING = 0x0041;
-        public const int WM_COMPAREITEM = 0x0039;
-        public const int WM_CONTEXTMENU = 0x007B;
-        public const int WM_COPY = 0x0301;
-        public const int WM_COPYDATA = 0x004A;
-        public const int WM_CREATE = 0x0001;
-        public const int WM_CTLCOLORBTN = 0x0135;
-        public const int WM_CTLCOLORDLG = 0x0136;
-        public const int WM_CTLCOLOREDIT = 0x0133;
-        public const int WM_CTLCOLORLISTBOX = 0x0134;
-        public const int WM_CTLCOLORMSGBOX = 0x0132;
-        public const int WM_CTLCOLORSCROLLBAR = 0x0137;
-        public const int WM_CTLCOLORSTATIC = 0x0138;
-        public const int WM_CUT = 0x0300;
-        public const int WM_DEADCHAR = 0x0103;
-        public const int WM_DELETEITEM = 0x002D;
-        public const int WM_DESTROY = 0x0002;
-        public const int WM_DESTROYCLIPBOARD = 0x0307;
-        public const int WM_DEVICECHANGE = 0x0219;
-        public const int WM_DEVMODECHANGE = 0x001B;
-        public const int WM_DISPLAYCHANGE = 0x007E;
-        public const int WM_DRAWCLIPBOARD = 0x0308;
-        public const int WM_DRAWITEM = 0x002B;
-        public const int WM_DROPFILES = 0x0233;
-        public const int WM_ENABLE = 0x000A;
-        public const int WM_ENDSESSION = 0x0016;
-        public const int WM_ENTERIDLE = 0x0121;
-        public const int WM_ENTERMENULOOP = 0x0211;
-        public const int WM_ENTERSIZEMOVE = 0x0231;
-        public const int WM_ERASEBKGND = 0x0014;
-        public const int WM_EXITMENULOOP = 0x0212;
-        public const int WM_EXITSIZEMOVE = 0x0232;
-        public const int WM_FONTCHANGE = 0x001D;
-        public const int WM_GETDLGCODE = 0x0087;
-        public const int WM_GETFONT = 0x0031;
-        public const int WM_GETHOTKEY = 0x0033;
-        public const int WM_GETICON = 0x007F;
-        public const int WM_GETMINMAXINFO = 0x0024;
-        public const int WM_GETOBJECT = 0x003D;
-        public const int WM_GETTEXT = 0x000D;
-        public const int WM_GETTEXTLENGTH = 0x000E;
-        public const int WM_HANDHELDFIRST = 0x0358;
-        public const int WM_HANDHELDLAST = 0x035F;
-        public const int WM_HELP = 0x0053;
-        public const int WM_HOTKEY = 0x0312;
-        public const int WM_HSCROLL = 0x0114;
-        public const int WM_HSCROLLCLIPBOARD = 0x030E;
-        public const int WM_ICONERASEBKGND = 0x0027;
-        public const int WM_IME_CHAR = 0x0286;
-        public const int WM_IME_COMPOSITION = 0x010F;
-        public const int WM_IME_COMPOSITIONFULL = 0x0284;
-        public const int WM_IME_CONTROL = 0x0283;
-        public const int WM_IME_ENDCOMPOSITION = 0x010E;
-        public const int WM_IME_KEYDOWN = 0x0290;
-        public const int WM_IME_KEYLAST = 0x010F;
-        public const int WM_IME_KEYUP = 0x0291;
-        public const int WM_IME_NOTIFY = 0x0282;
-        public const int WM_IME_REQUEST = 0x0288;
-        public const int WM_IME_SELECT = 0x0285;
-        public const int WM_IME_SETCONTEXT = 0x0281;
-        public const int WM_IME_STARTCOMPOSITION = 0x010D;
-        public const int WM_INITDIALOG = 0x0110;
-        public const int WM_INITMENU = 0x0116;
-        public const int WM_INITMENUPOPUP = 0x0117;
-        public const int WM_INPUTLANGCHANGE = 0x0051;
-        public const int WM_INPUTLANGCHANGEREQUEST = 0x0050;
-        public const int WM_KEYDOWN = 0x0100;
-        public const int WM_KEYFIRST = 0x0100;
-        public const int WM_KEYLAST = 0x0108;
-        public const int WM_KEYUP = 0x0101;
-        public const int WM_KILLFOCUS = 0x0008;
-        public const int WM_LBUTTONDBLCLK = 0x0203;
-        public const int WM_LBUTTONDOWN = 0x0201;
-        public const int WM_LBUTTONUP = 0x0202;
-        public const int WM_MBUTTONDBLCLK = 0x0209;
-        public const int WM_MBUTTONDOWN = 0x0207;
-        public const int WM_MBUTTONUP = 0x0208;
-        public const int WM_MDIACTIVATE = 0x0222;
-        public const int WM_MDICASCADE = 0x0227;
-        public const int WM_MDICREATE = 0x0220;
-        public const int WM_MDIDESTROY = 0x0221;
-        public const int WM_MDIGETACTIVE = 0x0229;
-        public const int WM_MDIICONARRANGE = 0x0228;
-        public const int WM_MDIMAXIMIZE = 0x0225;
-        public const int WM_MDINEXT = 0x0224;
-        public const int WM_MDIREFRESHMENU = 0x0234;
-        public const int WM_MDIRESTORE = 0x0223;
-        public const int WM_MDISETMENU = 0x0230;
-        public const int WM_MDITILE = 0x0226;
-        public const int WM_MEASUREITEM = 0x002C;
-        public const int WM_MENUCHAR = 0x0120;
-        public const int WM_MENUCOMMAND = 0x0126;
-        public const int WM_MENUDRAG = 0x0123;
-        public const int WM_MENUGETOBJECT = 0x0124;
-        public const int WM_MENURBUTTONUP = 0x0122;
-        public const int WM_MENUSELECT = 0x011F;
-        public const int WM_MOUSEACTIVATE = 0x0021;
-        public const int WM_MOUSEFIRST = 0x0200;
-        public const int WM_MOUSEHOVER = 0x02A1;
-        public const int WM_MOUSELAST = 0x020D;
-        public const int WM_MOUSELEAVE = 0x02A3;
-        public const int WM_MOUSEMOVE = 0x0200;
-        public const int WM_MOUSEWHEEL = 0x020A;
-        public const int WM_MOUSEHWHEEL = 0x020E;
-        public const int WM_MOVE = 0x0003;
-        public const int WM_MOVING = 0x0216;
-        public const int WM_NCACTIVATE = 0x0086;
-        public const int WM_NCCALCSIZE = 0x0083;
-        public const int WM_NCCREATE = 0x0081;
-        public const int WM_NCDESTROY = 0x0082;
-        public const int WM_NCHITTEST = 0x0084;
-        public const int WM_NCLBUTTONDBLCLK = 0x00A3;
-        public const int WM_NCLBUTTONDOWN = 0x00A1;
-        public const int WM_NCLBUTTONUP = 0x00A2;
-        public const int WM_NCMBUTTONDBLCLK = 0x00A9;
-        public const int WM_NCMBUTTONDOWN = 0x00A7;
-        public const int WM_NCMBUTTONUP = 0x00A8;
-        public const int WM_NCMOUSEMOVE = 0x00A0;
-        public const int WM_NCPAINT = 0x0085;
-        public const int WM_NCRBUTTONDBLCLK = 0x00A6;
-        public const int WM_NCRBUTTONDOWN = 0x00A4;
-        public const int WM_NCRBUTTONUP = 0x00A5;
-        public const int WM_NEXTDLGCTL = 0x0028;
-        public const int WM_NEXTMENU = 0x0213;
-        public const int WM_NOTIFY = 0x004E;
-        public const int WM_NOTIFYFORMAT = 0x0055;
-        public const int WM_NULL = 0x0000;
-        public const int WM_PAINT = 0x000F;
-        public const int WM_PAINTCLIPBOARD = 0x0309;
-        public const int WM_PAINTICON = 0x0026;
-        public const int WM_PALETTECHANGED = 0x0311;
-        public const int WM_PALETTEISCHANGING = 0x0310;
-        public const int WM_PARENTNOTIFY = 0x0210;
-        public const int WM_PASTE = 0x0302;
-        public const int WM_PENWINFIRST = 0x0380;
-        public const int WM_PENWINLAST = 0x038F;
-        public const int WM_POWER = 0x0048;
-        public const int WM_POWERBROADCAST = 0x0218;
-        public const int WM_PRINT = 0x0317;
-        public const int WM_PRINTCLIENT = 0x0318;
-        public const int WM_QUERYDRAGICON = 0x0037;
-        public const int WM_QUERYENDSESSION = 0x0011;
-        public const int WM_QUERYNEWPALETTE = 0x030F;
-        public const int WM_QUERYOPEN = 0x0013;
-        public const int WM_QUEUESYNC = 0x0023;
-        public const int WM_QUIT = 0x0012;
-        public const int WM_RBUTTONDBLCLK = 0x0206;
-        public const int WM_RBUTTONDOWN = 0x0204;
-        public const int WM_RBUTTONUP = 0x0205;
-        public const int WM_RENDERALLFORMATS = 0x0306;
-        public const int WM_RENDERFORMAT = 0x0305;
-        public const int WM_SETCURSOR = 0x0020;
-        public const int WM_SETFOCUS = 0x0007;
-        public const int WM_SETFONT = 0x0030;
-        public const int WM_SETHOTKEY = 0x0032;
-        public const int WM_SETICON = 0x0080;
-        public const int WM_SETREDRAW = 0x000B;
-        public const int WM_SETTEXT = 0x000C;
-        public const int WM_SETTINGCHANGE = 0x001A;
-        public const int WM_SHOWWINDOW = 0x0018;
-        public const int WM_SIZE = 0x0005;
-        public const int WM_SIZECLIPBOARD = 0x030B;
-        public const int WM_SIZING = 0x0214;
-        public const int WM_SPOOLERSTATUS = 0x002A;
-        public const int WM_STYLECHANGED = 0x007D;
-        public const int WM_STYLECHANGING = 0x007C;
-        public const int WM_SYNCPAINT = 0x0088;
-        public const int WM_SYSCHAR = 0x0106;
-        public const int WM_SYSCOLORCHANGE = 0x0015;
-        public const int WM_SYSCOMMAND = 0x0112;
-        public const int WM_SYSDEADCHAR = 0x0107;
-        public const int WM_SYSKEYDOWN = 0x0104;
-        public const int WM_SYSKEYUP = 0x0105;
-        public const int WM_TCARD = 0x0052;
-        public const int WM_TIMECHANGE = 0x001E;
-        public const int WM_TIMER = 0x0113;
-        public const int WM_UNDO = 0x0304;
-        public const int WM_UNINITMENUPOPUP = 0x0125;
-        public const int WM_USER = 0x0400;
-        public const int WM_USERCHANGED = 0x0054;
-        public const int WM_VKEYTOITEM = 0x002E;
-        public const int WM_VSCROLL = 0x0115;
-        public const int WM_VSCROLLCLIPBOARD = 0x030A;
-        public const int WM_WINDOWPOSCHANGED = 0x0047;
-        public const int WM_WINDOWPOSCHANGING = 0x0046;
-        public const int WM_WININICHANGE = 0x001A;
-        public const int WM_XBUTTONDBLCLK = 0x020D;
-        public const int WM_XBUTTONDOWN = 0x020B;
-        public const int WM_XBUTTONUP = 0x020C;
-
-        #endregion
-
-        public const uint WHITE_BRUSH = 0;
-        public const uint LTGRAY_BRUSH = 1;
-        public const uint GRAY_BRUSH = 2;
-        public const uint DKGRAY_BRUSH = 3;
-        public const uint BLACK_BRUSH = 4;
-        public const uint NULL_BRUSH = 5;
-        public const uint HOLLOW_BRUSH = NULL_BRUSH;
-        public const uint WHITE_PEN = 6;
-        public const uint BLACK_PEN = 7;
-        public const uint NULL_PEN = 8;
-        public const uint OEM_FIXED_FONT = 10;
-        public const uint ANSI_FIXED_FONT = 11;
-        public const uint ANSI_VAR_FONT = 12;
-        public const uint SYSTEM_FONT = 13;
-        public const uint DEVICE_DEFAULT_FONT = 14;
-        public const uint DEFAULT_PALETTE = 15;
-        public const uint SYSTEM_FIXED_FONT = 16;
-        public const uint DEFAULT_GUI_FONT = 17;
-        public const uint DC_BRUSH = 18;
-        public const uint DC_PEN = 19;
-
-        public const uint DEFAULT_PITCH = 0;
-        public const uint FIXED_PITCH = 1;
-        public const uint VARIABLE_PITCH = 2;
-
-        public const uint DEFAULT_QUALITY = 0;
-        public const uint DRAFT_QUALITY = 1;
-        public const uint PROOF_QUALITY = 2;
-        public const uint NONANTIALIASED_QUALITY = 3;
-        public const uint ANTIALIASED_QUALITY = 4;
-        public const uint CLEARTYPE_QUALITY = 5;
-        public const uint CLEARTYPE_NATURAL_QUALITY = 6;
-
-        public const uint CLIP_DEFAULT_PRECIS = 0;
-        public const uint CLIP_CHARACTER_PRECIS = 1;
-        public const uint CLIP_STROKE_PRECIS = 2;
-        public const uint CLIP_MASK = 0xf;
-
-        public const uint OUT_DEFAULT_PRECIS = 0;
-        public const uint OUT_STRING_PRECIS = 1;
-        public const uint OUT_CHARACTER_PRECIS = 2;
-        public const uint OUT_STROKE_PRECIS = 3;
-        public const uint OUT_TT_PRECIS = 4;
-        public const uint OUT_DEVICE_PRECIS = 5;
-        public const uint OUT_RASTER_PRECIS = 6;
-        public const uint OUT_TT_ONLY_PRECIS = 7;
-        public const uint OUT_OUTLINE_PRECIS = 8;
-        public const uint OUT_SCREEN_OUTLINE_PRECIS = 9;
-        public const uint OUT_PS_ONLY_PRECIS = 10;
-
-        public const uint ANSI_CHARSET = 0;
-        public const uint DEFAULT_CHARSET = 1;
-        public const uint SYMBOL_CHARSET = 2;
-
-        public const uint FW_DONTCARE = 0;
-        public const uint FW_THIN = 100;
-        public const uint FW_EXTRALIGHT = 200;
-        public const uint FW_LIGHT = 300;
-        public const uint FW_NORMAL = 400;
-        public const uint FW_MEDIUM = 500;
-        public const uint FW_SEMIBOLD = 600;
-        public const uint FW_BOLD = 700;
-        public const uint FW_EXTRABOLD = 800;
-        public const uint FW_HEAVY = 900;
-
-        public const uint SRCCOPY = 0x00CC0020; // dest = source                   
-        public const uint SRCPAINT = 0x00EE0086;    // dest = source OR dest           
-        public const uint SRCAND = 0x008800C6;  // dest = source AND dest          
-        public const uint SRCINVERT = 0x00660046;   // dest = source XOR dest          
-        public const uint SRCERASE = 0x00440328;    // dest = source AND (NOT dest )   
-        public const uint NOTSRCCOPY = 0x00330008;  // dest = (NOT source)             
-        public const uint NOTSRCERASE = 0x001100A6; // dest = (NOT src) AND (NOT dest) 
-        public const uint MERGECOPY = 0x00C000CA;   // dest = (source AND pattern)     
-        public const uint MERGEPAINT = 0x00BB0226;  // dest = (NOT source) OR dest     
-        public const uint PATCOPY = 0x00F00021; // dest = pattern                  
-        public const uint PATPAINT = 0x00FB0A09;    // dest = DPSnoo                   
-        public const uint PATINVERT = 0x005A0049;   // dest = pattern XOR dest         
-        public const uint DSTINVERT = 0x00550009;   // dest = (NOT dest)               
-        public const uint BLACKNESS = 0x00000042;   // dest = BLACK                    
-        public const uint WHITENESS = 0x00FF0062;   // dest = WHITE     
-
-        public const uint DIB_RGB_COLORS = 0;
-        public const uint DIB_PAL_COLORS = 1;
-
-        public const uint CS_VREDRAW = 0x0001;
-        public const uint CS_HREDRAW = 0x0002;
-        public const uint CS_DBLCLKS = 0x0008;
-        public const uint CS_OWNDC = 0x0020;
-        public const uint CS_CLASSDC = 0x0040;
-        public const uint CS_PARENTDC = 0x0080;
-        public const uint CS_NOCLOSE = 0x0200;
-        public const uint CS_SAVEBITS = 0x0800;
-        public const uint CS_BYTEALIGNCLIENT = 0x1000;
-        public const uint CS_BYTEALIGNWINDOW = 0x2000;
-        public const uint CS_GLOBALCLASS = 0x4000;
     }
 }
