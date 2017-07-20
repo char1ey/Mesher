@@ -25,11 +25,15 @@ namespace Mesher
             m_camera = new OrthographicsCamera(RenderContext);
             RenderContext.MouseMove += RenderContext_MouseMove;
             RenderContext.MouseWheel += RenderContext_MouseWheel;
+            texture = new Texture((Bitmap)Image.FromFile(@"C:\Users\backsword\Desktop\other\51076.jpg"));
 
             mesh = new Mesh(new[]
-                {new Mathematics.Triangle(new Vertex(-1, 0), new Vertex(0, 1), new Vertex(1, 0))}, null, null);
+                {new Vertex(-1, -1, 0), new Vertex(1, -1, 0), new Vertex(0, 1, 0)}, new []
+            {
+                new Vertex(0, 0), new Vertex(0, 1), new Vertex(1, 1)
+            }, null, new int[,]{ { 0, 1, 2 } }, texture);
 
-            texture = new Texture((Bitmap)Image.FromFile(@"C:\Users\backsword\Desktop\other\51076.jpg"));
+
         }
 
         private Mesh mesh;
@@ -45,8 +49,8 @@ namespace Mesher
             RenderContext.BeginRender(true);
             
             mesh.Render();
-          //  TextureTriangle.Draw(new Mathematics.Triangle(new Vertex(-1, -1, 0), new Vertex(1, -1, 0), new Vertex(0, 1, 0)), 
-             //   new Mathematics.Triangle(new Vertex(0, 0), new Vertex(0, 1), new Vertex(1, 1)), texture);
+           // TextureTriangle.Draw(new Mathematics.Triangle(new Vertex(-1, -1, 0), new Vertex(1, -1, 0), new Vertex(0, 1, 0)), 
+            //    new Mathematics.Triangle(new Vertex(0, 0), new Vertex(0, 1), new Vertex(1, 1)), texture);
             Grid.Draw(RenderContext);
 
             RenderContext.EndRender(true);

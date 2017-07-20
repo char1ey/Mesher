@@ -5996,6 +5996,15 @@ namespace Mesher.GraphicsCore
             GetDelegateFor<glBufferData>()(target, data.Length * sizeof(float), p, usage);
             Marshal.FreeHGlobal(p);
         }
+
+        public static void BufferData(uint target, int[] data, uint usage)
+        {
+            IntPtr p = Marshal.AllocHGlobal(data.Length * sizeof(int));
+            Marshal.Copy(data, 0, p, data.Length);
+            GetDelegateFor<glBufferData>()(target, data.Length * sizeof(int), p, usage);
+            Marshal.FreeHGlobal(p);
+        }
+
         public static void BufferData(uint target, ushort[] data, uint usage)
         {
             var dataSize = data.Length * sizeof(ushort);
