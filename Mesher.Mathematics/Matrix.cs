@@ -1,5 +1,5 @@
 using System;
-using System.Linq;
+using System.Reflection.Emit;
 
 namespace Mesher.Mathematics 
 {
@@ -17,12 +17,12 @@ namespace Mesher.Mathematics
         /// <param name="scale">The scale.</param>
 		public Matrix(double scale)
         {
-            matrix = new double[][]
+            m_matrix = new[]
             {
-                new double[] { scale, 0.0f, 0.0f, 0.0f },
-                new double[] { 0.0f, scale, 0.0f, 0.0f },
-                new double[] { 0.0f, 0.0f, scale, 0.0f },
-                new double[] { 0.0f, 0.0f, 0.0f, scale }
+                new[] { scale, 0.0f, 0.0f, 0.0f },
+                new[] { 0.0f, scale, 0.0f, 0.0f },
+                new[] { 0.0f, 0.0f, scale, 0.0f },
+                new[] { 0.0f, 0.0f, 0.0f, scale }
             };
         }
 
@@ -33,7 +33,7 @@ namespace Mesher.Mathematics
         /// <param name="cols">The colums of the matrix.</param>
         public Matrix(double[][] cols)
         {
-            this.matrix = new []
+            m_matrix = new []
             {
                 cols[0],
                 cols[1],
@@ -44,7 +44,7 @@ namespace Mesher.Mathematics
 
         public Matrix(double[] a, double[] b, double[] c, double[] d)
         {
-            this.matrix = new[]
+            m_matrix = new[]
             {
                 a, b, c, d
             };
@@ -52,23 +52,34 @@ namespace Mesher.Mathematics
 
         public Matrix(double[] m)
         {
-            matrix = new double[N][];
-            for (int i = 0; i < N; i++)
+            m_matrix = new double[N][];
+            for (var i = 0; i < N; i++)
             {
-                matrix[i] = new double[N];
-                for (int j = 0; j < N; j++)
-                    matrix[i][j] = m[i * N + j];
+                m_matrix[i] = new double[N];
+                for (var j = 0; j < N; j++)
+                    m_matrix[i][j] = m[i * N + j];
+            }
+        }
+
+        public Matrix(float[] m)
+        {
+            m_matrix = new double[N][];
+            for (var i = 0; i < N; i++)
+            {
+                m_matrix[i] = new double[N];
+                for (var j = 0; j < N; j++)
+                    m_matrix[i][j] = m[i * N + j];
             }
         }
 
         public Matrix(Matrix m)
         {
-            matrix = new double[N][];
-            for (int i = 0; i < N; i++)
+            m_matrix = new double[N][];
+            for (var i = 0; i < N; i++)
             {
-                matrix[i] = new double[N];
-                for (int j = 0; j < N; j++)
-                    matrix[i][j] = m[i, j];
+                m_matrix[i] = new double[N];
+                for (var j = 0; j < N; j++)
+                    m_matrix[i][j] = m[i, j];
             }
         }
 
@@ -80,7 +91,7 @@ namespace Mesher.Mathematics
         {
             return new Matrix
             {
-                matrix = new[] 
+                m_matrix = new[] 
                 {
                     new double[]{1,0,0,0 },
                     new double[]{0,1,0,0 },
@@ -95,17 +106,17 @@ namespace Mesher.Mathematics
         #region Index Access
 
         /// <summary>
-        /// Gets or sets the <see cref="double[]"/> column at the specified index.
+        /// Gets or sets the <see cref="double"/> column at the specified index.
         /// </summary>
         /// <value>
-        /// The <see cref="double[]"/> column.
+        /// The <see cref="double"/> column.
         /// </value>
         /// <param name="column">The column index.</param>
         /// <returns>The column at index <paramref name="column"/>.</returns>
         public double[] this[int column]
 		{
-            get { return matrix[column]; }
-            set { matrix[column] = value; }
+            get { return m_matrix[column]; }
+            set { m_matrix[column] = value; }
 		}
 
         /// <summary>
@@ -121,8 +132,8 @@ namespace Mesher.Mathematics
         /// </returns>
         public double this[int column, int row]
         {
-            get { return matrix[column][row]; }
-            set { matrix[column][row] = value; }
+            get { return m_matrix[column][row]; }
+            set { m_matrix[column][row] = value; }
         }
 
         #endregion
@@ -133,12 +144,21 @@ namespace Mesher.Mathematics
         /// Returns the matrix as a flat array of elements, column major.
         /// </summary>
         /// <returns></returns>
-        public double[] ToArray()
+        public double[] ToArrayDouble()
         {
-            double[] ret = new double[N * N];
-            for (int i = 0; i < N; i++)
-                for (int j = 0; j < N; j++)
-                    ret[i * N + j] = matrix[i][j];
+            var ret = new double[N * N];
+            for (var i = 0; i < N; i++)
+                for (var j = 0; j < N; j++)
+                    ret[i * N + j] = m_matrix[i][j];
+            return ret;
+        }
+
+        public float[] ToArrayFloat()
+        {
+            var ret = new float[N * N];
+            for (var i = 0; i < N; i++)
+            for (var j = 0; j < N; j++)
+                ret[i * N + j] = (float)m_matrix[i][j];
             return ret;
         }
 
@@ -154,7 +174,7 @@ namespace Mesher.Mathematics
         /// <returns>The product of <paramref name="lhs"/> and <paramref name="rhs"/>.</returns>
         public static double[] operator *(Matrix lhs, double[] rhs)
         {
-            return new double[] {
+            return new[] {
                 lhs[0, 0] * rhs[0] + lhs[1, 0] * rhs[1] + lhs[2, 0] * rhs[2] + lhs[3, 0] * rhs[3],
                 lhs[0, 1] * rhs[0] + lhs[1, 1] * rhs[1] + lhs[2, 1] * rhs[2] + lhs[3, 1] * rhs[3],
                 lhs[0, 2] * rhs[0] + lhs[1, 2] * rhs[1] + lhs[2, 2] * rhs[2] + lhs[3, 2] * rhs[3],
@@ -181,10 +201,10 @@ namespace Mesher.Mathematics
         {
             return new Matrix(new []
             {
-                add(add(mult(lhs[0][0], rhs[0]), mult(lhs[1][0], rhs[1])), add(mult(lhs[2][0], rhs[2]), mult(lhs[3][0], rhs[3]))),
-                add(add(mult(lhs[0][1], rhs[0]), mult(lhs[1][1], rhs[1])), add(mult(lhs[2][1], rhs[2]), mult(lhs[3][1], rhs[3]))),
-                add(add(mult(lhs[0][2], rhs[0]), mult(lhs[1][2], rhs[1])), add(mult(lhs[2][2], rhs[2]), mult(lhs[3][2], rhs[3]))),
-                add(add(mult(lhs[0][3], rhs[0]), mult(lhs[1][3], rhs[1])), add(mult(lhs[2][3], rhs[2]), mult(lhs[3][3], rhs[3])))
+                Add(Add(Mult(lhs[0][0], rhs[0]), Mult(lhs[1][0], rhs[1])), Add(Mult(lhs[2][0], rhs[2]), Mult(lhs[3][0], rhs[3]))),
+                Add(Add(Mult(lhs[0][1], rhs[0]), Mult(lhs[1][1], rhs[1])), Add(Mult(lhs[2][1], rhs[2]), Mult(lhs[3][1], rhs[3]))),
+                Add(Add(Mult(lhs[0][2], rhs[0]), Mult(lhs[1][2], rhs[1])), Add(Mult(lhs[2][2], rhs[2]), Mult(lhs[3][2], rhs[3]))),
+                Add(Add(Mult(lhs[0][3], rhs[0]), Mult(lhs[1][3], rhs[1])), Add(Mult(lhs[2][3], rhs[2]), Mult(lhs[3][3], rhs[3])))
             });
         }
 
@@ -192,10 +212,10 @@ namespace Mesher.Mathematics
         {
             return new Matrix(new[]
             {
-                mult(lhs[0], s),
-                mult(lhs[1], s),
-                mult(lhs[2], s),
-                mult(lhs[3], s)
+                Mult(lhs[0], s),
+                Mult(lhs[1], s),
+                Mult(lhs[2], s),
+                Mult(lhs[3], s)
             });
         }
 
@@ -215,8 +235,8 @@ namespace Mesher.Mathematics
         public static Matrix Frustum(double left, double right, double bottom, double top, double nearVal, double farVal)
         {
             var result = Identity();
-            result[0, 0] = (2.0f * nearVal) / (right - left);
-            result[1, 1] = (2.0f * nearVal) / (top - bottom);
+            result[0, 0] = 2.0f * nearVal / (right - left);
+            result[1, 1] = 2.0f * nearVal / (top - bottom);
             result[2, 0] = (right + left) / (right - left);
             result[2, 1] = (top + bottom) / (top - bottom);
             result[2, 2] = -(farVal + nearVal) / (farVal - nearVal);
@@ -235,19 +255,21 @@ namespace Mesher.Mathematics
         public static Matrix InfinitePerspective(double fovy, double aspect, double zNear)
         {
 
-            double range = Math.Tan(fovy / 2) * zNear;
+            var range = Math.Tan(fovy / 2) * zNear;
 
-            double left = -range * aspect;
-            double right = range * aspect;
-            double bottom = -range;
-            double top = range;
+            var left = -range * aspect;
+            var right = range * aspect;
+            var bottom = -range;
+            var top = range;
 
-            var result = new Matrix(0);
-            result[0, 0] = ((2f) * zNear) / (right - left);
-            result[1, 1] = ((2f) * zNear) / (top - bottom);
-            result[2, 2] = -(1f);
-            result[2, 3] = -(1f);
-            result[3, 2] = -(2f) * zNear;
+            var result = new Matrix(0)
+            {
+                [0, 0] = 2f * zNear / (right - left),
+                [1, 1] = 2f * zNear / (top - bottom),
+                [2, 2] = -1f,
+                [2, 3] = -1f,
+                [3, 2] = -2f * zNear
+            };
             return result;
         }
 
@@ -260,24 +282,26 @@ namespace Mesher.Mathematics
         /// <returns></returns>
         public static Matrix LookAt(Vertex eye, Vertex center, Vertex up)
         {
-            Vertex f = Vertex.Normalize(center - eye);
-            Vertex s = Vertex.Normalize(f.Cross(up));
-            Vertex u = s.Cross(f);
+            var f = Vertex.Normalize(center - eye);
+            var s = Vertex.Normalize(f.Cross(up));
+            var u = s.Cross(f);
 
-            Matrix Result = new Matrix(1);
-            Result[0, 0] = s.x;
-            Result[1, 0] = s.y;
-            Result[2, 0] = s.z;
-            Result[0, 1] = u.x;
-            Result[1, 1] = u.y;
-            Result[2, 1] = u.z;
-            Result[0, 2] = -f.x;
-            Result[1, 2] = -f.y;
-            Result[2, 2] = -f.z;
-            Result[3, 0] = -s.Dot(eye);
-            Result[3, 1] = -u.Dot(eye);
-            Result[3, 2] = f.Dot(eye);
-            return Result;
+            var result = new Matrix(1)
+            {
+                [0, 0] = s.X,
+                [1, 0] = s.Y,
+                [2, 0] = s.Z,
+                [0, 1] = u.X,
+                [1, 1] = u.Y,
+                [2, 1] = u.Z,
+                [0, 2] = -f.X,
+                [1, 2] = -f.Y,
+                [2, 2] = -f.Z,
+                [3, 0] = -s.Dot(eye),
+                [3, 1] = -u.Dot(eye),
+                [3, 2] = f.Dot(eye)
+            };
+            return result;
         }
 
         /// <summary>
@@ -292,10 +316,10 @@ namespace Mesher.Mathematics
         /// <returns></returns>
         public static Matrix Ortho(double left, double right, double bottom, double top, double zNear, double zFar)
         {
-            var result = Matrix.Identity();
-            result[0, 0] = (2f) / (right - left);
-            result[1, 1] = (2f) / (top - bottom);
-            result[2, 2] = -(2f) / (zFar - zNear);
+            var result = Identity();
+            result[0, 0] = 2f / (right - left);
+            result[1, 1] = 2f / (top - bottom);
+            result[2, 2] = -2f / (zFar - zNear);
             result[3, 0] = -(right + left) / (right - left);
             result[3, 1] = -(top + bottom) / (top - bottom);
             result[3, 2] = -(zFar + zNear) / (zFar - zNear);
@@ -312,10 +336,10 @@ namespace Mesher.Mathematics
         /// <returns></returns>
         public static Matrix Ortho(double left, double right, double bottom, double top)
         {
-            var result = Matrix.Identity();
-            result[0, 0] = (2f) / (right - left);
-            result[1, 1] = (2f) / (top - bottom);
-            result[2, 2] = -(1f);
+            var result = Identity();
+            result[0, 0] = 2f / (right - left);
+            result[1, 1] = 2f / (top - bottom);
+            result[2, 2] = -1f;
             result[3, 0] = -(right + left) / (right - left);
             result[3, 1] = -(top + bottom) / (top - bottom);
             return result;
@@ -331,11 +355,11 @@ namespace Mesher.Mathematics
         /// <returns>A <see cref="Matrix"/> that contains the projection matrix for the perspective transformation.</returns>
         public static Matrix Perspective(double fovy, double aspect, double zNear, double zFar)
         {
-            var tanHalfFovy = (double)Math.Tan(fovy / 2.0f);
+            var tanHalfFovy = Math.Tan(fovy / 2.0f);
 
-            var result = Matrix.Identity();
+            var result = Identity();
             result[0, 0] = 1.0f / (aspect * tanHalfFovy);
-            result[1, 1] = 1.0f / (tanHalfFovy);
+            result[1, 1] = 1.0f / tanHalfFovy;
             result[2, 2] = -(zFar + zNear) / (zFar - zNear);
             result[2, 3] = -1.0f;
             result[3, 2] = -(2.0f * zFar * zNear) / (zFar - zNear);
@@ -362,12 +386,14 @@ namespace Mesher.Mathematics
             var h = Math.Cos(0.5 * rad) / Math.Sin(0.5 * rad);
             var w = h * height / width;
 
-            var result = new Matrix(0);
-            result[0, 0] = w;
-            result[1, 1] = h;
-            result[2, 2] = -(zFar + zNear) / (zFar - zNear);
-            result[2, 3] = -(1f);
-            result[3, 2] = -((2f) * zFar * zNear) / (zFar - zNear);
+            var result = new Matrix(0)
+            {
+                [0, 0] = w,
+                [1, 1] = h,
+                [2, 2] = -(zFar + zNear) / (zFar - zNear),
+                [2, 3] = -1f,
+                [3, 2] = -(2f * zFar * zNear) / (zFar - zNear)
+            };
             return result;
         }
 
@@ -381,21 +407,21 @@ namespace Mesher.Mathematics
         /// <exception cref="System.ArgumentOutOfRangeException"></exception>
         public static Matrix PickMatrix(Vertex center, Vertex delta, double[] viewport)
         {
-            if (delta.x <= 0 || delta.y <= 0)
+            if (delta.X <= 0 || delta.Y <= 0)
                 throw new ArgumentOutOfRangeException();
-            var Result = new Matrix(1.0f);
+            var result = new Matrix(1.0f);
 
-            if (!(delta.x > (0f) && delta.y > (0f)))
-                return Result; // Error
+            if (!(delta.X > 0f && delta.Y > 0f))
+                return result; // Error
 
-            Vertex Temp = new Vertex(
-                ((viewport[2]) - (2f) * (center.x - (viewport[0]))) / delta.x,
-                ((viewport[3]) - (2f) * (center.y - (viewport[1]))) / delta.y,
-                (0f));
+            var temp = new Vertex(
+                (viewport[2] - 2f * (center.X - viewport[0])) / delta.X,
+                (viewport[3] - 2f * (center.Y - viewport[1])) / delta.Y,
+                0f);
 
             // Translate and scale the picked region to the entire window
-            Result = Translate(Result, Temp);
-            return Scale(Result, new Vertex((viewport[2]) / delta.x, (viewport[3]) / delta.y, (1)));
+            result = Translate(result, temp);
+            return Scale(result, new Vertex(viewport[2] / delta.X, viewport[3] / delta.Y, 1));
         }
 
         /// <summary>
@@ -409,12 +435,12 @@ namespace Mesher.Mathematics
         public static Vertex Project(Vertex obj, Matrix model, Matrix proj, double[] viewport)
 
         {
-            double[] tmp = new double[] { obj.x, obj.y, obj.z, 1 };
+            var tmp = new[] { obj.X, obj.Y, obj.Z, 1 };
             tmp = model * tmp;
             tmp = proj * tmp;
 
-            tmp = devide(tmp, tmp[3]);
-            tmp = add(mult(tmp, 0.5), 0.5f);
+            tmp = Devide(tmp, tmp[3]);
+            tmp = Add(Mult(tmp, 0.5), 0.5f);
             tmp[0] = tmp[0] * viewport[2] + viewport[0];
             tmp[1] = tmp[1] * viewport[3] + viewport[1];
 
@@ -430,13 +456,13 @@ namespace Mesher.Mathematics
         /// <returns></returns>
         public static Matrix Rotate(Matrix m, double angle, Vertex v)
         {
-            double c = Math.Cos(angle);
-            double s = Math.Sin(angle);
+            var c = Math.Cos(angle);
+            var s = Math.Sin(angle);
 
-            Vertex axis = v.Normalize();
-            Vertex temp = (1.0 - c) * axis;
+            var axis = v.Normalize();
+            var temp = (1.0 - c) * axis;
 
-            Matrix rotate = Matrix.Identity();
+            var rotate = Identity();
             rotate[0, 0] = c + temp[0] * axis[0];
             rotate[0, 1] = 0 + temp[0] * axis[1] + s * axis[2];
             rotate[0, 2] = 0 + temp[0] * axis[2] - s * axis[1];
@@ -449,21 +475,18 @@ namespace Mesher.Mathematics
             rotate[2, 1] = 0 + temp[2] * axis[1] - s * axis[0];
             rotate[2, 2] = c + temp[2] * axis[2];
 
-            Matrix result = Identity();
-            result[0] = add(add(mult(m[0], rotate[0][0]), mult(m[1], rotate[0][1])), mult(m[2], rotate[0][2]));
-            result[1] = add(add(mult(m[0], rotate[1][0]), mult(m[1], rotate[1][1])), mult(m[2], rotate[1][2]));
-            result[2] = add(add(mult(m[0], rotate[2][0]), mult(m[1], rotate[2][1])), mult(m[2], rotate[2][2]));
+            var result = Identity();
+            result[0] = Add(Add(Mult(m[0], rotate[0][0]), Mult(m[1], rotate[0][1])), Mult(m[2], rotate[0][2]));
+            result[1] = Add(Add(Mult(m[0], rotate[1][0]), Mult(m[1], rotate[1][1])), Mult(m[2], rotate[1][2]));
+            result[2] = Add(Add(Mult(m[0], rotate[2][0]), Mult(m[1], rotate[2][1])), Mult(m[2], rotate[2][2]));
             result[3] = m[3];
             return result;
         }
 
-
-        //  TODO: this is actually defined as an extension, put in the right file.
         public static Matrix Rotate(double angle, Vertex v)
         {
-            return Rotate(Matrix.Identity(), angle, v);
+            return Rotate(Identity(), angle, v);
         }
-
 
         /// <summary>
         /// Applies a scale transformation to matrix <paramref name="m"/> by vector <paramref name="v"/>.
@@ -473,12 +496,21 @@ namespace Mesher.Mathematics
         /// <returns><paramref name="m"/> scaled by <paramref name="v"/>.</returns>
         public static Matrix Scale(Matrix m, Vertex v)
         {
-            Matrix result = m;
-            result[0] = mult(m[0], v[0]);
-            result[1] = mult(m[1], v[1]);
-            result[2] = mult(m[2], v[2]);
+            var result = m;
+            result[0] = Mult(m[0], v[0]);
+            result[1] = Mult(m[1], v[1]);
+            result[2] = Mult(m[2], v[2]);
             result[3] = m[3];
             return result;
+        }
+
+        /// <summary>
+        /// Create a scale transformation matrix by vector <paramref name="v"/>.
+        /// </summary>
+        /// <param name="v">The vector to scale by.</param>
+        public static Matrix Scale(Vertex v)
+        {
+            return Scale(Identity(), v);
         }
 
         /// <summary>
@@ -489,8 +521,10 @@ namespace Mesher.Mathematics
         /// <returns><paramref name="m"/> translated by <paramref name="v"/>.</returns>
         public static Matrix Translate(Matrix m, Vertex v)
         {
-            Matrix result = new Matrix(m);
-            result[3] = add(add(mult(m[0], v[0]), mult(m[1], v[1])), add(mult(m[2], v[2]), m[3]));
+            var result = new Matrix(m)
+            {
+                [3] = Add(Add(Mult(m[0], v[0]), Mult(m[1], v[1])), Add(Mult(m[2], v[2]), m[3]))
+            };
             return result;
         }
 
@@ -504,19 +538,21 @@ namespace Mesher.Mathematics
         /// <returns></returns>
         public static Matrix TweakedInfinitePerspective(double fovy, double aspect, double zNear)
         {
-            double range = Math.Tan(fovy / (2)) * zNear;
-            double left = -range * aspect;
-            double right = range * aspect;
-            double bottom = -range;
-            double top = range;
+            var range = Math.Tan(fovy / 2) * zNear;
+            var left = -range * aspect;
+            var right = range * aspect;
+            var bottom = -range;
+            var top = range;
 
-            Matrix Result = new Matrix((0f));
-            Result[0, 0] = ((2) * zNear) / (right - left);
-            Result[1, 1] = ((2) * zNear) / (top - bottom);
-            Result[2, 2] = (0.0001f) - (1f);
-            Result[2, 3] = (-1);
-            Result[3, 2] = -((0.0001f) - (2)) * zNear;
-            return Result;
+            var result = new Matrix(0f)
+            {
+                [0, 0] = 2 * zNear / (right - left),
+                [1, 1] = 2 * zNear / (top - bottom),
+                [2, 2] = 0.0001f - 1f,
+                [2, 3] = -1,
+                [3, 2] = -(0.0001f - 2) * zNear
+            };
+            return result;
         }
 
         /// <summary>
@@ -529,15 +565,15 @@ namespace Mesher.Mathematics
         /// <returns></returns>
         public static Vertex UnProject(Vertex win, Matrix model, Matrix proj, double[] viewport)
         {
-            Matrix inverse = (proj * model).Inverse();
+            var inverse = (proj * model).Inverse();
 
-            double[] tmp = new double[] { win.x, win.y, win.z, 1 };
-            tmp[0] = (tmp[0] - (viewport[0])) / (viewport[2]);
-            tmp[1] = (tmp[1] - (viewport[1])) / (viewport[3]);
-            tmp = substract(mult(tmp, 2), 1);
+            var tmp = new[] { win.X, win.Y, win.Z, 1 };
+            tmp[0] = (tmp[0] - viewport[0]) / viewport[2];
+            tmp[1] = (tmp[1] - viewport[1]) / viewport[3];
+            tmp = Substract(Mult(tmp, 2), 1);
 
-            double[] obj = inverse * tmp;
-            obj = devide(obj, obj[3]);
+            var obj = inverse * tmp;
+            obj = Devide(obj, obj[3]);
 
             return new Vertex(obj[0], obj[1], obj[2]);
         }
@@ -549,65 +585,65 @@ namespace Mesher.Mathematics
 
         public static Matrix Inverse(Matrix m)
         {
-            double Coef00 = m[2][2] * m[3][3] - m[3][2] * m[2][3];
-            double Coef02 = m[1][2] * m[3][3] - m[3][2] * m[1][3];
-            double Coef03 = m[1][2] * m[2][3] - m[2][2] * m[1][3];
+            var coef00 = m[2][2] * m[3][3] - m[3][2] * m[2][3];
+            var coef02 = m[1][2] * m[3][3] - m[3][2] * m[1][3];
+            var coef03 = m[1][2] * m[2][3] - m[2][2] * m[1][3];
 
-            double Coef04 = m[2][1] * m[3][3] - m[3][1] * m[2][3];
-            double Coef06 = m[1][1] * m[3][3] - m[3][1] * m[1][3];
-            double Coef07 = m[1][1] * m[2][3] - m[2][1] * m[1][3];
+            var coef04 = m[2][1] * m[3][3] - m[3][1] * m[2][3];
+            var coef06 = m[1][1] * m[3][3] - m[3][1] * m[1][3];
+            var coef07 = m[1][1] * m[2][3] - m[2][1] * m[1][3];
 
-            double Coef08 = m[2][1] * m[3][2] - m[3][1] * m[2][2];
-            double Coef10 = m[1][1] * m[3][2] - m[3][1] * m[1][2];
-            double Coef11 = m[1][1] * m[2][2] - m[2][1] * m[1][2];
+            var coef08 = m[2][1] * m[3][2] - m[3][1] * m[2][2];
+            var coef10 = m[1][1] * m[3][2] - m[3][1] * m[1][2];
+            var coef11 = m[1][1] * m[2][2] - m[2][1] * m[1][2];
 
-            double Coef12 = m[2][0] * m[3][3] - m[3][0] * m[2][3];
-            double Coef14 = m[1][0] * m[3][3] - m[3][0] * m[1][3];
-            double Coef15 = m[1][0] * m[2][3] - m[2][0] * m[1][3];
+            var coef12 = m[2][0] * m[3][3] - m[3][0] * m[2][3];
+            var coef14 = m[1][0] * m[3][3] - m[3][0] * m[1][3];
+            var coef15 = m[1][0] * m[2][3] - m[2][0] * m[1][3];
 
-            double Coef16 = m[2][0] * m[3][2] - m[3][0] * m[2][2];
-            double Coef18 = m[1][0] * m[3][2] - m[3][0] * m[1][2];
-            double Coef19 = m[1][0] * m[2][2] - m[2][0] * m[1][2];
+            var coef16 = m[2][0] * m[3][2] - m[3][0] * m[2][2];
+            var coef18 = m[1][0] * m[3][2] - m[3][0] * m[1][2];
+            var coef19 = m[1][0] * m[2][2] - m[2][0] * m[1][2];
 
-            double Coef20 = m[2][0] * m[3][1] - m[3][0] * m[2][1];
-            double Coef22 = m[1][0] * m[3][1] - m[3][0] * m[1][1];
-            double Coef23 = m[1][0] * m[2][1] - m[2][0] * m[1][1];
+            var coef20 = m[2][0] * m[3][1] - m[3][0] * m[2][1];
+            var coef22 = m[1][0] * m[3][1] - m[3][0] * m[1][1];
+            var coef23 = m[1][0] * m[2][1] - m[2][0] * m[1][1];
 
-            double[] Fac0 = new double[] { Coef00, Coef00, Coef02, Coef03 };
-            double[] Fac1 = new double[] { Coef04, Coef04, Coef06, Coef07 };
-            double[] Fac2 = new double[] { Coef08, Coef08, Coef10, Coef11 };
-            double[] Fac3 = new double[] { Coef12, Coef12, Coef14, Coef15 };
-            double[] Fac4 = new double[] { Coef16, Coef16, Coef18, Coef19 };
-            double[] Fac5 = new double[] { Coef20, Coef20, Coef22, Coef23 };
+            var fac0 = new[] { coef00, coef00, coef02, coef03 };
+            var fac1 = new[] { coef04, coef04, coef06, coef07 };
+            var fac2 = new[] { coef08, coef08, coef10, coef11 };
+            var fac3 = new[] { coef12, coef12, coef14, coef15 };
+            var fac4 = new[] { coef16, coef16, coef18, coef19 };
+            var fac5 = new[] { coef20, coef20, coef22, coef23 };
 
-            double[] Vec0 = new double[] { m[1][0], m[0][0], m[0][0], m[0][0] };
-            double[] Vec1 = new double[] { m[1][1], m[0][1], m[0][1], m[0][1] };
-            double[] Vertex = new double[] { m[1][2], m[0][2], m[0][2], m[0][2] };
-            double[] Vec3 = new double[] { m[1][3], m[0][3], m[0][3], m[0][3] };
+            var vec0 = new[] { m[1][0], m[0][0], m[0][0], m[0][0] };
+            var vec1 = new[] { m[1][1], m[0][1], m[0][1], m[0][1] };
+            var vertex = new[] { m[1][2], m[0][2], m[0][2], m[0][2] };
+            var vec3 = new[] { m[1][3], m[0][3], m[0][3], m[0][3] };
 
-            double[] Inv0 = add(substract(mult(Vec1, Fac0), mult(Vertex, Fac1)), mult(Vec3, Fac2));
-            double[] Inv1 = add(substract(mult(Vec0, Fac0), mult(Vertex, Fac3)), mult(Vec3, Fac4));
-            double[] Inv2 = add(substract(mult(Vec0, Fac1), mult(Vec1, Fac3)), mult(Vec3, Fac5));
-            double[] Inv3 = add(substract(mult(Vec0, Fac2), mult(Vec1, Fac4)), mult(Vertex, Fac5));
+            var inv0 = Add(Substract(Mult(vec1, fac0), Mult(vertex, fac1)), Mult(vec3, fac2));
+            var inv1 = Add(Substract(Mult(vec0, fac0), Mult(vertex, fac3)), Mult(vec3, fac4));
+            var inv2 = Add(Substract(Mult(vec0, fac1), Mult(vec1, fac3)), Mult(vec3, fac5));
+            var inv3 = Add(Substract(Mult(vec0, fac2), Mult(vec1, fac4)), Mult(vertex, fac5));
 
-            double[] SignA = new double[] { +1, -1, +1, -1 };
-            double[] SignB = new double[] { -1, +1, -1, +1 };
-            Matrix Inverse = new Matrix(mult(Inv0, SignA), mult(Inv1, SignB), mult(Inv2, SignA), mult(Inv3, SignB));
+            var signA = new double[] { +1, -1, +1, -1 };
+            var signB = new double[] { -1, +1, -1, +1 };
+            var inverse = new Matrix(Mult(inv0, signA), Mult(inv1, signB), Mult(inv2, signA), Mult(inv3, signB));
 
-            double[] Row0 = new double[] { Inverse[0][0], Inverse[1][0], Inverse[2][0], Inverse[3][0] };
+            var row0 = new[] { inverse[0][0], inverse[1][0], inverse[2][0], inverse[3][0] };
 
-            double[] Dot0 = mult(m[0], Row0);
-            double Dot1 = Dot0[0] + Dot0[1] + Dot0[2] + Dot0[3];
+            var dot0 = Mult(m[0], row0);
+            var dot1 = dot0[0] + dot0[1] + dot0[2] + dot0[3];
 
-            double OneOverDeterminant = (1f) / Dot1;
+            var oneOverDeterminant = 1f / dot1;
 
-            return Inverse * OneOverDeterminant;
+            return inverse * oneOverDeterminant;
         }
 
         public static bool Valid(Matrix m)
         {
-            for (int i = 0; i < N; i++)
-                for (int j = 0; j < N; j++)
+            for (var i = 0; i < N; i++)
+                for (var j = 0; j < N; j++)
                     if (double.IsNaN(m[i, j]) || double.IsInfinity(m[i, j]))
                         return false;
             return true;
@@ -623,104 +659,72 @@ namespace Mesher.Mathematics
         #region entity
         private const int N = 4;
 
-        public static double dot(double[] x, double[] y)
+        public static double Dot(double[] x, double[] y)
         {
-            double[] tmp = mult(x, y);
+            var tmp = Mult(x, y);
             return tmp[0] + tmp[1] + tmp[2] + tmp[3];
         }
 
-        private static double[] mult(double[] a, double[] b)
+        private static double[] Mult(double[] a, double[] b)
         {
-            double[] ret = new double[N];
-            for (int i = 0; i < N; i++)
+            var ret = new double[N];
+            for (var i = 0; i < N; i++)
                 ret[i] = a[i] * b[i];
             return ret;
         }
 
-        private static double[] add(double[] a, double[] b)
+        private static double[] Add(double[] a, double[] b)
         {
-            double[] ret = new double[N];
-            for (int i = 0; i < N; i++)
+            var ret = new double[N];
+            for (var i = 0; i < N; i++)
                 ret[i] = a[i] + b[i];
             return ret;
         }
 
-        private static double[] substract(double[] a, double[] b)
+        private static double[] Substract(double[] a, double[] b)
         {
-            double[] ret = new double[N];
-            for (int i = 0; i < N; i++)
+            var ret = new double[N];
+            for (var i = 0; i < N; i++)
                 ret[i] = a[i] - b[i];
             return ret;
         }
 
-        private static double[] devide(double[] a, double[] b)
+        private static double[] Mult(double a, double[] b)
         {
-            double[] ret = new double[N];
-            for (int i = 0; i < N; i++)
-                ret[i] = a[i] / b[i];
-            return ret;
-        }
-
-        private static double[] mult(double a, double[] b)
-        {
-            double[] ret = new double[N];
-            for (int i = 0; i < N; i++)
+            var ret = new double[N];
+            for (var i = 0; i < N; i++)
                 ret[i] = a * b[i];
             return ret;
         }
 
-        private static double[] add(double a, double[] b)
+        private static double[] Mult(double[] a, double b)
         {
-            double[] ret = new double[N];
-            for (int i = 0; i < N; i++)
-                ret[i] = a + b[i];
-            return ret;
-        }
-
-        private static double[] substract(double a, double[] b)
-        {
-            double[] ret = new double[N];
-            for (int i = 0; i < N; i++)
-                ret[i] = a - b[i];
-            return ret;
-        }
-
-        private static double[] devide(double a, double[] b)
-        {
-            double[] ret = new double[N];
-            for (int i = 0; i < N; i++)
-                ret[i] = a / b[i];
-            return ret;
-        }
-
-        private static double[] mult(double[] a, double b)
-        {
-            double[] ret = new double[N];
-            for (int i = 0; i < N; i++)
+            var ret = new double[N];
+            for (var i = 0; i < N; i++)
                 ret[i] = a[i] * b;
             return ret;
         }
 
-        private static double[] add(double[] a, double b)
+        private static double[] Add(double[] a, double b)
         {
-            double[] ret = new double[N];
-            for (int i = 0; i < N; i++)
+            var ret = new double[N];
+            for (var i = 0; i < N; i++)
                 ret[i] = a[i] + b;
             return ret;
         }
 
-        private static double[] substract(double[] a, double b)
+        private static double[] Substract(double[] a, double b)
         {
-            double[] ret = new double[N];
-            for (int i = 0; i < N; i++)
+            var ret = new double[N];
+            for (var i = 0; i < N; i++)
                 ret[i] = a[i] - b;
             return ret;
         }
 
-        private static double[] devide(double[] a, double b)
+        private static double[] Devide(double[] a, double b)
         {
-            double[] ret = new double[N];
-            for (int i = 0; i < N; i++)
+            var ret = new double[N];
+            for (var i = 0; i < N; i++)
                 ret[i] = a[i] / b;
             return ret;
         }
@@ -730,6 +734,6 @@ namespace Mesher.Mathematics
         /// <summary>
         /// The columms of the matrix.
         /// </summary>
-        private double[][] matrix;
+        private double[][] m_matrix;
 	}
 }

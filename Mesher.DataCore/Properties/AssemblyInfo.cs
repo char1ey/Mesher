@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Общие сведения об этой сборке предоставляются следующим набором
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
-[assembly: AssemblyTitle("Mesher.OpenGLCore")]
+[assembly: AssemblyTitle("Mesher.DataCore")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Mesher.OpenGLCore")]
+[assembly: AssemblyProduct("Mesher.DataCore")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // Следующий GUID служит для идентификации библиотеки типов, если этот проект будет видимым для COM
-[assembly: Guid("f489ba15-8bee-4595-8313-6a45674da281")]
+[assembly: Guid("10df17a9-53a4-4721-bd2e-236852b299a4")]
 
 // Сведения о версии сборки состоят из следующих четырех значений:
 //

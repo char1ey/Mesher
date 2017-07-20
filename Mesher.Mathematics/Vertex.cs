@@ -5,93 +5,93 @@ namespace Mesher.Mathematics
     /// <summary>
     /// Represents a three dimensional vector.
     /// </summary>
-	public struct Vertex
+    public struct Vertex
 	{
-		public double x;
-		public double y;
-		public double z;
+		public double X;
+		public double Y;
+		public double Z;
 
 		public double this[int index]
 		{
-			get 
+			get
 			{
-				if(index == 0) return x;
-				else if(index == 1) return y;
-				else if(index == 2) return z;
-                else throw new Exception("Out of range.");
+			    if(index == 0) return X;
+			    if(index == 1) return Y;
+			    if(index == 2) return Z;
+			    throw new Exception("Out of range.");
 			}
 			set 
 			{
-				if(index == 0) x = value;
-                else if (index == 1) y = value;
-                else if (index == 2) z = value;
+				if(index == 0) X = value;
+                else if (index == 1) Y = value;
+                else if (index == 2) Z = value;
                 else throw new Exception("Out of range.");
 			}
 		}
 
 		public Vertex(double s)
 		{
-			x = y = z = s;
+			X = Y = Z = s;
 		}
 
 		public Vertex(double x, double y, double z)
 		{
-			this.x = x;
-			this.y = y;
-            this.z = z;
+			X = x;
+			Y = y;
+            Z = z;
 		}
 
         public Vertex(double x, double y)
         {
-            this.x = x;
-            this.y = y;
-            z = 0;
+            X = x;
+            Y = y;
+            Z = 0;
         }
 
         public Vertex(Vertex v)
         {
-            x = v.x;
-            y = v.y;
-            z = v.z;
+            X = v.X;
+            Y = v.Y;
+            Z = v.Z;
         }
 		
 		public static Vertex operator + (Vertex lhs, Vertex rhs)
 		{
-			return new Vertex(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z);
+			return new Vertex(lhs.X + rhs.X, lhs.Y + rhs.Y, lhs.Z + rhs.Z);
 		}
 
         public static Vertex operator +(Vertex lhs, double rhs)
         {
-            return new Vertex(lhs.x + rhs, lhs.y + rhs, lhs.z + rhs);
+            return new Vertex(lhs.X + rhs, lhs.Y + rhs, lhs.Z + rhs);
         }
 
         public static Vertex operator -(Vertex lhs, Vertex rhs)
         {
-            return new Vertex(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z);
+            return new Vertex(lhs.X - rhs.X, lhs.Y - rhs.Y, lhs.Z - rhs.Z);
         }
 
         public static Vertex operator - (Vertex lhs, double rhs)
         {
-            return new Vertex(lhs.x - rhs, lhs.y - rhs, lhs.z - rhs);
+            return new Vertex(lhs.X - rhs, lhs.Y - rhs, lhs.Z - rhs);
         }
 
         public static Vertex operator *(Vertex self, double s)
 		{
-			return new Vertex(self.x * s, self.y * s, self.z * s);
+			return new Vertex(self.X * s, self.Y * s, self.Z * s);
 		}
         public static Vertex operator *(double lhs, Vertex rhs)
         {
-            return new Vertex(rhs.x * lhs, rhs.y * lhs, rhs.z * lhs);
+            return new Vertex(rhs.X * lhs, rhs.Y * lhs, rhs.Z * lhs);
         }
 
         public static Vertex operator /(Vertex lhs, double rhs)
         {
-            return new Vertex(lhs.x / rhs, lhs.y / rhs, lhs.z / rhs);
+            return new Vertex(lhs.X / rhs, lhs.Y / rhs, lhs.Z / rhs);
         }
 
         public static Vertex operator * (Vertex lhs, Vertex rhs)
         {
-            return new Vertex(rhs.x * lhs.x, rhs.y * lhs.y, rhs.z * lhs.z);
+            return new Vertex(rhs.X * lhs.X, rhs.Y * lhs.Y, rhs.Z * lhs.Z);
         }
 
         public Vertex Cross(Vertex v)
@@ -102,9 +102,9 @@ namespace Mesher.Mathematics
         public static Vertex Cross(Vertex lhs, Vertex rhs)
         {
             return new Vertex(
-                lhs.y * rhs.z - rhs.y * lhs.z,
-                lhs.z * rhs.x - rhs.z * lhs.x,
-                lhs.x * rhs.y - rhs.x * lhs.y);
+                lhs.Y * rhs.Z - rhs.Y * lhs.Z,
+                lhs.Z * rhs.X - rhs.Z * lhs.X,
+                lhs.X * rhs.Y - rhs.X * lhs.Y);
         }
 
         public double Angle(Vertex v)
@@ -125,7 +125,7 @@ namespace Mesher.Mathematics
         public static double Dot(Vertex x, Vertex y)
         {
             Vertex tmp = new Vertex(x * y);
-            return tmp.x + tmp.y + tmp.z;
+            return tmp.X + tmp.Y + tmp.Z;
         }
 
         public Vertex Normalize()
@@ -135,7 +135,17 @@ namespace Mesher.Mathematics
 
         public static Vertex Normalize(Vertex v)
         {
-            return v / Math.Sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+            return v / Math.Sqrt(v.X * v.X + v.Y * v.Y + v.Z * v.Z);
+        }
+
+        public static double Length(Vertex v)
+        {
+            return Math.Sqrt(v.X * v.X + v.Y * v.Y + v.Z * v.Z);
+        }
+
+        public double Length()
+        {
+            return Length(this);
         }
 
         public bool Valid()
@@ -145,12 +155,12 @@ namespace Mesher.Mathematics
 
         public static bool Valid(Vertex v)
         {
-            return !(double.IsNaN(v.x) || double.IsNaN(v.y) || double.IsNaN(v.z) || double.IsInfinity(v.x) || double.IsInfinity(v.y) || double.IsInfinity(v.z));
+            return !(double.IsNaN(v.X) || double.IsNaN(v.Y) || double.IsNaN(v.Z) || double.IsInfinity(v.X) || double.IsInfinity(v.Y) || double.IsInfinity(v.Z));
         }
 
         public double[] ToArray()
         {
-            return new[] { x, y, z };
+            return new[] { X, Y, Z };
         }
 	}
 }

@@ -1,17 +1,16 @@
-﻿using Mesher.Mathematics;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
+using Mesher.Mathematics;
 
-namespace Mesher.OpenGLCore
+namespace Mesher.GraphicsCore
 {
     /// <summary>
     /// The OpenGL class wraps Suns OpenGL 3D library.
     /// </summary>
-    public static class gl
+    internal static class Gl
     {
         #region The OpenGL constant definitions.
         //   OpenGL Version Identifier
@@ -1653,6 +1652,13 @@ namespace Mesher.OpenGLCore
             glColor4f(red, green, blue, alpha);
         }
         /// <summary>
+        /// Sets the current color.
+        /// </summary>
+        public static void Color(Color color)
+        {
+            glColor4f(color.R / 256f, color.G / 256f, color.B / 256f, color.A / 256f);
+        }
+        /// <summary>
         /// This function sets the current colour mask.
         /// </summary>
         /// <param name="red">Red component mask.</param>
@@ -2812,6 +2818,17 @@ namespace Mesher.OpenGLCore
 		public static void LogicOp(uint opcode)
         {
             glLogicOp(opcode);
+        }
+        /// <summary>
+        /// This function transforms the projection matrix so that it looks at a certain
+        /// point, from a certain point.
+        /// </summary>
+        /// <param name="eye">Position of the eye.</param>
+        /// <param name="center">Point to look at.</param>
+        /// <param name="up">'Up' Vector.</param>
+        public static void LookAt(Vertex eye, Vertex center, Vertex up)
+        {
+            gluLookAt(eye.X, eye.Y, eye.Z, center.X, center.Y, center.Z, up.X, up.Y, up.Z);
         }
         /// <summary>
         /// This function transforms the projection matrix so that it looks at a certain
@@ -4454,6 +4471,16 @@ namespace Mesher.OpenGLCore
         {
             glVertex2d(x, y);
         }
+
+        /// <summary>
+        /// Set the current vertex (must be called between 'Begin' and 'End').
+        /// </summary>
+        /// <param name="v">Specifies the coordinate.</param>
+        public static void Vertex(Vertex v)
+        {
+            glVertex3dv(v.ToArray());
+        }
+
         /// <summary>
         /// Set the current vertex (must be called between 'Begin' and 'End').
         /// </summary>

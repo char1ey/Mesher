@@ -5,9 +5,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mesher.OpenGLCore
+namespace Mesher.GraphicsCore
 {
-    public static class Win32
+    internal static class Win32
     {
         /// <summary>
         /// Initializes the <see cref="Win32"/> class.

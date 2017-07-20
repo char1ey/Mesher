@@ -98,13 +98,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mesher.Components\Mesher.Components.csproj">
-      <Project>{a6fc6075-f988-47dd-87e4-9482c214c075}</Project>
-      <Name>Mesher.Components</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Mesher.GraphicsCore\Mesher.GraphicsCore.csproj">
       <Project>{a6c36013-04d8-46e7-a737-38cd4e739885}</Project>
       <Name>Mesher.GraphicsCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Mesher.Mathematics\Mesher.Mathematics.csproj">
+      <Project>{12CF173C-2A66-4664-BA94-3D823CE12A69}</Project>
+      <Name>Mesher.Mathematics</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

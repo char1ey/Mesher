@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
-using Mesher.OpenGLCore;
+using System.Drawing;
 
 namespace Mesher.Components
 {
@@ -20,7 +20,9 @@ namespace Mesher.Components
         new public event System.Windows.Input.KeyEventHandler KeyUp;
         new public event System.Windows.Input.KeyEventHandler KeyDown;
 
-        public RenderContext()
+        public Color ClearColor { get; set; }
+
+        public RenderContext(Color color)
         {
             InitializeComponent();
 
@@ -35,7 +37,13 @@ namespace Mesher.Components
             windowsFormsHost.KeyUp += WindowsFormsHost_KeyUp;
 
             windowsFormsHost.Child.Resize += Child_Resize;
+
+            m_GlWindow.Begin();
+            gl.ClearColor(color.R / 256f, color.G / 256f, color.B / 256f, 1.0f);            
+            m_GlWindow.End();
         }
+
+        public RenderContext():this(Color.DimGray) { }
 
         private void Child_MouseWheel(object sender, MouseEventArgs e)
         {
@@ -60,19 +68,23 @@ namespace Mesher.Components
         private void Child_Resize(object sender, EventArgs e)
         {
             var control = (Control)sender;
+            Width = control.Width;
+            Height = control.Height;
             m_GlWindow.ResizeWindow(control.Width, control.Height);
-
             ContextResize?.Invoke(sender, e);
         }
 
-        public void BeginRender()
+        public void BeginRender(bool clear = false)
         {
             m_GlWindow.Begin();
+            if(clear)
+                gl.Clear(gl.GL_DEPTH_BUFFER_BIT | gl.GL_COLOR_BUFFER_BIT);
         }
 
-        public void EndRender()
+        public void EndRender(bool swapBuffers = false)
         {
-            m_GlWindow.SwapBuffers();
+            if(swapBuffers)
+                m_GlWindow.SwapBuffers();
             m_GlWindow.End();
         }
 
