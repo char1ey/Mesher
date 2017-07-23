@@ -28,10 +28,10 @@ namespace Mesher
             texture = new Texture((Bitmap)Image.FromFile(@"C:\Users\backsword\Desktop\other\51076.jpg"));
 
             mesh = new Mesh(new[]
-                {new Vertex(-1, -1, 0), new Vertex(1, -1, 0), new Vertex(0, 1, 0)}, new []
+                {new Vertex(-1, -1, 0), new Vertex(1, -1, 0), new Vertex(0, 1, 0), new Vertex(0, -3, 0)}, new []
             {
-                new Vertex(0, 0), new Vertex(0, 1), new Vertex(1, 1)
-            }, null, new int[,]{ { 0, 1, 2 } }, texture);
+                new Vertex(0, 0), new Vertex(0, 1), new Vertex(1, 1), new Vertex(0.5, 0.5)
+            }, null, new int[,]{ { 0, 1, 2 }, { 0, 1, 3 } }, texture);
 
 
         }
