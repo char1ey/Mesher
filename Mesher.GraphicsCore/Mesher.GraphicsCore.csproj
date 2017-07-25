@@ -55,6 +55,7 @@
     <Compile Include="Camera\OrthographicsCamera.cs" />
     <Compile Include="Camera\PerspectiveCamera.cs" />
     <Compile Include="Drawing\TextureTriangle.cs" />
+    <Compile Include="Light\Light.cs" />
     <Compile Include="OpenGL.cs" />
     <Compile Include="Shaders\LinkShaderProgramException.cs" />
     <Compile Include="Shaders\CompileShaderException.cs" />
@@ -75,9 +76,7 @@
       <Name>Mesher.Mathematics</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Light\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Page Include="RenderContext.xaml">
       <SubType>Designer</SubType>

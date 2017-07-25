@@ -5996,7 +5996,22 @@ namespace Mesher.GraphicsCore
             GetDelegateFor<glBufferData>()(target, data.Length * sizeof(float), p, usage);
             Marshal.FreeHGlobal(p);
         }
+        public static unsafe void BufferData(uint target, Vertex[] data, int dimension, uint usage)
+        {
+            var p = Marshal.AllocHGlobal(data.Length * sizeof(float) * dimension);
+            var pointer = (float*) p.ToPointer();
 
+            for (var i = 0; i < data.Length; i++)
+            {
+                *pointer++ = (float)data[i].X;
+                *pointer++ = (float)data[i].Y;
+                if(dimension == 3)
+                    *pointer++ = (float)data[i].Z;
+            }
+
+            GetDelegateFor<glBufferData>()(target, data.Length * sizeof(float) * dimension, p, usage);
+            Marshal.FreeHGlobal(p);            
+        }
         public static void BufferData(uint target, int[] data, uint usage)
         {
             IntPtr p = Marshal.AllocHGlobal(data.Length * sizeof(int));
