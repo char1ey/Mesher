@@ -31,7 +31,7 @@ namespace Mesher
                 {new Vertex(-1, -1, 0), new Vertex(1, -1, 0), new Vertex(0, 1, 0), new Vertex(0, -3, 0)}, new []
             {
                 new Vertex(0, 0), new Vertex(0, 1), new Vertex(1, 1), new Vertex(0.5, 0.5)
-            }, null, new int[,]{ { 0, 1, 2 }, { 0, 1, 3 } }, texture);
+            }, null, new []{ 0, 1, 2 , 0, 1, 3 }, texture);
 
 
         }
