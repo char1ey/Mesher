@@ -101,7 +101,7 @@ namespace Mesher.GraphicsCore.BufferObjects
 
         public void Render()
         {
-            m_texture.Activate();
+            m_texture?.Activate();
 
             Gl.BindVertexArray(m_vao[0]);
 
@@ -115,7 +115,7 @@ namespace Mesher.GraphicsCore.BufferObjects
             Gl.DisableClientState(Gl.GL_VERTEX_ARRAY);
             Gl.DisableClientState(Gl.GL_TEXTURE_COORD_ARRAY);
 
-            m_texture.Deactivate();
+            m_texture?.Deactivate();
         }
 
         public void Dispose()
