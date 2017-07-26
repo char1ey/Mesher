@@ -5,7 +5,7 @@ namespace Mesher.GraphicsCore.Drawing
 {
     public static class Triangle
     {
-        public static void Draw(Vertex a, Vertex b, Vertex c, Color color, RenderContext renderContext)
+        public static void Draw(Vertex a, Vertex b, Vertex c, Color color, RenderContextPrototype renderContext)
         {
             Gl.Begin(Gl.GL_TRIANGLES);
 

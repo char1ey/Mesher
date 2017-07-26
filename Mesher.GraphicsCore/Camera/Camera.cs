@@ -25,7 +25,7 @@ namespace Mesher.GraphicsCore.Camera
         private Vertex m_PreviousEye;
         private Vertex m_PreviousUp;
 
-        private RenderContext m_RenderContext;
+        private RenderContextPrototype m_RenderContext;
 
         private double m_MouseRotationSpeed;
         private double m_MouseMovementSpeed;
@@ -60,7 +60,7 @@ namespace Mesher.GraphicsCore.Camera
             get { return m_Up; }
         }
 
-        public RenderContext RenderContext
+        public RenderContextPrototype RenderContext
         {
             get { return m_RenderContext; }
         }
@@ -70,7 +70,7 @@ namespace Mesher.GraphicsCore.Camera
         #region constructors
 
         protected Camera(Vertex eye, Vertex center, Vertex up, 
-            double mouseRotationSpeed, double mouseMovementSpeed, RenderContext renderContext)
+            double mouseRotationSpeed, double mouseMovementSpeed, RenderContextPrototype renderContext)
         {
             m_MouseMovementSpeed = mouseMovementSpeed;
             m_MouseRotationSpeed = mouseRotationSpeed;
@@ -87,13 +87,13 @@ namespace Mesher.GraphicsCore.Camera
             m_RenderContext.KeyUp += KeyUpCameraControl;
         }
 
-        protected Camera(Vertex eye, Vertex center, Vertex up, RenderContext renderContext)
+        protected Camera(Vertex eye, Vertex center, Vertex up, RenderContextPrototype renderContext)
             : this(eye, center, up, DefaultMouseRotationSpeed, DefaultMouseMovementSpeed, renderContext) { }
 
-        protected Camera(double mouseRotationSpeed, double mouseMovementSpeed, RenderContext renderContext)
+        protected Camera(double mouseRotationSpeed, double mouseMovementSpeed, RenderContextPrototype renderContext)
             : this(new Vertex(0, 0, 1), new Vertex(0, 0, 0), new Vertex(0, 1, 0), mouseRotationSpeed, mouseMovementSpeed, renderContext) { }
 
-        protected Camera(RenderContext renderContext)
+        protected Camera(RenderContextPrototype renderContext)
             : this(DefaultMouseRotationSpeed, DefaultMouseMovementSpeed, renderContext) { }
 
         #endregion

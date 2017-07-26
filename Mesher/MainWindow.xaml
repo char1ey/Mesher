@@ -24,6 +24,6 @@
                 </MenuItem>
             </MenuItem>
         </Menu>
-        <graphicscore:RenderContext Name="RenderContext"/>
+        <graphicscore:RenderContextPrototype Name="RenderContext"/>
     </DockPanel>
 </Window>

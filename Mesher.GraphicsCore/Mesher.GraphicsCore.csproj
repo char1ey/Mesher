@@ -57,6 +57,7 @@
     <Compile Include="Drawing\TextureTriangle.cs" />
     <Compile Include="Light\Light.cs" />
     <Compile Include="OpenGL.cs" />
+    <Compile Include="RenderContext.cs" />
     <Compile Include="Shaders\LinkShaderProgramException.cs" />
     <Compile Include="Shaders\CompileShaderException.cs" />
     <Compile Include="Shaders\ShaderProgram.cs" />
@@ -64,8 +65,8 @@
     <Compile Include="Texture\Texture.cs" />
     <Compile Include="Win32.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RenderContext.xaml.cs">
-      <DependentUpon>RenderContext.xaml</DependentUpon>
+    <Compile Include="RenderContextPrototype.xaml.cs">
+      <DependentUpon>RenderContextPrototype.xaml</DependentUpon>
     </Compile>
     <Compile Include="Drawing\Grid.cs" />
     <Compile Include="Drawing\Triangle.cs" />
@@ -78,7 +79,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Page Include="RenderContext.xaml">
+    <Page Include="RenderContextPrototype.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

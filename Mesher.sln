@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.12
+VisualStudioVersion = 15.0.26430.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mesher", "Mesher\Mesher.csproj", "{49A78E28-4749-43EA-991C-F7F6218F6F75}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mesher.Mathematics", "Mesher.Mathematics\Mesher.Mathematics.csproj", "{12CF173C-2A66-4664-BA94-3D823CE12A69}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mesher.DataCore", "Mesher.DataCore\Mesher.DataCore.csproj", "{10DF17A9-53A4-4721-BD2E-236852B299A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mesher.Components", "Mesher.Components\Mesher.Components.csproj", "{A6FC6075-F988-47DD-87E4-9482C214C075}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +71,18 @@ Global
 		{10DF17A9-53A4-4721-BD2E-236852B299A4}.Release|x64.Build.0 = Release|Any CPU
 		{10DF17A9-53A4-4721-BD2E-236852B299A4}.Release|x86.ActiveCfg = Release|Any CPU
 		{10DF17A9-53A4-4721-BD2E-236852B299A4}.Release|x86.Build.0 = Release|Any CPU
+		{A6FC6075-F988-47DD-87E4-9482C214C075}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6FC6075-F988-47DD-87E4-9482C214C075}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6FC6075-F988-47DD-87E4-9482C214C075}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A6FC6075-F988-47DD-87E4-9482C214C075}.Debug|x64.Build.0 = Debug|Any CPU
+		{A6FC6075-F988-47DD-87E4-9482C214C075}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A6FC6075-F988-47DD-87E4-9482C214C075}.Debug|x86.Build.0 = Debug|Any CPU
+		{A6FC6075-F988-47DD-87E4-9482C214C075}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6FC6075-F988-47DD-87E4-9482C214C075}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6FC6075-F988-47DD-87E4-9482C214C075}.Release|x64.ActiveCfg = Release|Any CPU
+		{A6FC6075-F988-47DD-87E4-9482C214C075}.Release|x64.Build.0 = Release|Any CPU
+		{A6FC6075-F988-47DD-87E4-9482C214C075}.Release|x86.ActiveCfg = Release|Any CPU
+		{A6FC6075-F988-47DD-87E4-9482C214C075}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

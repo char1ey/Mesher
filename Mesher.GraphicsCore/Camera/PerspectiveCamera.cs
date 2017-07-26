@@ -29,31 +29,31 @@ namespace Mesher.GraphicsCore.Camera
             ResizeRenderContext(null, null);
         }
 
-        public PerspectiveCamera(double angle, Vertex eye, Vertex center, Vertex up, double mouseRotationSpeed, double mouseMovementSpeed, RenderContext renderContext)
+        public PerspectiveCamera(double angle, Vertex eye, Vertex center, Vertex up, double mouseRotationSpeed, double mouseMovementSpeed, RenderContextPrototype renderContext)
             :base(eye, center, up, mouseRotationSpeed, mouseMovementSpeed, renderContext)
         {
             Init(angle);
         }
 
-        public PerspectiveCamera(double angle, Vertex eye, Vertex center, Vertex up, RenderContext renderContext)
+        public PerspectiveCamera(double angle, Vertex eye, Vertex center, Vertex up, RenderContextPrototype renderContext)
             :base(eye, center, up, renderContext)
         {
             Init(angle);
         }
 
-        public PerspectiveCamera(double angle, double mouseRotationSpeed, double mouseMovementSpeed, RenderContext renderContext)
+        public PerspectiveCamera(double angle, double mouseRotationSpeed, double mouseMovementSpeed, RenderContextPrototype renderContext)
             :base(mouseRotationSpeed, mouseMovementSpeed, renderContext)
         {
             Init(angle);
         }
 
-        public PerspectiveCamera(double angle, RenderContext renderContext)
+        public PerspectiveCamera(double angle, RenderContextPrototype renderContext)
             :base(renderContext)
         {
             Init(angle);
         }
 
-        public PerspectiveCamera(RenderContext renderContext)
+        public PerspectiveCamera(RenderContextPrototype renderContext)
             :base(renderContext)
         {
             Init(DefaultAngle);

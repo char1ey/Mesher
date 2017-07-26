@@ -2,7 +2,7 @@
 {
     public class Grid
     {
-        public static void Draw(RenderContext renderContext)
+        public static void Draw(RenderContextPrototype renderContext)
         {
             renderContext.BeginRender();
             for (float i = -50; i <= 50; i += 5)

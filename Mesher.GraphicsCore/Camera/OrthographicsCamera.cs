@@ -34,31 +34,31 @@ namespace Mesher.GraphicsCore.Camera
             ResizeRenderContext(null, null);
         }
 
-        public OrthographicsCamera(double ratio, Vertex eye, Vertex center, Vertex up, double mouseRotationSpeed, double mouseMovementSpeed, RenderContext renderContext)
+        public OrthographicsCamera(double ratio, Vertex eye, Vertex center, Vertex up, double mouseRotationSpeed, double mouseMovementSpeed, RenderContextPrototype renderContext)
             :base(eye, center, up, mouseRotationSpeed, mouseMovementSpeed, renderContext)
         {
             Init(ratio);
         }
 
-        public OrthographicsCamera(double ratio, Vertex eye, Vertex center, Vertex up, RenderContext renderContext)
+        public OrthographicsCamera(double ratio, Vertex eye, Vertex center, Vertex up, RenderContextPrototype renderContext)
             :base(eye, center, up, renderContext)
         {
             Init(ratio);
         }
 
-        public OrthographicsCamera(double ratio, double mouseRotationSpeed, double mouseMovementSpeed, RenderContext renderContext)
+        public OrthographicsCamera(double ratio, double mouseRotationSpeed, double mouseMovementSpeed, RenderContextPrototype renderContext)
             :base(mouseRotationSpeed, mouseMovementSpeed, renderContext)
         {
             Init(ratio);
         }
         
-        public OrthographicsCamera(double ratio, RenderContext renderContext)
+        public OrthographicsCamera(double ratio, RenderContextPrototype renderContext)
             :base(renderContext)
         {
             Init(ratio);
         }
 
-        public OrthographicsCamera(RenderContext renderContext)
+        public OrthographicsCamera(RenderContextPrototype renderContext)
             :base(renderContext)
         {
             Init(DefaultRatio);
