@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Mesher.Mathematics
 {
-    public struct Triangle
+    public struct Triangle3
     {
-        public Vec3 A;
-        public Vec3 B;
-        public Vec3 C;
+        public Vector3 A;
+        public Vector3 B;
+        public Vector3 C;
 
-        public Triangle(Vec3 a, Vec3 b, Vec3 c)
+        public Triangle3(Vector3 a, Vector3 b, Vector3 c)
         {
             A = a;
             B = b;

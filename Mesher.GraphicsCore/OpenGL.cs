@@ -2798,7 +2798,7 @@ namespace Mesher.GraphicsCore
         /// Replace the current matrix with the specified matrix.
         /// </summary>
         /// <param name="m">Specifies a pointer to 16 consecutive values, which are used as the elements of a 4x4 column-major matrix.</param>
-        public static void LoadMatrixf(float[] m)
+        public static void LoadMatrix(float[] m)
         {
             glLoadMatrixf(m);
         }
@@ -2826,7 +2826,7 @@ namespace Mesher.GraphicsCore
         /// <param name="eye">Position of the eye.</param>
         /// <param name="center">Point to look at.</param>
         /// <param name="up">'Up' Vector.</param>
-        public static void LookAt(Vertex eye, Vertex center, Vertex up)
+        public static void LookAt(Vec3 eye, Vec3 center, Vec3 up)
         {
             gluLookAt(eye.X, eye.Y, eye.Z, center.X, center.Y, center.Z, up.X, up.Y, up.Z);
         }
@@ -3454,6 +3454,33 @@ namespace Mesher.GraphicsCore
         public static void Project(double objx, double objy, double objz, double[] modelMatrix, double[] projMatrix, int[] viewport, double[] winx, double[] winy, double[] winz)
         {
             gluProject(objx, objy, objz, modelMatrix, projMatrix, viewport, winx, winy, winz);
+        }
+        /// <summary>
+        /// This function Maps the specified object coordinates into window coordinates.
+        /// </summary>
+        /// <param name="objx">The object's x coord.</param>
+        /// <param name="objy">The object's y coord.</param>
+        /// <param name="objz">The object's z coord.</param>
+        public static Vec2 Project(double objx, double objy, double objz)
+        {
+            var modelview = new double[16];
+            var projection = new double[16];
+            var viewport = new int[4];
+            GetDouble(GL_MODELVIEW_MATRIX, modelview);
+            GetDouble(GL_PROJECTION_MATRIX, projection);
+            GetInteger(GL_VIEWPORT, viewport);
+            var result = new[] {new double[1], new double[1], new double[1]};
+            
+            gluProject(objx, objy, objz, modelview, projection, viewport, result[0], result[1], result[2]);
+          
+            return new Vec2(result[0][0], result[1][0]);
+        }
+        /// <summary>
+        /// This function Maps the specified object coordinates into window coordinates.
+        /// </summary>
+        public static Vec2 Project(Vec3 v)
+        {
+            return Project(v.X, v.Y, v.Z);
         }
         /// <summary>
         /// Save the current state of the attribute groups specified by 'mask'.
@@ -4450,7 +4477,7 @@ namespace Mesher.GraphicsCore
         /// <param name="winy">Y Coordinate (Screen Coordinate).</param>
         /// <param name="winz">Z Coordinate (Screen Coordinate).</param>
         /// <returns>The world coordinate.</returns>
-        public static Vertex UnProject(double winx, double winy, double winz)
+        public static Vec3 UnProject(double winx, double winy, double winz)
         {
             var modelview = new double[16];
             var projection = new double[16];
@@ -4460,7 +4487,17 @@ namespace Mesher.GraphicsCore
             GetInteger(GL_VIEWPORT, viewport);
             var result = new double[3];
             gluUnProject(winx, winy, winz, modelview, projection, viewport, ref result[0], ref result[1], ref result[2]);
-            return new Vertex((float)result[0], (float)result[1], (float)result[2]);
+            return new Vec3(result[0], result[1], result[2]);
+        }
+        /// <summary>
+        /// This is a convenience function. It calls UnProject with the current 
+        /// viewport, modelview and persective matricies, saving you from getting them.
+        /// To use you own matricies, all the other version of UnProject.
+        /// </summary>
+        /// <returns>The world coordinate.</returns>
+        public static Vec3 UnProject(Vec2 v)
+        {
+            return UnProject(v.X, v.Y, 0);
         }
         /// <summary>
         /// Set the current vertex (must be called between 'Begin' and 'End').
@@ -4476,7 +4513,7 @@ namespace Mesher.GraphicsCore
         /// Set the current vertex (must be called between 'Begin' and 'End').
         /// </summary>
         /// <param name="v">Specifies the coordinate.</param>
-        public static void Vertex(Vertex v)
+        public static void Vertex(Vec3 v)
         {
             glVertex3dv(v.ToArray());
         }
@@ -5996,21 +6033,35 @@ namespace Mesher.GraphicsCore
             GetDelegateFor<glBufferData>()(target, data.Length * sizeof(float), p, usage);
             Marshal.FreeHGlobal(p);
         }
-        public static unsafe void BufferData(uint target, Vertex[] data, int dimension, uint usage)
+        public static unsafe void BufferData(uint target, Vec3[] data, uint usage)
         {
-            var p = Marshal.AllocHGlobal(data.Length * sizeof(float) * dimension);
+            var p = Marshal.AllocHGlobal(data.Length * sizeof(float) * 3);
             var pointer = (float*) p.ToPointer();
 
             for (var i = 0; i < data.Length; i++)
             {
                 *pointer++ = (float)data[i].X;
                 *pointer++ = (float)data[i].Y;
-                if(dimension == 3)
-                    *pointer++ = (float)data[i].Z;
+                *pointer++ = (float)data[i].Z;
             }
 
-            GetDelegateFor<glBufferData>()(target, data.Length * sizeof(float) * dimension, p, usage);
+            GetDelegateFor<glBufferData>()(target, data.Length * sizeof(float) * 3, p, usage);
             Marshal.FreeHGlobal(p);            
+        }
+
+        public static unsafe void BufferData(uint target, Vec2[] data, uint usage)
+        {
+            var p = Marshal.AllocHGlobal(data.Length * sizeof(float) * 2);
+            var pointer = (float*)p.ToPointer();
+
+            for (var i = 0; i < data.Length; i++)
+            {
+                *pointer++ = (float)data[i].X;
+                *pointer++ = (float)data[i].Y;
+            }
+
+            GetDelegateFor<glBufferData>()(target, data.Length * sizeof(float) * 2, p, usage);
+            Marshal.FreeHGlobal(p);
         }
         public static void BufferData(uint target, int[] data, uint usage)
         {
@@ -6380,6 +6431,13 @@ namespace Mesher.GraphicsCore
         public static void UniformMatrix4(int location, int count, bool transpose, float[] value)
         {
             GetDelegateFor<glUniformMatrix4fv>()(location, count, transpose, value);
+        }
+        public static void UniformMatrix4(int location, int count, bool transpose, double[] value)
+        {
+            var data = new float[value.Length];
+            for (var i = 0; i < value.Length; i++)
+                data[i] = (float)value[i];
+            GetDelegateFor<glUniformMatrix4fv>()(location, count, transpose, data);
         }
         public static void ValidateProgram(uint program)
         {

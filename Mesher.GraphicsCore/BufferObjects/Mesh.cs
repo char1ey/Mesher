@@ -16,7 +16,7 @@ namespace Mesher.GraphicsCore.BufferObjects
 
         private readonly Texture.Texture m_texture;
 
-        public Mesh(Vertex[] vertexes, Vertex[] textureVertexes, Vertex[] normals, int[] indicies, Texture.Texture texture)
+        public Mesh(Vec3[] vertexes, Vec2[] textureVertexes, Vec3[] normals, int[] indicies, Texture.Texture texture)
         {
             m_texture = texture;
 
@@ -32,7 +32,7 @@ namespace Mesher.GraphicsCore.BufferObjects
                 m_vboVert = new uint[1]; 
                 Gl.GenBuffers(1, m_vboVert);
                 Gl.BindBuffer(Gl.GL_ARRAY_BUFFER, m_vboVert[0]);
-                Gl.BufferData(Gl.GL_ARRAY_BUFFER, vertexes, 3, Gl.GL_STATIC_DRAW);
+                Gl.BufferData(Gl.GL_ARRAY_BUFFER, vertexes, Gl.GL_STATIC_DRAW);
                 Gl.VertexPointer(3, Gl.GL_FLOAT, 0, IntPtr.Zero);
             }
 
@@ -41,7 +41,7 @@ namespace Mesher.GraphicsCore.BufferObjects
                 m_vboNormals = new uint[1];
                 Gl.GenBuffers(1, m_vboNormals);
                 Gl.BindBuffer(Gl.GL_ARRAY_BUFFER, m_vboNormals[0]);
-                Gl.BufferData(Gl.GL_ARRAY_BUFFER, normals, 3, Gl.GL_STATIC_DRAW);
+                Gl.BufferData(Gl.GL_ARRAY_BUFFER, normals, Gl.GL_STATIC_DRAW);
                 Gl.VertexPointer(3, Gl.GL_FLOAT, 0, IntPtr.Zero);
             }
 
@@ -50,7 +50,7 @@ namespace Mesher.GraphicsCore.BufferObjects
                 m_vboTexVert = new uint[1];
                 Gl.GenBuffers(1, m_vboTexVert);
                 Gl.BindBuffer(Gl.GL_ARRAY_BUFFER, m_vboTexVert[0]);
-                Gl.BufferData(Gl.GL_ARRAY_BUFFER, textureVertexes, 2, Gl.GL_STATIC_DRAW);
+                Gl.BufferData(Gl.GL_ARRAY_BUFFER, textureVertexes, Gl.GL_STATIC_DRAW);
                 Gl.TexCoordPointer(2, Gl.GL_FLOAT, 0, IntPtr.Zero);
             }
 

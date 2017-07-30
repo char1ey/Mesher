@@ -102,9 +102,9 @@ namespace Mesher.GraphicsCore.Shaders
             Gl.Uniform1(Gl.GetUniformLocation(m_shaderProgramId, variableName), value.Activate());
         }
 
-        public void SetVariableValue(string variableName, Matrix matrix)
+        public void SetVariableValue(string variableName, Mat4 matrix)
         {
-            Gl.UniformMatrix4(Gl.GetUniformLocation(m_shaderProgramId, variableName), 1, false, matrix.ToArrayFloat());
+            Gl.UniformMatrix4(Gl.GetUniformLocation(m_shaderProgramId, variableName), 1, false, matrix.ToArray());
         }
 
         public void Dispose()

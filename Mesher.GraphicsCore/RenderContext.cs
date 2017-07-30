@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using Mesher.Mathematics;
 
 namespace Mesher.GraphicsCore
 {
@@ -53,6 +54,32 @@ namespace Mesher.GraphicsCore
                                                                          | Win32.SetWindowPosFlags.SWP_NOACTIVATE);
         }
 
+        public Vec3 UnProject(Vec2 v)
+        {
+            return UnProject(v.X, v.Y);
+        }
+
+        public Vec3 UnProject(double x, double y)
+        {
+            Begin();
+            var ret = Gl.UnProject(x, y, 0);
+            End();
+            return ret;
+        }
+
+        public Vec2 Project(double x, double y, double z)
+        {
+            Begin();
+            var ret = Gl.Project(x, y, z);
+            End();
+            return ret;
+        }
+
+        public Vec2 Project(Vec3 v)
+        {
+            return Project(v.X, v.Y, v.Z);
+        }
+
         public void Begin()
         {
             m_previousHdc = Win32.wglGetCurrentDC();
@@ -60,6 +87,8 @@ namespace Mesher.GraphicsCore
 
             if (m_previousHdc != m_hdc || m_previousHglrc != m_hglrc)
                 Win32.wglMakeCurrent(m_hdc, m_hglrc);
+
+            Gl.Clear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
         }
 
         public void End()

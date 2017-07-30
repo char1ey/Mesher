@@ -5,14 +5,14 @@ namespace Mesher.GraphicsCore.Drawing
 {
     public static class Triangle
     {
-        public static void Draw(Vertex a, Vertex b, Vertex c, Color color, RenderContextPrototype renderContext)
+        public static void Draw(Mathematics.Triangle t, Color color)
         {
             Gl.Begin(Gl.GL_TRIANGLES);
 
             Gl.Color(color);
-            Gl.Vertex(a);
-            Gl.Vertex(b);
-            Gl.Vertex(c);
+            Gl.Vertex(t.A);
+            Gl.Vertex(t.B);
+            Gl.Vertex(t.C);
 
             Gl.End();
         }
