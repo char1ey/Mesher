@@ -9,8 +9,11 @@ namespace Mesher.GraphicsCore.Camera
 {
     public class OrthographicCamera : Camera
     {
-        public OrthographicCamera(Mat4 projectionMatrix, Vec3 position, Vec3 upVector, Vec3 lookAtPoint) 
-            : base(projectionMatrix, position, upVector, lookAtPoint)
+        private const double ZNear = -1000000;
+        private const double ZFar = 1000000;
+
+        public OrthographicCamera(double width, double height, Vec3 position, Vec3 upVector, Vec3 lookAtPoint) 
+            : base(Mat4.Ortho(-width/2, width/2, height/2, -height/2, ZNear, ZFar), position, upVector, lookAtPoint)
         {
         }
     }
