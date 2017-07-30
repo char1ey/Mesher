@@ -52,6 +52,8 @@
     <Compile Include="BufferObjects\IBufferObject.cs" />
     <Compile Include="BufferObjects\Mesh.cs" />
     <Compile Include="Camera\Camera.cs" />
+    <Compile Include="Camera\OrthographicCamera.cs" />
+    <Compile Include="Camera\PerspectiveCamera.cs" />
     <Compile Include="Drawing\TextureTriangle.cs" />
     <Compile Include="Light\Light.cs" />
     <Compile Include="OpenGL.cs" />

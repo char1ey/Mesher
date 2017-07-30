@@ -107,8 +107,8 @@ namespace Mesher.Components
                 {
                     Camera.Rotate(
                         (m_previousCameraPosition - m_previousCameraLookAtPoint).Cross(m_previousCameraUpVector),
-                        (e.Y - m_previousMousePosition.Y) / Height * Math.PI / 2);
-                    Camera.Rotate(new Vec3(0, 0, 1), (m_previousMousePosition.X - e.X) / Width * Math.PI / 2);
+                        (e.Y - m_previousMousePosition.Y) / Height * Math.PI * 2);
+                    Camera.Rotate(new Vec3(0, 0, 1), (m_previousMousePosition.X - e.X) / Width * Math.PI * 2);
                 }
             }
             m_previousMouseButton = e.Button;
