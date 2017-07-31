@@ -6,7 +6,7 @@ namespace Mesher.Mathematics
     /// <summary>
     /// Represents a 4x4 matrix.
     /// </summary>
-	public struct Mat4
+	public class Mat4
     {
         #region Construction
 
@@ -25,6 +25,8 @@ namespace Mesher.Mathematics
                 new Vec4(0.0f, 0.0f, 0.0f, scale),
             };
         }
+
+        public Mat4():this(1) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Mat4"/> struct.
@@ -56,16 +58,7 @@ namespace Mesher.Mathematics
         /// <returns>A new identity matrix.</returns>
         public static Mat4 Identity()
         {
-            return new Mat4
-            {
-                m_cols = new[] 
-                {
-                    new Vec4(1,0,0,0),
-                    new Vec4(0,1,0,0),
-                    new Vec4(0,0,1,0),
-                    new Vec4(0,0,0,1)
-                }
-            };
+            return new Mat4();
         }
 
         #endregion

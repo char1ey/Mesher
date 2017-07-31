@@ -5,7 +5,7 @@ namespace Mesher.Mathematics
     /// <summary>
     /// Represents a 3x3 matrix.
     /// </summary>
-    public struct Mat3
+    public class Mat3
     {
         #region Construction
 
@@ -21,6 +21,16 @@ namespace Mesher.Mathematics
                 new Vec3(scale, 0.0f, 0.0f),
                 new Vec3(0.0f, scale, 0.0f),
                 new Vec3(0.0f, 0.0f, scale)
+            };
+        }
+
+        public Mat3()
+        {
+            m_cols = new[]
+            {
+                new Vec3(1, 0, 0),
+                new Vec3(0, 1, 0),
+                new Vec3(0, 0, 1)
             };
         }
 
@@ -53,15 +63,7 @@ namespace Mesher.Mathematics
         /// <returns>A new identity matrix.</returns>
         public static Mat3 Identity()
         {
-            return new Mat3
-            {
-                m_cols = new[] 
-                {
-                    new Vec3(1,0,0),
-                    new Vec3(0,1,0),
-                    new Vec3(0,0,1)
-                }
-            };
+            return new Mat3();
         }
 
         #endregion

@@ -48,14 +48,18 @@ namespace Mesher.Components
         {
             m_renderContext.ResizeWindow(Width, Height);
             if(Camera == null)
-                Camera = new Camera(Mat4.Identity(), new Vec3(0, 0, 1), new Vec3(0, 1, 0), new Vec3(0, 0, 0));
+                Camera = new OrthographicCamera(Width * 0.04, Height * 0.04, new Vec3(0, 0, 1), new Vec3(0, 1, 0), new Vec3(0, 0, 0));
             Camera.ProjectionMatrix = Mat4.Ortho(-Width * 0.02, Width * 0.02, -Height * 0.02, Height * 0.02, -1000000, 1000000);
             base.OnResize(e);
         }
 
         protected override void OnMouseWheel(MouseEventArgs e)
         {
-          //  Camera.Zoom(e.Delta);
+            var zoom = (double) e.Delta / SystemInformation.MouseWheelScrollDelta * 1.2;
+            if (zoom < 0) zoom = -zoom;
+            else zoom = 1 / zoom;
+            Camera.Zoom(zoom);
+            Camera.Apply();
             base.OnMouseWheel(e);
         }
 

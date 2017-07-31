@@ -2,7 +2,7 @@
 
 namespace Mesher.GraphicsCore.Camera
 {
-    public class Camera
+    public abstract class Camera
     {
         private const double Eps = 1e-9;
 
@@ -51,6 +51,6 @@ namespace Mesher.GraphicsCore.Camera
             UpVector = new Vec3(Mat4.Rotate(angle, Position - LookAtPoint) * new Vec4(UpVector, 1));
         }
 
-       // public abstract void Zoom(double zoom);
+        public abstract void Zoom(double zoom);
     }
 }

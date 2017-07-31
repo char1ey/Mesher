@@ -17,5 +17,10 @@ namespace Mesher.GraphicsCore.Camera
         {
             
         }
+
+        public override void Zoom(double zoom)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

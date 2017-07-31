@@ -50,8 +50,8 @@ namespace Mesher.GraphicsCore
             Win32.glViewport(0, 0, width, height);
             End();
             Win32.SetWindowPos(Handle, IntPtr.Zero, 0, 0, width, height, Win32.SetWindowPosFlags.SWP_NOMOVE
-                                                                         | Win32.SetWindowPosFlags.SWP_NOZORDER
-                                                                         | Win32.SetWindowPosFlags.SWP_NOACTIVATE);
+                                                                       | Win32.SetWindowPosFlags.SWP_NOZORDER
+                                                                       | Win32.SetWindowPosFlags.SWP_NOACTIVATE);
         }
 
         public Vec3 UnProject(Vec2 v)

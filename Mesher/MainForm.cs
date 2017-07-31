@@ -23,7 +23,7 @@ namespace Mesher
             InitializeComponent();
 
             texture = new Texture((Bitmap)Image.FromFile(@"C:\Users\backsword\Desktop\other\51076.jpg"));
-
+            sceneContext1.MouseWheel += SceneContext1_MouseWheel;
             mesh = new Mesh(new[]
                 {new Vec3(0, -1, -1), new Vec3(0, 1, -1), new Vec3(0, 0, 1), new Vec3(0, 0, -3)}, new[]
             {
@@ -31,10 +31,15 @@ namespace Mesher
             }, null, new[] { 0, 1, 2, 0, 1, 3 }, texture);
         }
 
+        private void SceneContext1_MouseWheel(object sender, MouseEventArgs e)
+        {
+            Render();
+        }
+
         private Mesh mesh;
         private Texture texture;
 
-        private void sceneContext1_MouseMove(object sender, MouseEventArgs e)
+        private void Render()
         {
             sceneContext1.BeginRender();
             mesh.Render();
@@ -42,6 +47,11 @@ namespace Mesher
             //    new Mathematics.Triangle(new Vertex(0, 0), new Vertex(0, 1), new Vertex(1, 1)), texture);
             Grid.Draw();
             sceneContext1.EndRender();
+        }
+
+        private void sceneContext1_MouseMove(object sender, MouseEventArgs e)
+        {
+            Render();
         }
     }
 }

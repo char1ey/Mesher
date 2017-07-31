@@ -5,9 +5,15 @@ namespace Mesher.Mathematics
     /// <summary>
     /// Represents a 2x2 matrix.
     /// </summary>
-    public struct Mat2
+    public class Mat2
     {
         #region Construction
+
+        private Mat2()
+        {
+            m_cols[0] = new Vec2(1, 0);
+            m_cols[1] = new Vec2(0, 1);
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Mat2"/> struct.
@@ -59,14 +65,7 @@ namespace Mesher.Mathematics
         /// <returns>A new identity matrix.</returns>
         public static Mat2 Identity()
         {
-            return new Mat2
-            {
-                m_cols = new[] 
-                {
-                    new Vec2(1,0),
-                    new Vec2(0,1)
-                }
-            };
+            return new Mat2();
         }
 
         #endregion

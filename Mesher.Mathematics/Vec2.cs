@@ -5,7 +5,7 @@ namespace Mesher.Mathematics
     /// <summary>
     /// Represents a two dimensional vector.
     /// </summary>
-	public struct Vec2
+	public class Vec2
 	{
 		public double X;
 		public double Y;

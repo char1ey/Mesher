@@ -5,7 +5,7 @@ namespace Mesher.Mathematics
     /// <summary>
     /// Represents a four dimensional vector.
     /// </summary>
-    public struct Vec4
+    public class Vec4
     {
         public double X;
         public double Y;

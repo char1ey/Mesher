@@ -5,7 +5,7 @@ namespace Mesher.Mathematics
     /// <summary>
     /// Represents a three dimensional vector.
     /// </summary>
-	public struct Vec3
+	public class Vec3
 	{
         public static Vec3 Zero = new Vec3(0, 0, 0);
 

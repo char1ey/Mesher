@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Mesher.Mathematics
 {
-    public struct Triangle
+    public class Triangle
     {
         public Vec3 A;
         public Vec3 B;
