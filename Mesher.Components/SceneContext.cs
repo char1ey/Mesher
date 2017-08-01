@@ -51,8 +51,8 @@ namespace Mesher.Components
         {
             m_renderContext.ResizeWindow(Width, Height);
             if(Camera == null)
-                Camera = new OrthographicCamera(Width * 0.04, Height * 0.04, new Vec3(0, 0, 1), new Vec3(0, 1, 0), new Vec3(0, 0, 0));
-            Camera.ProjectionMatrix = Mat4.Ortho(-Width * 0.02, Width * 0.02, -Height * 0.02, Height * 0.02, -1000000, 1000000);
+                Camera = new PerspectiveCamera(60, (double)Width/Height, new Vec3(0, 0, 1), new Vec3(0, 1, 0), new Vec3(0, 0, 0));
+            Camera.ProjectionMatrix = Mat4.Perspective(45, (double)Width / Height, 0.01, 1000000);
             base.OnResize(e);
         }
 
@@ -64,8 +64,8 @@ namespace Mesher.Components
             var a = m_renderContext.UnProject(Width / 2, Height / 2);
             var b = m_renderContext.UnProject(e.X, Height - e.Y);
             
-            a = new Plane(0, 0, 1, 0).Cross(new Line(a, Camera.LookAtPoint - Camera.Position));
-            b = new Plane(0, 0, 1, 0).Cross(new Line(b, Camera.LookAtPoint - Camera.Position));
+            a = new Plane(0, 0, 1, 0).Cross(new Line(a, (Camera.LookAtPoint - Camera.Position).Normalize()));
+            b = new Plane(0, 0, 1, 0).Cross(new Line(b, (Camera.LookAtPoint - Camera.Position).Normalize()));
 
             Camera.Move((b - a) * zoom / 7.2);
   

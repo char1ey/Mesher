@@ -9,7 +9,7 @@ namespace Mesher.GraphicsCore.Camera
 {
     public class PerspectiveCamera : Camera
     {
-        private const double ZNear = 1;
+        private const double ZNear = 0.01;
         private const double ZFar = 1000000;
 
         public PerspectiveCamera(double angle, double aspect, Vec3 position, Vec3 upVector, Vec3 lookAtPoint) 
@@ -20,7 +20,7 @@ namespace Mesher.GraphicsCore.Camera
 
         public override void Zoom(double zoom)
         {
-            throw new NotImplementedException();
+            Position = LookAtPoint + (Position - LookAtPoint) / zoom;
         }
     }
 }
