@@ -53,5 +53,10 @@ namespace Mesher
         {
             Render();
         }
+
+        private void sceneContext1_Resize(object sender, EventArgs e)
+        {
+            Render();
+        }
     }
 }

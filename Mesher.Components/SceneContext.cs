@@ -51,8 +51,9 @@ namespace Mesher.Components
         {
             m_renderContext.ResizeWindow(Width, Height);
             if(Camera == null)
-                Camera = new PerspectiveCamera(60, (double)Width/Height, new Vec3(0, 0, 1), new Vec3(0, 1, 0), new Vec3(0, 0, 0));
+                Camera = new PerspectiveCamera(45, (double)Width/Height, new Vec3(0, 0, 1), new Vec3(0, 1, 0), new Vec3(0, 0, 0));
             Camera.ProjectionMatrix = Mat4.Perspective(45, (double)Width / Height, 0.01, 1000000);
+            Camera.Apply();
             base.OnResize(e);
         }
 
@@ -61,7 +62,7 @@ namespace Mesher.Components
             var zoom = (double) e.Delta / SystemInformation.MouseWheelScrollDelta * ZoomSpeed;
             Camera.Zoom(zoom < 0 ? -1 / zoom : zoom);
 
-            var a = m_renderContext.UnProject(Width / 2, Height / 2);
+            var a = m_renderContext.UnProject(Width / 2f, Height / 2f);
             var b = m_renderContext.UnProject(e.X, Height - e.Y);
             
             a = new Plane(0, 0, 1, 0).Cross(new Line(a, (Camera.LookAtPoint - Camera.Position).Normalize()));
