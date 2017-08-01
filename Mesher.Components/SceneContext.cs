@@ -15,6 +15,9 @@ namespace Mesher.Components
 {
     public partial class SceneContext : UserControl
     {
+        private const double Eps = 1e-9;
+        private const double ZoomSpeed = 1.2;
+
         private readonly RenderContext m_renderContext;
 
         private bool m_isShiftPressed;
@@ -55,7 +58,7 @@ namespace Mesher.Components
 
         protected override void OnMouseWheel(MouseEventArgs e)
         {
-            var zoom = (double) e.Delta / SystemInformation.MouseWheelScrollDelta * 1.2;
+            var zoom = (double) e.Delta / SystemInformation.MouseWheelScrollDelta * ZoomSpeed;
             if (zoom < 0) zoom = -zoom;
             else zoom = 1 / zoom;
             Camera.Zoom(zoom);
@@ -104,8 +107,10 @@ namespace Mesher.Components
 
                 if (e.Button == MouseButtons.Left)
                 {
-                    Camera.Move(m_renderContext.UnProject(m_previousMousePosition.X, Height - m_previousMousePosition.Y)
-                                - m_renderContext.UnProject(e.X, Height - e.Y));
+                    var a = m_renderContext.UnProject(m_previousMousePosition.X, Height - m_previousMousePosition.Y);
+                    var b = m_renderContext.UnProject(e.X, Height - e.Y);
+
+                    Camera.Move(a - b);
                 }
                 else if (e.Button == MouseButtons.Right)
                 {
