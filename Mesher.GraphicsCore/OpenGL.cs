@@ -1394,6 +1394,12 @@ namespace Mesher.GraphicsCore
         {
             glClearColor(red, green, blue, alpha);
         }
+
+        public static void ClearColor(Color color)
+        {
+            ClearColor(color.R / 256f, color.G / 256f, color.B / 256f, color.A / 256f);
+        }
+
         /// <summary>
         /// Specify the clear value for the depth buffer.
         /// </summary>

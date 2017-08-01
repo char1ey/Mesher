@@ -33,7 +33,6 @@
             // 
             // sceneContext1
             // 
-            this.sceneContext1.Camera = null;
             this.sceneContext1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.sceneContext1.Location = new System.Drawing.Point(0, 0);
             this.sceneContext1.Name = "sceneContext1";

@@ -19,8 +19,6 @@ namespace Mesher.Mathematics
         {
             get
             {
-                if (Math.Abs(A) < Eps && Math.Abs(B) < Eps && Math.Abs(C) < Eps)
-                    return new Vec3(0, 0, 1);
                 return new Vec3(A, B, C);
             }
         }

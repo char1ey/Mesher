@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using Mesher.Mathematics;
+using System.Drawing;
 
 namespace Mesher.GraphicsCore
 {
@@ -12,6 +13,8 @@ namespace Mesher.GraphicsCore
 
         private IntPtr m_previousHdc;
         private IntPtr m_previousHglrc;
+
+        public Color ClearColor { get; set; }
 
         public RenderContext(IntPtr handle)
         {
@@ -88,7 +91,9 @@ namespace Mesher.GraphicsCore
             if (m_previousHdc != m_hdc || m_previousHglrc != m_hglrc)
                 Win32.wglMakeCurrent(m_hdc, m_hglrc);
 
+            Gl.ClearColor(ClearColor);
             Gl.Clear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
+            Gl.Enable(Gl.GL_DEPTH_TEST);
         }
 
         public void End()

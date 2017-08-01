@@ -441,6 +441,16 @@ namespace Mesher.Mathematics
             return result;
         }
 
+        public static Mat4 Scale(Vec3 v)
+        {
+            return Scale(Identity(), v);
+        }
+
+        public static Mat4 Scale(double s)
+        {
+            return Scale(new Vec3(s));
+        }
+
         /// <summary>
         /// Applies a translation transformation to matrix <paramref name="m"/> by vector <paramref name="v"/>.
         /// </summary>

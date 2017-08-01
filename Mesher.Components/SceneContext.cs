@@ -20,7 +20,6 @@ namespace Mesher.Components
 
         private readonly RenderContext m_renderContext;
 
-        private bool m_isShiftPressed;
         private MouseButtons m_previousMouseButton;
         private Vec2 m_previousMousePosition;
 
@@ -33,6 +32,7 @@ namespace Mesher.Components
         public SceneContext()
         {
             m_renderContext = new RenderContext(Handle);
+            m_renderContext.ClearColor = Color.DimGray;
             InitializeComponent();
         }
 
@@ -59,9 +59,16 @@ namespace Mesher.Components
         protected override void OnMouseWheel(MouseEventArgs e)
         {
             var zoom = (double) e.Delta / SystemInformation.MouseWheelScrollDelta * ZoomSpeed;
-            if (zoom < 0) zoom = -zoom;
-            else zoom = 1 / zoom;
-            Camera.Zoom(zoom);
+            Camera.Zoom(zoom < 0 ? -1 / zoom : zoom);
+
+            var a = m_renderContext.UnProject(Width / 2, Height / 2);
+            var b = m_renderContext.UnProject(e.X, Height - e.Y);
+            
+            a = new Plane(0, 0, 1, 0).Cross(new Line(a, Camera.LookAtPoint - Camera.Position));
+            b = new Plane(0, 0, 1, 0).Cross(new Line(b, Camera.LookAtPoint - Camera.Position));
+
+            Camera.Move((b - a) * zoom / 7.2);
+  
             Camera.Apply();
             base.OnMouseWheel(e);
         }
@@ -69,21 +76,14 @@ namespace Mesher.Components
         protected override void OnKeyUp(KeyEventArgs e)
         {
             if (e.KeyCode == Keys.LShiftKey)
-            {
-                m_isShiftPressed = false;
                 m_previousMouseButton = MouseButtons.None;
-            }
-
             base.OnKeyUp(e);
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
             if (e.KeyCode == Keys.LShiftKey)
-            {
-                m_isShiftPressed = true;
                 m_previousMouseButton = MouseButtons.None;
-            }
             base.OnKeyDown(e);
         }
 
