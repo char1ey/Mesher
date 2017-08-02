@@ -8,15 +8,20 @@ namespace Mesher.GraphicsCore
 {
     public sealed class RenderContext : NativeWindow, IDisposable
     {
-        private readonly IntPtr m_hdc;
-        private readonly IntPtr m_hglrc;
+        private IntPtr m_hdc;
+        private IntPtr m_hglrc;
 
         private IntPtr m_previousHdc;
         private IntPtr m_previousHglrc;
 
+        public IntPtr GlrcHandle
+        {
+            get { return m_hglrc; }
+        }
+
         public Color ClearColor { get; set; }
 
-        public RenderContext(IntPtr handle)
+        private void CreateDeviceContext(IntPtr handle)
         {
             var createParams = new CreateParams
             {
@@ -43,7 +48,20 @@ namespace Mesher.GraphicsCore
             };
             var pixelFrormat = Win32.ChoosePixelFormat(m_hdc, pfd);
             Win32.SetPixelFormat(m_hdc, pixelFrormat, pfd);
+
+        }
+
+        public RenderContext(IntPtr handle)
+        {
+            CreateDeviceContext(handle);
             m_hglrc = Win32.wglCreateContext(m_hdc);
+            Win32.wglMakeCurrent(m_hdc, m_hglrc);
+        }
+
+        public RenderContext(IntPtr handle, IntPtr hglrc)
+        {
+            CreateDeviceContext(handle);
+            m_hglrc = hglrc;
             Win32.wglMakeCurrent(m_hdc, m_hglrc);
         }
 
@@ -90,10 +108,15 @@ namespace Mesher.GraphicsCore
 
             if (m_previousHdc != m_hdc || m_previousHglrc != m_hglrc)
                 Win32.wglMakeCurrent(m_hdc, m_hglrc);
+        }
 
+        public void Clear()
+        {
+            Begin();
             Gl.ClearColor(ClearColor);
             Gl.Clear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
             Gl.Enable(Gl.GL_DEPTH_TEST);
+            End();
         }
 
         public void End()

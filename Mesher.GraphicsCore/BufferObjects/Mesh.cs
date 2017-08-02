@@ -27,7 +27,7 @@ namespace Mesher.GraphicsCore.BufferObjects
 
             m_elementsCount = indicies.Length;
 
-            if (vertexes != null)
+            if (vertexes != null && vertexes.Length != 0)
             {
                 m_vboVert = new uint[1]; 
                 Gl.GenBuffers(1, m_vboVert);
@@ -36,7 +36,7 @@ namespace Mesher.GraphicsCore.BufferObjects
                 Gl.VertexPointer(3, Gl.GL_FLOAT, 0, IntPtr.Zero);
             }
 
-            if (normals != null)
+            if (normals != null && normals.Length != 0)
             {
                 m_vboNormals = new uint[1];
                 Gl.GenBuffers(1, m_vboNormals);
@@ -45,7 +45,7 @@ namespace Mesher.GraphicsCore.BufferObjects
                 Gl.VertexPointer(3, Gl.GL_FLOAT, 0, IntPtr.Zero);
             }
 
-            if (textureVertexes != null)
+            if (textureVertexes != null && textureVertexes.Length != 0)
             {
                 m_vboTexVert = new uint[1];
                 Gl.GenBuffers(1, m_vboTexVert);
@@ -79,8 +79,10 @@ namespace Mesher.GraphicsCore.BufferObjects
             if(m_vboTexVert != null)
                 Gl.EnableClientState(Gl.GL_TEXTURE_COORD_ARRAY);
 
-            Gl.DrawElements(Gl.GL_TRIANGLES, m_elementsCount, Gl.GL_UNSIGNED_INT, IntPtr.Zero);
+            Gl.PolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL);
 
+            Gl.DrawElements(Gl.GL_TRIANGLES, m_elementsCount, Gl.GL_UNSIGNED_INT, IntPtr.Zero);
+            
             if (m_vboNormals != null)
                 Gl.DisableClientState(Gl.GL_NORMAL_ARRAY);
             if (m_vboVert != null)

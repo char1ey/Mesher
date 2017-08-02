@@ -8,6 +8,10 @@ namespace Mesher.Mathematics
 {
     public class Plane
     {
+        public static Plane XYPlane = new Plane(0, 0, 1, 0);
+        public static Plane XZPlane = new Plane(0, 1, 0, 0);
+        public static Plane YZPlane = new Plane(1, 0, 0, 0);
+
         private const double Eps = 1e-9;
 
         public double A { get; set; }

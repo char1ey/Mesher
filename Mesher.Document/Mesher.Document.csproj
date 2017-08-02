@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{10DF17A9-53A4-4721-BD2E-236852B299A4}</ProjectGuid>
+    <ProjectGuid>{0245D0E5-CA26-471F-93E4-9C0B935995DD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Mesher.DataCore</RootNamespace>
-    <AssemblyName>Mesher.DataCore</AssemblyName>
+    <RootNamespace>Mesher.Document</RootNamespace>
+    <AssemblyName>Mesher.Document</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -32,7 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,21 +41,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Obj.cs" />
+    <Compile Include="Document.cs" />
+    <Compile Include="Scene.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mesher.Document\Mesher.Document.csproj">
-      <Project>{0245D0E5-CA26-471F-93E4-9C0B935995DD}</Project>
-      <Name>Mesher.Document</Name>
+    <ProjectReference Include="..\Mesher.Components\Mesher.Components.csproj">
+      <Project>{A6FC6075-F988-47DD-87E4-9482C214C075}</Project>
+      <Name>Mesher.Components</Name>
     </ProjectReference>
     <ProjectReference Include="..\Mesher.GraphicsCore\Mesher.GraphicsCore.csproj">
       <Project>{A6C36013-04D8-46E7-A737-38CD4E739885}</Project>
       <Name>Mesher.GraphicsCore</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Mesher.Mathematics\Mesher.Mathematics.csproj">
-      <Project>{12CF173C-2A66-4664-BA94-3D823CE12A69}</Project>
-      <Name>Mesher.Mathematics</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

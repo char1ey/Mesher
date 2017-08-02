@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mesher.Components", "Mesher
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mesher", "Mesher\Mesher.csproj", "{75B753B3-33D5-474F-AA07-257BF6943111}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mesher.Document", "Mesher.Document\Mesher.Document.csproj", "{0245D0E5-CA26-471F-93E4-9C0B935995DD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,18 @@ Global
 		{75B753B3-33D5-474F-AA07-257BF6943111}.Release|x64.Build.0 = Release|Any CPU
 		{75B753B3-33D5-474F-AA07-257BF6943111}.Release|x86.ActiveCfg = Release|Any CPU
 		{75B753B3-33D5-474F-AA07-257BF6943111}.Release|x86.Build.0 = Release|Any CPU
+		{0245D0E5-CA26-471F-93E4-9C0B935995DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0245D0E5-CA26-471F-93E4-9C0B935995DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0245D0E5-CA26-471F-93E4-9C0B935995DD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0245D0E5-CA26-471F-93E4-9C0B935995DD}.Debug|x64.Build.0 = Debug|Any CPU
+		{0245D0E5-CA26-471F-93E4-9C0B935995DD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0245D0E5-CA26-471F-93E4-9C0B935995DD}.Debug|x86.Build.0 = Debug|Any CPU
+		{0245D0E5-CA26-471F-93E4-9C0B935995DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0245D0E5-CA26-471F-93E4-9C0B935995DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0245D0E5-CA26-471F-93E4-9C0B935995DD}.Release|x64.ActiveCfg = Release|Any CPU
+		{0245D0E5-CA26-471F-93E4-9C0B935995DD}.Release|x64.Build.0 = Release|Any CPU
+		{0245D0E5-CA26-471F-93E4-9C0B935995DD}.Release|x86.ActiveCfg = Release|Any CPU
+		{0245D0E5-CA26-471F-93E4-9C0B935995DD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -29,16 +29,37 @@ namespace Mesher.Components
 
         public Camera Camera { get; set; }
 
+        public IntPtr GlrcHandle
+        {
+            get { return m_renderContext.GlrcHandle; }
+        }
+
         public SceneContext()
         {
-            m_renderContext = new RenderContext(Handle);
-            m_renderContext.ClearColor = Color.DimGray;
+            m_renderContext = new RenderContext(Handle) {ClearColor = Color.DimGray};
             InitializeComponent();
+        }
+
+        public SceneContext(Camera camera) : this()
+        {
+            Camera = camera;
+        }
+
+        public SceneContext(IntPtr hglrc)
+        {
+            m_renderContext = new RenderContext(Handle, hglrc) {ClearColor = Color.DimGray};
+            InitializeComponent();
+        }
+
+        public SceneContext(Camera camera, IntPtr hglrc) : this(hglrc)
+        {
+            Camera = camera;
         }
 
         public void BeginRender()
         {
             m_renderContext.Begin();
+            m_renderContext.Clear();
         }
 
         public void EndRender()
@@ -51,8 +72,8 @@ namespace Mesher.Components
         {
             m_renderContext.ResizeWindow(Width, Height);
             if(Camera == null)
-                Camera = new PerspectiveCamera(45, (double)Width/Height, new Vec3(0, 0, 1), new Vec3(0, 1, 0), new Vec3(0, 0, 0));
-            Camera.ProjectionMatrix = Mat4.Perspective(45, (double)Width / Height, 0.01, 1000000);
+                Camera = new OrthographicCamera(0.04 * Width, 0.04 * Height, new Vec3(0, 0, 1), new Vec3(0, 1, 0), new Vec3(0, 0, 0));
+            Camera.ProjectionMatrix = Mat4.Ortho(-0.02 * Width, 0.02 * Width, -0.02 * Height, 0.02 * Height, -1000000, 1000000);
             Camera.Apply();
             base.OnResize(e);
         }
@@ -65,8 +86,8 @@ namespace Mesher.Components
             var a = m_renderContext.UnProject(Width / 2f, Height / 2f);
             var b = m_renderContext.UnProject(e.X, Height - e.Y);
             
-            a = new Plane(0, 0, 1, 0).Cross(new Line(a, (Camera.LookAtPoint - Camera.Position).Normalize()));
-            b = new Plane(0, 0, 1, 0).Cross(new Line(b, (Camera.LookAtPoint - Camera.Position).Normalize()));
+            a = Plane.XYPlane.Cross(new Line(a, (Camera.LookAtPoint - Camera.Position).Normalize()));
+            b = Plane.XYPlane.Cross(new Line(b, (Camera.LookAtPoint - Camera.Position).Normalize()));
 
             Camera.Move((b - a) * zoom / 7.2);
   

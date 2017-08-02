@@ -28,24 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.sceneContext1 = new Mesher.Components.SceneContext();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sceneContext1 = new Mesher.Components.SceneContext();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // sceneContext1
-            // 
-            this.sceneContext1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.sceneContext1.Location = new System.Drawing.Point(0, 24);
-            this.sceneContext1.Name = "sceneContext1";
-            this.sceneContext1.Size = new System.Drawing.Size(580, 304);
-            this.sceneContext1.TabIndex = 0;
-            this.sceneContext1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.sceneContext1_MouseMove);
-            this.sceneContext1.Resize += new System.EventHandler(this.sceneContext1_Resize);
             // 
             // menuStrip
             // 
@@ -53,7 +43,7 @@
             this.fileToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(580, 24);
+            this.menuStrip.Size = new System.Drawing.Size(596, 24);
             this.menuStrip.TabIndex = 1;
             this.menuStrip.Text = "menuStrip";
             // 
@@ -84,11 +74,22 @@
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             // 
+            // sceneContext1
+            // 
+            this.sceneContext1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.sceneContext1.Location = new System.Drawing.Point(0, 24);
+            this.sceneContext1.Name = "sceneContext1";
+            this.sceneContext1.Size = new System.Drawing.Size(596, 314);
+            this.sceneContext1.TabIndex = 0;
+            this.sceneContext1.Paint += new System.Windows.Forms.PaintEventHandler(this.sceneContext1_Paint);
+            this.sceneContext1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.sceneContext1_MouseMove);
+            this.sceneContext1.Resize += new System.EventHandler(this.sceneContext1_Resize);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(580, 328);
+            this.ClientSize = new System.Drawing.Size(596, 338);
             this.Controls.Add(this.sceneContext1);
             this.Controls.Add(this.menuStrip);
             this.MainMenuStrip = this.menuStrip;

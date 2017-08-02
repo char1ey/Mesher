@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Mesher.DataCore;
 using Mesher.GraphicsCore;
 using Mesher.GraphicsCore.BufferObjects;
 using Mesher.GraphicsCore.Camera;
@@ -29,6 +30,9 @@ namespace Mesher
             {
                 new Vec2(0, 0), new Vec2(0, 1), new Vec2(1, 1), new Vec2(0.5, 0.5)
             }, null, new[] { 0, 1, 2, 0, 1, 3 }, texture);
+
+
+            mesh = Obj.Load(@"C:\Users\backsword\Desktop\Blonde Elexis - nude\Blonde Elexis - nude.obj").Mesh;
         }
 
         private void SceneContext1_MouseWheel(object sender, MouseEventArgs e)
@@ -55,6 +59,11 @@ namespace Mesher
         }
 
         private void sceneContext1_Resize(object sender, EventArgs e)
+        {
+            Render();
+        }
+
+        private void sceneContext1_Paint(object sender, PaintEventArgs e)
         {
             Render();
         }
