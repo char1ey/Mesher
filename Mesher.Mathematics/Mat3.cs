@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 
 namespace Mesher.Mathematics 
@@ -14,7 +15,7 @@ namespace Mesher.Mathematics
         /// This matrix is the identity matrix scaled by <paramref name="scale"/>.
         /// </summary>
         /// <param name="scale">The scale.</param>
-        public Mat3(double scale)
+        public Mat3(Double scale)
         {
             m_cols = new[]
             {
@@ -22,6 +23,20 @@ namespace Mesher.Mathematics
                 new Vec3(0.0f, scale, 0.0f),
                 new Vec3(0.0f, 0.0f, scale)
             };
+        }
+
+        public Mat3(Mat4 mat)
+        {
+            m_cols = new[]
+            {
+                new Vec3(0),
+                new Vec3(0),
+                new Vec3(0)
+            };
+
+            for (var i = 0; i < 3; i++)
+                for (var j = 0; j < 3; j++)
+                    m_cols[i][j] = mat[i][j];
         }
 
         public Mat3()
@@ -41,7 +56,7 @@ namespace Mesher.Mathematics
         /// <param name="cols">The colums of the matrix.</param>
         public Mat3(Vec3[] cols)
         {
-            this.m_cols = new[]
+            m_cols = new[]
             {
                 cols[0],
                 cols[1],
@@ -51,7 +66,7 @@ namespace Mesher.Mathematics
 
         public Mat3(Vec3 a, Vec3 b, Vec3 c)
         {
-            this.m_cols = new[]
+            m_cols = new[]
             {
                 a, b, c
             };
@@ -78,7 +93,7 @@ namespace Mesher.Mathematics
         /// </value>
         /// <param name="column">The column index.</param>
         /// <returns>The column at index <paramref name="column"/>.</returns>
-        public Vec3 this[int column]
+        public Vec3 this[Int32 column]
         {
             get { return m_cols[column]; }
             set { m_cols[column] = value; }
@@ -95,7 +110,7 @@ namespace Mesher.Mathematics
         /// <returns>
         /// The element at <paramref name="column"/> and <paramref name="row"/>.
         /// </returns>
-        public double this[int column, int row]
+        public Double this[Int32 column, Int32 row]
         {
             get { return m_cols[column][row]; }
             set { m_cols[column][row] = value; }
@@ -109,9 +124,9 @@ namespace Mesher.Mathematics
         /// Returns the matrix as a flat array of elements, column major.
         /// </summary>
         /// <returns></returns>
-        public double[] to_array()
+        public Double[] to_array()
         {
-            return m_cols.SelectMany(v => v.ToArray()).ToArray();
+            return m_cols.SelectMany(v => v.GetComponentsDouble()).ToArray();
         }
 
         /// <summary>
@@ -160,7 +175,7 @@ namespace Mesher.Mathematics
             });
         }
 
-        public static Mat3 operator * (Mat3 lhs, double s)
+        public static Mat3 operator * (Mat3 lhs, Double s)
         {
             return new Mat3(new[]
             {
@@ -172,9 +187,9 @@ namespace Mesher.Mathematics
 
         #endregion
 
-        public static Mat3 inverse(Mat3 m)
+        public static Mat3 Inverse(Mat3 m)
         {
-            var oneOverDeterminant = (1f) / (
+            var oneOverDeterminant = 1f / (
                                          +m[0][0] * (m[1][1] * m[2][2] - m[2][1] * m[1][2])
                                          - m[1][0] * (m[0][1] * m[2][2] - m[2][1] * m[0][2])
                                          + m[2][0] * (m[0][1] * m[1][2] - m[1][1] * m[0][2]));
@@ -192,6 +207,14 @@ namespace Mesher.Mathematics
 
             return Inverse;
 
+        }
+
+        public Single[] ToArray()
+        {
+            var ret = new Single[9];
+            for (var i = 0; i < ret.Length; i++)
+                ret[i] = (Single)this[i / 3, i % 3];
+            return ret;
         }
 
         /// <summary>

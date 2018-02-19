@@ -5,15 +5,17 @@ namespace Mesher.Mathematics
     /// <summary>
     /// Represents a three dimensional vector.
     /// </summary>
-	public class Vec3
+	public class Vec3 : VecN
 	{
+        public override Int32 ComponentsCount { get { return 3; } }
+
         public static Vec3 Zero = new Vec3(0, 0, 0);
 
-		public double X;
-		public double Y;
-		public double Z;
+		public Double X;
+		public Double Y;
+		public Double Z;
 
-		public double this[int index]
+		public Double this[Int32 index]
 		{
 			get 
 			{
@@ -31,37 +33,39 @@ namespace Mesher.Mathematics
 			}
 		}
 
-		public Vec3(double s)
+		public Vec3() : this(0) { }
+
+		public Vec3(Double s)
 		{
 			X = Y = Z = s;
 		}
 
-		public Vec3(double x, double y, double z)
+		public Vec3(Double x, Double y, Double z)
 		{
-			this.X = x;
-			this.Y = y;
-            this.Z = z;
+			X = x;
+			Y = y;
+            Z = z;
 		}
 
         public Vec3(Vec3 v)
         {
-            this.X = v.X;
-            this.Y = v.Y;
-            this.Z = v.Z;
+            X = v.X;
+            Y = v.Y;
+            Z = v.Z;
         }
 
         public Vec3(Vec4 v)
         {
-            this.X = v.X;
-            this.Y = v.Y;
-            this.Z = v.Z; 
+            X = v.X;
+            Y = v.Y;
+            Z = v.Z; 
         }
 
-        public Vec3(Vec2 xy, double z)
+        public Vec3(Vec2 xy, Double z)
         {
-            this.X = xy.X;
-            this.Y = xy.Y;
-            this.Z = z;
+            X = xy.X;
+            Y = xy.Y;
+            Z = z;
         }
 		
 		public static Vec3 operator + (Vec3 lhs, Vec3 rhs)
@@ -69,7 +73,7 @@ namespace Mesher.Mathematics
 			return new Vec3(lhs.X + rhs.X, lhs.Y + rhs.Y, lhs.Z + rhs.Z);
 		}
 
-        public static Vec3 operator +(Vec3 lhs, double rhs)
+        public static Vec3 operator +(Vec3 lhs, Double rhs)
         {
             return new Vec3(lhs.X + rhs, lhs.Y + rhs, lhs.Z + rhs);
         }
@@ -79,21 +83,21 @@ namespace Mesher.Mathematics
             return new Vec3(lhs.X - rhs.X, lhs.Y - rhs.Y, lhs.Z - rhs.Z);
         }
 
-        public static Vec3 operator - (Vec3 lhs, double rhs)
+        public static Vec3 operator - (Vec3 lhs, Double rhs)
         {
             return new Vec3(lhs.X - rhs, lhs.Y - rhs, lhs.Z - rhs);
         }
 
-        public static Vec3 operator *(Vec3 self, double s)
+        public static Vec3 operator *(Vec3 self, Double s)
 		{
 			return new Vec3(self.X * s, self.Y * s, self.Z * s);
 		}
-        public static Vec3 operator *(double lhs, Vec3 rhs)
+        public static Vec3 operator *(Double lhs, Vec3 rhs)
         {
             return new Vec3(rhs.X * lhs, rhs.Y * lhs, rhs.Z * lhs);
         }
 
-        public static Vec3 operator /(Vec3 lhs, double rhs)
+        public static Vec3 operator /(Vec3 lhs, Double rhs)
         {
             return new Vec3(lhs.X / rhs, lhs.Y / rhs, lhs.Z / rhs);
         }
@@ -106,7 +110,7 @@ namespace Mesher.Mathematics
 	    public static Vec3 Normalize(Vec3 v)
 	    {
 	        var sqr = v.X * v.X + v.Y * v.Y + v.Z * v.Z;
-	        return v * (1.0f / (double)Math.Sqrt(sqr));
+	        return v * (1.0f / (Double)Math.Sqrt(sqr));
 	    }
 
 	    public Vec3 Normalize()
@@ -114,13 +118,13 @@ namespace Mesher.Mathematics
 	        return Normalize(this);
 	    }
 
-	    public static double Dot(Vec3 x, Vec3 y)
+	    public static Double Dot(Vec3 x, Vec3 y)
 	    {
 	        var tmp = new Vec3(x * y);
 	        return tmp.X + tmp.Y + tmp.Z;
 	    }
 
-	    public double Dot(Vec3 v)
+	    public Double Dot(Vec3 v)
 	    {
 	        return Dot(this, v);
 	    }
@@ -138,42 +142,52 @@ namespace Mesher.Mathematics
             return Cross(this, v);
         }
 
-	    public static double Angle(Vec3 a, Vec3 b)
+	    public static Double Angle(Vec3 a, Vec3 b)
 	    {
 	        return Math.Acos(a.Normalize().Dot(b.Normalize()));
         }
 
-	    public double Angle(Vec3 v)
+	    public Double Angle(Vec3 v)
 	    {
 	        return Angle(this, v);
 	    }
 
-	    public static bool Valid(Vec3 v)
+	    public static Boolean Valid(Vec3 v)
 	    {
 	        for(var i = 0; i < 3; i++)
-	            if (double.IsNaN(v[i]) || double.IsInfinity(v[i]))
+	            if (Double.IsNaN(v[i]) || Double.IsInfinity(v[i]))
 	                return false;
 	        return true;
 	    }
 
-	    public bool Valid()
+	    public Boolean Valid()
 	    {
 	        return Valid(this);
 	    }
 
-	    public static double Length(Vec3 v)
+	    public static Double Length(Vec3 v)
 	    {
 	        return Math.Sqrt(v.X * v.X + v.Y * v.Y + v.Z * v.Z);
 	    }
 
-	    public double Length()
+	    public Double Length()
 	    {
 	        return Length(this);
 	    }
 
-        public double[] ToArray()
+        public override Single[] GetComponentsFloat()
+        {
+            return new[] { (Single)X, (Single)Y, (Single)Z };
+        }
+
+        public override Double[] GetComponentsDouble()
         {
             return new[] { X, Y, Z };
         }
-	}
+
+        public Vec3 Clone()
+        {
+            return new Vec3(X, Y, Z);
+        }
+    }
 }

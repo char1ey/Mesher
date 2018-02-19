@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Mesher.Document</RootNamespace>
     <AssemblyName>Mesher.Document</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,13 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Document.cs" />
-    <Compile Include="Scene.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mesher.Components\Mesher.Components.csproj">
-      <Project>{A6FC6075-F988-47DD-87E4-9482C214C075}</Project>
+      <Project>{a6fc6075-f988-47dd-87e4-9482c214c075}</Project>
       <Name>Mesher.Components</Name>
     </ProjectReference>
     <ProjectReference Include="..\Mesher.GraphicsCore\Mesher.GraphicsCore.csproj">

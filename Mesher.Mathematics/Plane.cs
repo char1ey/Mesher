@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mesher.Mathematics
 {
@@ -12,12 +8,12 @@ namespace Mesher.Mathematics
         public static Plane XZPlane = new Plane(0, 1, 0, 0);
         public static Plane YZPlane = new Plane(1, 0, 0, 0);
 
-        private const double Eps = 1e-9;
+        private const Double Eps = 1e-9;
 
-        public double A { get; set; }
-        public double B { get; set; }
-        public double C { get; set; }
-        public double D { get; set; }
+        public Double A { get; set; }
+        public Double B { get; set; }
+        public Double C { get; set; }
+        public Double D { get; set; }
 
         public Vec3 Normal
         {
@@ -27,7 +23,7 @@ namespace Mesher.Mathematics
             }
         }
 
-        public Plane(double a, double b, double c, double d)
+        public Plane(Double a, Double b, Double c, Double d)
         {
             A = a;
             B = b;

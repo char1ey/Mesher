@@ -5,14 +5,16 @@ namespace Mesher.Mathematics
     /// <summary>
     /// Represents a four dimensional vector.
     /// </summary>
-    public class Vec4
+    public class Vec4 : VecN
     {
-        public double X;
-        public double Y;
-        public double Z;
-        public double W;
+        public override Int32 ComponentsCount { get { return 4; } }
 
-        public double this[int index]
+        public Double X;
+        public Double Y;
+        public Double Z;
+        public Double W;
+
+        public Double this[Int32 index]
         {
             get
             {
@@ -32,33 +34,35 @@ namespace Mesher.Mathematics
             }
         }
 
-        public Vec4(double s)
+		public Vec4() : this(0) { }
+
+		public Vec4(Double s)
         {
             X = Y = Z = W = s;
         }
 
-        public Vec4(double x, double y, double z, double w)
+        public Vec4(Double x, Double y, Double z, Double w)
         {
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
-            this.W = w;
+            X = x;
+            Y = y;
+            Z = z;
+            W = w;
         }
 
         public Vec4(Vec4 v)
         {
-            this.X = v.X;
-            this.Y = v.Y;
-            this.Z = v.Z;
-            this.W = v.W;
+            X = v.X;
+            Y = v.Y;
+            Z = v.Z;
+            W = v.W;
         }
 
-        public Vec4(Vec3 xyz, double w)
+        public Vec4(Vec3 xyz, Double w)
         {
-            this.X = xyz.X;
-            this.Y = xyz.Y;
-            this.Z = xyz.Z;
-            this.W = w;
+            X = xyz.X;
+            Y = xyz.Y;
+            Z = xyz.Z;
+            W = w;
         }
 
         public static Vec4 operator + (Vec4 lhs, Vec4 rhs)
@@ -66,12 +70,12 @@ namespace Mesher.Mathematics
             return new Vec4(lhs.X + rhs.X, lhs.Y + rhs.Y, lhs.Z + rhs.Z, lhs.W + rhs.W);
         }
 
-        public static Vec4 operator +(Vec4 lhs, double rhs)
+        public static Vec4 operator +(Vec4 lhs, Double rhs)
         {
             return new Vec4(lhs.X + rhs, lhs.Y + rhs, lhs.Z + rhs, lhs.W + rhs);
         }
 
-        public static Vec4 operator -(Vec4 lhs, double rhs)
+        public static Vec4 operator -(Vec4 lhs, Double rhs)
         {
             return new Vec4(lhs.X - rhs, lhs.Y - rhs, lhs.Z - rhs, lhs.W - rhs);
         }
@@ -81,12 +85,12 @@ namespace Mesher.Mathematics
             return new Vec4(lhs.X - rhs.X, lhs.Y - rhs.Y, lhs.Z - rhs.Z, lhs.W - rhs.W);
         }
 
-        public static Vec4 operator * (Vec4 self, double s)
+        public static Vec4 operator * (Vec4 self, Double s)
         {
             return new Vec4(self.X * s, self.Y * s, self.Z * s, self.W * s);
         }
 
-        public static Vec4 operator * (double lhs, Vec4 rhs)
+        public static Vec4 operator * (Double lhs, Vec4 rhs)
         {
             return new Vec4(rhs.X * lhs, rhs.Y * lhs, rhs.Z * lhs, rhs.W * lhs);
         }
@@ -96,7 +100,7 @@ namespace Mesher.Mathematics
             return new Vec4(rhs.X * lhs.X, rhs.Y * lhs.Y, rhs.Z * lhs.Z, rhs.W * lhs.W);
         }
 
-        public static Vec4 operator / (Vec4 lhs, double rhs)
+        public static Vec4 operator / (Vec4 lhs, Double rhs)
         {
             return new Vec4(lhs.X/rhs, lhs.Y/rhs, lhs.Z/rhs, lhs.W/rhs);
         }
@@ -104,17 +108,21 @@ namespace Mesher.Mathematics
         public static Vec4 Normalize(Vec4 v)
         {
             var sqr = v.X * v.X + v.Y * v.Y + v.Z * v.Z + v.W * v.W;
-            return v * (1.0f / (double)Math.Sqrt(sqr));
+            return v * (1.0f / (Double)Math.Sqrt(sqr));
         }
 
-        public static double Dot(Vec4 x, Vec4 y)
+        public static Double Dot(Vec4 x, Vec4 y)
         {
             var tmp = new Vec4(x * y);
-            return (tmp.X + tmp.Y) + (tmp.Z + tmp.W);
+            return tmp.X + tmp.Y + (tmp.Z + tmp.W);
         }
 
+        public override Single[] GetComponentsFloat()
+        {
+            return new[] { (Single)X, (Single)Y, (Single)Z, (Single)W };
+        }
 
-        public double[] ToArray()
+        public override Double[] GetComponentsDouble()
         {
             return new[] { X, Y, Z, W };
         }

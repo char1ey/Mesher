@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 
 namespace Mesher.Mathematics
@@ -20,7 +21,7 @@ namespace Mesher.Mathematics
         /// This matrix is the identity matrix scaled by <paramref name="scale"/>.
         /// </summary>
         /// <param name="scale">The scale.</param>
-        public Mat2(double scale)
+        public Mat2(Double scale)
         {
             m_cols = new[]
             {
@@ -36,7 +37,7 @@ namespace Mesher.Mathematics
         /// <param name="cols">The colums of the matrix.</param>
         public Mat2(Vec2[] cols)
         {
-            this.m_cols = new[]
+            m_cols = new[]
             {
                 cols[0],
                 cols[1]
@@ -45,15 +46,15 @@ namespace Mesher.Mathematics
 
         public Mat2(Vec2 a, Vec2 b)
         {
-            this.m_cols = new[]
+            m_cols = new[]
             {
                 a, b
             };
         }
 
-        public Mat2(double a, double b, double c, double d)
+        public Mat2(Double a, Double b, Double c, Double d)
         {
-            this.m_cols = new[]
+            m_cols = new[]
             {
                 new Vec2(a,b), new Vec2(c,d)
             };
@@ -80,7 +81,7 @@ namespace Mesher.Mathematics
         /// </value>
         /// <param name="column">The column index.</param>
         /// <returns>The column at index <paramref name="column"/>.</returns>
-        public Vec2 this[int column]
+        public Vec2 this[Int32 column]
         {
             get { return m_cols[column]; }
             set { m_cols[column] = value; }
@@ -97,7 +98,7 @@ namespace Mesher.Mathematics
         /// <returns>
         /// The element at <paramref name="column"/> and <paramref name="row"/>.
         /// </returns>
-        public double this[int column, int row]
+        public Double this[Int32 column, Int32 row]
         {
             get { return m_cols[column][row]; }
             set { m_cols[column][row] = value; }
@@ -111,9 +112,9 @@ namespace Mesher.Mathematics
         /// Returns the matrix as a flat array of elements, column major.
         /// </summary>
         /// <returns></returns>
-        public double[] to_array()
+        public Double[] to_array()
         {
-            return m_cols.SelectMany(v => v.ToArray()).ToArray();
+            return m_cols.SelectMany(v => v.GetComponentsDouble()).ToArray();
         }
 
         #endregion
@@ -149,7 +150,7 @@ namespace Mesher.Mathematics
             });
         }
 
-        public static Mat2 operator * (Mat2 lhs, double s)
+        public static Mat2 operator * (Mat2 lhs, Double s)
         {
             return new Mat2(new[]
             {
@@ -163,7 +164,7 @@ namespace Mesher.Mathematics
         public static Mat2 inverse(Mat2 m)
         {
 
-            var oneOverDeterminant = (1f) / (
+            var oneOverDeterminant = 1f / (
                                          +m[0][0] * m[1][1]
                                          - m[1][0] * m[0][1]);
 

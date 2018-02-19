@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Mesher.DataCore</RootNamespace>
     <AssemblyName>Mesher.DataCore</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AssimpNet">
+      <HintPath>libs\AssimpNet.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -41,14 +46,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Obj.cs" />
+    <Compile Include="DataLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mesher.Document\Mesher.Document.csproj">
-      <Project>{0245D0E5-CA26-471F-93E4-9C0B935995DD}</Project>
-      <Name>Mesher.Document</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Mesher.GraphicsCore\Mesher.GraphicsCore.csproj">
       <Project>{A6C36013-04D8-46E7-A737-38CD4E739885}</Project>
       <Name>Mesher.GraphicsCore</Name>

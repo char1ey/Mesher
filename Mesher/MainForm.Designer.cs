@@ -1,4 +1,7 @@
-﻿namespace Mesher
+﻿using Mesher.Core.Components;
+using Mesher.GraphicsCore;
+
+namespace Mesher.Core
 {
     partial class MainForm
     {
@@ -28,12 +31,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            RenderManager = new RenderManager(Handle);
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sceneContext1 = new Mesher.Components.SceneContext();
+            this.sceneContext1 = new SceneContext(RenderManager);
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -62,6 +66,7 @@
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.openToolStripMenuItem.Text = "Open";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -110,6 +115,7 @@
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        public RenderManager RenderManager;
     }
 }
 

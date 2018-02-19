@@ -1,70 +1,69 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows.Forms;
-using Mesher.DataCore;
 using Mesher.GraphicsCore;
-using Mesher.GraphicsCore.BufferObjects;
-using Mesher.GraphicsCore.Camera;
-using Mesher.GraphicsCore.Drawing;
-using Mesher.GraphicsCore.Texture;
-using Mesher.Mathematics;
+using Mesher.GraphicsCore.Objects;
+using DataLoader = Mesher.Core.Data.DataLoader;
 
-namespace Mesher
+namespace Mesher.Core
 {
     public partial class MainForm : Form
     {
+        //public RenderManager RenderManager { get; set; }
+        public Scene Scene;
+
         public MainForm()
-        {       
+        {
             InitializeComponent();
-
-            texture = new Texture((Bitmap)Image.FromFile(@"C:\Users\backsword\Desktop\other\51076.jpg"));
+            
             sceneContext1.MouseWheel += SceneContext1_MouseWheel;
-            mesh = new Mesh(new[]
-                {new Vec3(0, -1, -1), new Vec3(0, 1, -1), new Vec3(0, 0, 1), new Vec3(0, 0, -3)}, new[]
-            {
-                new Vec2(0, 0), new Vec2(0, 1), new Vec2(1, 1), new Vec2(0.5, 0.5)
-            }, null, new[] { 0, 1, 2, 0, 1, 3 }, texture);
-
-
-            mesh = Obj.Load(@"C:\Users\backsword\Desktop\Blonde Elexis - nude\Blonde Elexis - nude.obj").Mesh;
         }
 
-        private void SceneContext1_MouseWheel(object sender, MouseEventArgs e)
+        private void SceneContext1_MouseWheel(Object sender, MouseEventArgs e)
         {
             Render();
         }
-
-        private Mesh mesh;
-        private Texture texture;
 
         private void Render()
         {
+            if (Scene == null)
+                return;
+
             sceneContext1.BeginRender();
-            mesh.Render();
-            // TextureTriangle.Draw(new Mathematics.Triangle(new Vertex(-1, -1, 0), new Vertex(1, -1, 0), new Vertex(0, 1, 0)), 
-            //    new Mathematics.Triangle(new Vertex(0, 0), new Vertex(0, 1), new Vertex(1, 1)), texture);
-            Grid.Draw();
+
+            sceneContext1.Render(Scene);
+
             sceneContext1.EndRender();
         }
 
-        private void sceneContext1_MouseMove(object sender, MouseEventArgs e)
+        private void sceneContext1_MouseMove(Object sender, MouseEventArgs e)
         {
             Render();
         }
 
-        private void sceneContext1_Resize(object sender, EventArgs e)
+        private void sceneContext1_Resize(Object sender, EventArgs e)
         {
             Render();
         }
 
-        private void sceneContext1_Paint(object sender, PaintEventArgs e)
+        private void sceneContext1_Paint(Object sender, PaintEventArgs e)
         {
+            Render();
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Filter = @"OBJ (*.obj)|*.obj|3DS (*.3ds)|*.3ds";
+
+                openFileDialog.ShowDialog();
+
+                if(File.Exists(openFileDialog.FileName)) 
+                    Scene = DataLoader.LoadScene(openFileDialog.FileName, RenderManager);
+            }
+
+            sceneContext1.Update();
             Render();
         }
     }
