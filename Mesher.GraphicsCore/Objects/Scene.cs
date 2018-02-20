@@ -1,9 +1,10 @@
-﻿using Mesher.GraphicsCore.Camera;
+﻿using System;
+using Mesher.GraphicsCore.Camera;
 using Mesher.GraphicsCore.Light;
 
 namespace Mesher.GraphicsCore.Objects
 {
-    public class Scene
+    public class Scene : IDisposable
     {
 		public Cameras Cameras { get; }
 
@@ -16,6 +17,11 @@ namespace Mesher.GraphicsCore.Objects
             Cameras = new Cameras();
             Meshes = new Meshes();
             Lights = new Lights();
+        }
+
+        public void Dispose()
+        {
+
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Mesher.GraphicsCore.ShaderProgram
 {
     internal class ShaderProgram
     {
-        private const Int32 LogInfoMaxSize = 1000000;
+        private const Int32 LOG_INFO_MAX_SIZE = 1000000;
 
         private UInt32 m_shaderProgramId;
 
@@ -65,8 +65,8 @@ namespace Mesher.GraphicsCore.ShaderProgram
 
             if (success[0] == 0)
             {
-                var infoLog = new StringBuilder(LogInfoMaxSize);
-                Gl.GetProgramInfoLog(m_shaderProgramId, LogInfoMaxSize, IntPtr.Zero, infoLog);
+                var infoLog = new StringBuilder(LOG_INFO_MAX_SIZE);
+                Gl.GetProgramInfoLog(m_shaderProgramId, LOG_INFO_MAX_SIZE, IntPtr.Zero, infoLog);
 
                 throw new ValidateShaderProgramException(infoLog.ToString());
             }
@@ -82,8 +82,8 @@ namespace Mesher.GraphicsCore.ShaderProgram
 
             if (success[0] == 0)
             {
-                var infoLog = new StringBuilder(LogInfoMaxSize);
-                Gl.GetProgramInfoLog(m_shaderProgramId, LogInfoMaxSize, IntPtr.Zero, infoLog);
+                var infoLog = new StringBuilder(LOG_INFO_MAX_SIZE);
+                Gl.GetProgramInfoLog(m_shaderProgramId, LOG_INFO_MAX_SIZE, IntPtr.Zero, infoLog);
 
                 throw new LinkShaderProgramException(infoLog.ToString());
             }
@@ -100,8 +100,8 @@ namespace Mesher.GraphicsCore.ShaderProgram
 
             if (success[0] == 0)
             {
-                var infoLog = new StringBuilder(LogInfoMaxSize);
-                Gl.GetShaderInfoLog(ret, LogInfoMaxSize, IntPtr.Zero, infoLog);
+                var infoLog = new StringBuilder(LOG_INFO_MAX_SIZE);
+                Gl.GetShaderInfoLog(ret, LOG_INFO_MAX_SIZE, IntPtr.Zero, infoLog);
 
                 throw new CompileShaderException(infoLog.ToString());
             }

@@ -4,7 +4,7 @@ using Mesher.Mathematics;
 
 namespace Mesher.GraphicsCore.Material
 {
-    public class Material
+    public class Material : IDisposable
     {
         public Int32 Id { get; internal set; }
         public Boolean HasColorAmbient { get; set; }
@@ -46,6 +46,15 @@ namespace Mesher.GraphicsCore.Material
             TextureSpecular?.Deactivate();
             TextureEmissive?.Deactivate();
             TextureNormal?.Deactivate();
+        }
+
+        public void Dispose()
+        {
+            TextureAmbient?.Dispose();
+            TextureDiffuse?.Dispose();
+            TextureSpecular?.Dispose();
+            TextureEmissive?.Dispose();
+            TextureNormal?.Dispose();
         }
     }
 }

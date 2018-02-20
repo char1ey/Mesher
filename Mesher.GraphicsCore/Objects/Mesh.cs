@@ -37,11 +37,12 @@ namespace Mesher.GraphicsCore.Objects
 
         public void Dispose()
         {
-            Vertexes.Dispose();
-            Normals.Dispose();
-            TextureVertexes.Dispose();
-            Tangents.Dispose();
-            BiTangents.Dispose();
+            Vertexes?.Dispose();
+            Normals?.Dispose();
+            TextureVertexes?.Dispose();
+            Tangents?.Dispose();
+            BiTangents?.Dispose();
+            Material?.Dispose();
         }
     }
 }

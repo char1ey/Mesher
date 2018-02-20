@@ -88,9 +88,9 @@ namespace Mesher.GraphicsCore
             m_defaultRenderWindow.End();
         }
 
-        public Scene CreateScene()
+        public Texture.Texture CreateTexture()
         {
-            return new Scene();
+            throw new NotImplementedException();
         }
 
         private void CreateShaderProgram()
