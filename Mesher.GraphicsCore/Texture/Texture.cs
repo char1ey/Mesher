@@ -23,7 +23,7 @@ namespace Mesher.GraphicsCore.Texture
                 ActiveTextures[i] = -1;
         }
 
-        public Texture(Bitmap image)
+        internal Texture(Bitmap image)
         {
             m_id = new UInt32[1];
 

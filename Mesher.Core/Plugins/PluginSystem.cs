@@ -36,7 +36,7 @@ namespace Mesher.Core.Plugins
                 if (assembly != null)
                 {
                     var types = assembly.GetTypes();
-
+                    
                     foreach (var type in types)
                     {
                         if (type.IsInterface || type.IsAbstract)

@@ -36,9 +36,6 @@
     <Reference Include="AssimpNet">
       <HintPath>..\libs\AssimpNet.dll</HintPath>
     </Reference>
-    <Reference Include="Mesher.GraphicsCore">
-      <HintPath>..\Mesher.GraphicsCore\bin\Debug\Mesher.GraphicsCore.dll</HintPath>
-    </Reference>
     <Reference Include="Mesher.Mathematics">
       <HintPath>..\Mesher.Mathematics\bin\Debug\Mesher.Mathematics.dll</HintPath>
     </Reference>
@@ -101,6 +98,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Mesher.GraphicsCore\Mesher.GraphicsCore.csproj">
+      <Project>{a6c36013-04d8-46e7-a737-38cd4e739885}</Project>
+      <Name>Mesher.GraphicsCore</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

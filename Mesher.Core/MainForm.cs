@@ -32,7 +32,7 @@ namespace Mesher.Core
         {
             var plugin = (IPlugin) ((ToolStripItem) sender).Tag;
 
-            plugin.Execute();
+            plugin.Execute(renderManager, Scene);
         }
 
         private void SceneContext1_MouseWheel(Object sender, MouseEventArgs e)
@@ -75,8 +75,10 @@ namespace Mesher.Core
 
                 openFileDialog.ShowDialog();
 
-                if(File.Exists(openFileDialog.FileName)) 
+                if (File.Exists(openFileDialog.FileName))
+                {
                     Scene = DataLoader.LoadScene(openFileDialog.FileName, renderManager);
+                }
             }
 
             sceneContext1.Update();

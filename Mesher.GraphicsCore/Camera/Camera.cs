@@ -12,7 +12,7 @@ namespace Mesher.GraphicsCore.Camera
         private Stack<Vec3> m_upVectorsStack;
         private Stack<Vec3> m_lookAtPointsStack;
 
-        public Int32 Id { get; internal set; }
+        public Int32 Id { get; set; }
 
         public Mat4 ProjectionMatrix { get; set; }
 

@@ -40,8 +40,8 @@ namespace Mesher.GraphicsCore.ShaderProgram
 
         private String GetShaderSource(ShaderProgramType shaderProgramType)
         {
-            Byte[] bytes = null;            
-        
+            Byte[] bytes = null;
+
             switch (shaderProgramType)
             {
                 case ShaderProgramType.Vertex:
@@ -93,7 +93,7 @@ namespace Mesher.GraphicsCore.ShaderProgram
         {
             var ret = Gl.CreateShader(type);
 
-            Gl.ShaderSource(ret, source);           
+            Gl.ShaderSource(ret, source);
             Gl.CompileShader(ret);
             var success = new Int32[1];
             Gl.GetShader(ret, Gl.GL_COMPILE_STATUS, success);
@@ -124,18 +124,18 @@ namespace Mesher.GraphicsCore.ShaderProgram
             var name = ShaderVariablesNames.GetVariableName(variableName);
             var variableLocation = Gl.GetAttribLocation(m_shaderProgramId, name);
 
-            if(variableLocation != -1)
+            if (variableLocation != -1)
                 SetVertexBuffer((UInt32)variableLocation, vertexBuffer);
         }
 
         public void SetVertexBuffer<T>(UInt32 variableLocation, VertexBuffer<T> vertexBuffer) where T : VecN, new()
         {
-            Gl.BindBuffer(Gl.GL_ARRAY_BUFFER, vertexBuffer.Id);
+            vertexBuffer.Bind();
 
             Gl.EnableVertexAttribArray(variableLocation);
             Gl.VertexAttribPointer(variableLocation, new T().ComponentsCount, Gl.GL_FLOAT, false, 0, IntPtr.Zero);
         }
-        
+
         public void SetVariableValue(ShaderVariable variableName, Texture.Texture value)
         {
             var name = ShaderVariablesNames.GetVariableName(variableName);
@@ -166,7 +166,7 @@ namespace Mesher.GraphicsCore.ShaderProgram
             Gl.Uniform4(Gl.GetUniformLocation(m_shaderProgramId, name), (Single)v.X, (Single)v.Y, (Single)v.Z, (Single)v.W);
         }
 
-                public void SetVariableValue(ShaderVariable variableName, Color3 v)
+        public void SetVariableValue(ShaderVariable variableName, Color3 v)
         {
             var name = ShaderVariablesNames.GetVariableName(variableName);
             Gl.Uniform3(Gl.GetUniformLocation(m_shaderProgramId, name), v.R, v.G, v.B);
@@ -312,7 +312,7 @@ namespace Mesher.GraphicsCore.ShaderProgram
             {
                 var light = lights[i];
 
-                SetArrayValue(i, ShaderVariable.LightLightType, (Int32) light.LightType);
+                SetArrayValue(i, ShaderVariable.LightLightType, (Int32)light.LightType);
                 SetArrayValue(i, ShaderVariable.LightAmbientColor, light.AmbientColor);
                 SetArrayValue(i, ShaderVariable.LightDiffuseColor, light.DiffuseColor);
                 SetArrayValue(i, ShaderVariable.LightSpecularColor, light.SpecularColor);

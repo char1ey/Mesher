@@ -45,6 +45,7 @@ namespace Mesher.Core.Components
             if (Camera == null)
             {
                 Camera = new OrthographicCamera(Width, Height, new Vec3(0, 0, 1), new Vec3(0, 1, 0), new Vec3(0, 0, 0));
+                Camera.Id = scene.Cameras.Count;
                 scene.Cameras.Add((OrthographicCamera)Camera);
             }
 
