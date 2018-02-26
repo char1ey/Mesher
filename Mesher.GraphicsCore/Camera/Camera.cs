@@ -72,7 +72,7 @@ namespace Mesher.GraphicsCore.Camera
             LookAtPoint += v;
         }
 
-        public void Rotate(Vec3 axis, Double angle)
+        public void Rotate(Vec3 axis, Single angle)
         {
             if (!axis.Valid() || (axis - Vec3.Zero).Length() < EPS)
                 return;
@@ -81,7 +81,7 @@ namespace Mesher.GraphicsCore.Camera
             UpVector = (Position - LookAtPoint).Cross(UpVector).Cross(Position - LookAtPoint).Normalize();
         }
 
-        public void Spin(Double angle)
+        public void Spin(Single angle)
         {
             UpVector = new Vec3(Mat4.Rotate(angle, Position - LookAtPoint) * new Vec4(UpVector, 1));
         }
@@ -91,11 +91,11 @@ namespace Mesher.GraphicsCore.Camera
             return Mat4.UnProject(v, ViewMatrix, ProjectionMatrix, new Vec4(0, 0, windowWidth, windowHeight));
         }
 
-        public Vec3 UnProject(Double x, Double y, Double z, Single windowWidth, Single windowHeight)
+        public Vec3 UnProject(Single x, Single y, Single z, Single windowWidth, Single windowHeight)
         {
             return UnProject(new Vec3(x, y, z), windowWidth, windowHeight);
         }
 
-        public abstract void Zoom(Double zoom);
+        public abstract void Zoom(Single zoom);
     }
 }

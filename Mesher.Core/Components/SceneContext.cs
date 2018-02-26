@@ -10,9 +10,9 @@ namespace Mesher.Core.Components
 {
     public partial class SceneContext : UserControl
     {
-        private const Double Eps = 1e-9;
-        private const Double ZoomSpeed = 1.2;
-        private const Double RotationSpeed = 5;
+        private const Single Eps = 1e-9f;
+        private const Single ZoomSpeed = 1.2f;
+        private const Single RotationSpeed = 5f;
 
         private readonly RenderWindow m_renderWindow;
 
@@ -65,7 +65,7 @@ namespace Mesher.Core.Components
 
         protected override void OnMouseWheel(MouseEventArgs e)
         {
-            var zoom = (Double) e.Delta / SystemInformation.MouseWheelScrollDelta * ZoomSpeed;
+            var zoom = (Single) e.Delta / SystemInformation.MouseWheelScrollDelta * ZoomSpeed;
             Camera.Zoom(zoom < 0 ? -1 / zoom : zoom);
 
             var a = Camera.UnProject(Width / 2f, Height / 2f, 0, Width, Height);
@@ -74,7 +74,7 @@ namespace Mesher.Core.Components
             a = Plane.XYPlane.Cross(new Line(a, (Camera.LookAtPoint - Camera.Position).Normalize()));
             b = Plane.XYPlane.Cross(new Line(b, (Camera.LookAtPoint - Camera.Position).Normalize()));
 
-            Camera.Move((b - a) * zoom / 7.2);
+            Camera.Move((b - a) * zoom / 7.2f);
 
             base.OnMouseWheel(e);
         }
@@ -142,7 +142,7 @@ namespace Mesher.Core.Components
             var opSqr = ret.X * ret.X + ret.Y * ret.Y;
 
             if (opSqr <= 1)
-                ret.Z = Math.Sqrt(1 - opSqr);
+                ret.Z = (Single)Math.Sqrt(1 - opSqr);
             else ret = ret.Normalize();
 
             return ret;

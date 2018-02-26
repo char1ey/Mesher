@@ -1545,7 +1545,9 @@ namespace Mesher.GraphicsCore
         [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluPickMatrix(Double x, Double y, Double width, Double height, Int32[] viewport);
         [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluLookAt(Double eyex, Double eyey, Double eyez, Double centerx, Double centery, Double centerz, Double upx, Double upy, Double upz);
         [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluProject(Double objx, Double objy, Double objz, Double[] modelMatrix, Double[] projMatrix, Int32[] viewport, Double[] winx, Double[] winy, Double[] winz);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluProject(Single objx, Single objy, Single objz, Single[] modelMatrix, Single[] projMatrix, Int32[] viewport, Single[] winx, Single[] winy, Single[] winz);
         [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluUnProject(Double winx, Double winy, Double winz, Double[] modelMatrix, Double[] projMatrix, Int32[] viewport, ref Double objx, ref Double objy, ref Double objz);
+        [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluUnProject(Single winx, Single winy, Single winz, Single[] modelMatrix, Single[] projMatrix, Int32[] viewport, ref Single objx, ref Single objy, ref Single objz);
         [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluScaleImage(Int32 format, Int32 widthin, Int32 heightin, Int32 typein, Int32[] datain, Int32 widthout, Int32 heightout, Int32 typeout, Int32[] dataout);
         [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluBuild1DMipmaps(UInt32 target, UInt32 components, Int32 width, UInt32 format, UInt32 type, IntPtr data);
         [DllImport(LIBRARY_GLU, SetLastError = true)] private static extern void gluBuild2DMipmaps(UInt32 target, UInt32 components, Int32 width, Int32 height, UInt32 format, UInt32 type, IntPtr data);
@@ -2764,19 +2766,19 @@ namespace Mesher.GraphicsCore
         {
             glPrioritizeTextures(n, textures, priorities);
         }
-        public static void Project(Double objx, Double objy, Double objz, Double[] modelMatrix, Double[] projMatrix, Int32[] viewport, Double[] winx, Double[] winy, Double[] winz)
+        public static void Project(Single objx, Single objy, Single objz, Single[] modelMatrix, Single[] projMatrix, Int32[] viewport, Single[] winx, Single[] winy, Single[] winz)
         {
             gluProject(objx, objy, objz, modelMatrix, projMatrix, viewport, winx, winy, winz);
         }
-        public static Vec2 Project(Double objx, Double objy, Double objz)
+        public static Vec2 Project(Single objx, Single objy, Single objz)
         {
-            var modelview = new Double[16];
-            var projection = new Double[16];
+            var modelview = new Single[16];
+            var projection = new Single[16];
             var viewport = new Int32[4];
-            GetDouble(GL_MODELVIEW_MATRIX, modelview);
-            GetDouble(GL_PROJECTION_MATRIX, projection);
+            GetFloat(GL_MODELVIEW_MATRIX, modelview);
+            GetFloat(GL_PROJECTION_MATRIX, projection);
             GetInteger(GL_VIEWPORT, viewport);
-            var result = new[] { new Double[1], new Double[1], new Double[1] };
+            var result = new[] { new Single[1], new Single[1], new Single[1] };
 
             gluProject(objx, objy, objz, modelview, projection, viewport, result[0], result[1], result[2]);
 
@@ -3210,15 +3212,15 @@ namespace Mesher.GraphicsCore
             gluUnProject(winx, winy, winz, modelMatrix, projMatrix, viewport,
                 ref objx, ref objy, ref objz);
         }
-        public static Vec3 UnProject(Double winx, Double winy, Double winz)
+        public static Vec3 UnProject(Single winx, Single winy, Single winz)
         {
-            var modelview = new Double[16];
-            var projection = new Double[16];
+            var modelview = new Single[16];
+            var projection = new Single[16];
             var viewport = new Int32[4];
-            GetDouble(GL_MODELVIEW_MATRIX, modelview);
-            GetDouble(GL_PROJECTION_MATRIX, projection);
+            GetFloat(GL_MODELVIEW_MATRIX, modelview);
+            GetFloat(GL_PROJECTION_MATRIX, projection);
             GetInteger(GL_VIEWPORT, viewport);
-            var result = new Double[3];
+            var result = new Single[3];
             gluUnProject(winx, winy, winz, modelview, projection, viewport, ref result[0], ref result[1], ref result[2]);
             return new Vec3(result[0], result[1], result[2]);
         }
@@ -3229,11 +3231,6 @@ namespace Mesher.GraphicsCore
         public static void Vertex(Double x, Double y)
         {
             glVertex2d(x, y);
-        }
-
-        public static void Vertex(Vec3 v)
-        {
-            glVertex3dv(v.GetComponentsDouble());
         }
 
         public static void Vertex(Double[] v)

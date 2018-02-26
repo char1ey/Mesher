@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using Mesher.GraphicsCore.Buffers;
 using Mesher.GraphicsCore.Objects;
@@ -119,7 +120,7 @@ namespace Mesher.GraphicsCore.ShaderProgram
             Gl.UseProgram(0);
         }
 
-        public void SetVertexBuffer<T>(ShaderVariable variableName, VertexBuffer<T> vertexBuffer) where T : VecN, new()
+        public void SetVertexBuffer<T>(ShaderVariable variableName, VertexBuffer<T> vertexBuffer) where T : struct
         {
             var name = ShaderVariablesNames.GetVariableName(variableName);
             var variableLocation = Gl.GetAttribLocation(m_shaderProgramId, name);
@@ -128,12 +129,15 @@ namespace Mesher.GraphicsCore.ShaderProgram
                 SetVertexBuffer((UInt32)variableLocation, vertexBuffer);
         }
 
-        public void SetVertexBuffer<T>(UInt32 variableLocation, VertexBuffer<T> vertexBuffer) where T : VecN, new()
+        public void SetVertexBuffer<T>(UInt32 variableLocation, VertexBuffer<T> vertexBuffer) where T : struct
         {
             vertexBuffer.Bind();
 
             Gl.EnableVertexAttribArray(variableLocation);
-            Gl.VertexAttribPointer(variableLocation, new T().ComponentsCount, Gl.GL_FLOAT, false, 0, IntPtr.Zero);
+
+            var size = Marshal.SizeOf(typeof(T));
+
+            Gl.VertexAttribPointer(variableLocation, size / 4, Gl.GL_FLOAT, false, 0, IntPtr.Zero);
         }
 
         public void SetVariableValue(ShaderVariable variableName, Texture.Texture value)

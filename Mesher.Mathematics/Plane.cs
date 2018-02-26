@@ -8,12 +8,12 @@ namespace Mesher.Mathematics
         public static Plane XZPlane = new Plane(0, 1, 0, 0);
         public static Plane YZPlane = new Plane(1, 0, 0, 0);
 
-        private const Double Eps = 1e-9;
+        private const Single Eps = 1e-9f;
 
-        public Double A { get; set; }
-        public Double B { get; set; }
-        public Double C { get; set; }
-        public Double D { get; set; }
+        public Single A { get; set; }
+        public Single B { get; set; }
+        public Single C { get; set; }
+        public Single D { get; set; }
 
         public Vec3 Normal
         {
@@ -23,7 +23,7 @@ namespace Mesher.Mathematics
             }
         }
 
-        public Plane(Double a, Double b, Double c, Double d)
+        public Plane(Single a, Single b, Single c, Single d)
         {
             A = a;
             B = b;

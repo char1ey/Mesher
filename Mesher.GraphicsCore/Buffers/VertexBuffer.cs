@@ -1,77 +1,150 @@
 ﻿using Mesher.Mathematics;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace Mesher.GraphicsCore.Buffers
 {
-    public class VertexBuffer<T> : IDisposable where T : VecN, new()
+    public class VertexBuffer<T> : IDisposable
     {
-        private readonly RenderManager m_renderManager;
+        private UInt32[] m_Id;
 
-        private UInt32[] m_id;
+        private List<T> m_Data;
 
-	    private T[] m_vertices;
+        private Int32 m_StructSize;
 
-        public UInt32 Id { get { return m_id[0]; } }
-
-		public Int32 Count { get { return m_vertices.Length; } }
-
-	    internal VertexBuffer(T[] vertices, RenderManager renderManager)
-	    {
-	        m_renderManager = renderManager;
-
-		    m_vertices = vertices;
-
-            GenBuffer();
-            Bind();
-		    SetData(vertices);
-            UnBind();
-	    }
-
-        private void SetData(T[] vertices)
+        public UInt32 Id
         {
-            m_renderManager.Begin();
-            Gl.BufferData(Gl.GL_ARRAY_BUFFER, GetVertexData(vertices), Gl.GL_STATIC_DRAW);
-            m_renderManager.End();
+            get { return m_Id[0]; }
         }
 
-        private void GenBuffer()
+        public Int32 Count
         {
-            m_id = new UInt32[1];
-            m_renderManager.Begin();
-            Gl.GenBuffers(1, m_id);
-            m_renderManager.End();
+            get { return m_Data.Count; }
+        }
+
+        public Int32 Capacity { get; private set; }
+
+        public VertexBuffer(T[] data) : this()
+        {
+            m_Data = data.ToList();
+            Resize(m_Data.Count);
+            SetSubData(data, 0);
+        }
+
+        public VertexBuffer()
+        {
+            m_StructSize = Marshal.SizeOf(typeof(T));
+            Capacity = 1;
+
+            m_Data = new List<T>(Capacity);
+
+            m_Id = new UInt32[1];
+
+            Gl.GenBuffers(1, m_Id);
+            Gl.BindBuffer(Gl.GL_ARRAY_BUFFER, Id);
+            Gl.BufferData(Gl.GL_ARRAY_BUFFER, m_StructSize, IntPtr.Zero, Gl.GL_DYNAMIC_DRAW);
+        }
+
+        public T this[Int32 index]
+        {
+            get { return m_Data[index]; }
+            set { }
+        }
+
+        public void Add(T[] data)
+        {
+            Bind();
+
+            m_Data.AddRange(data);
+
+            if (Capacity < m_Data.Count)
+            {
+                while (Capacity < m_Data.Count)
+                    Capacity *= 2;
+
+                Resize(Capacity);
+                SetSubData(m_Data.ToArray(), 0);
+            }
+            else SetSubData(data, Count - 1);
+
+            UnBind();
+        }
+
+        public void Add(T data)
+        {
+            Bind();
+
+            m_Data.Add(data);
+
+            if (Capacity < m_Data.Count)
+            {
+                while (Capacity < m_Data.Count)
+                    Capacity *= 2;
+
+                Resize(Capacity);
+                SetSubData(m_Data.ToArray(), 0);
+            }
+            else SetSubData(data, Count - 1);
+
+            UnBind();
+        }
+
+        public void Clear()
+        {
+            m_Data.Clear();
+            Resize(1);
         }
 
         public void Bind()
         {
-            m_renderManager.Begin();
             Gl.BindBuffer(Gl.GL_ARRAY_BUFFER, Id);
-            m_renderManager.End();
         }
 
         public void UnBind()
         {
-            m_renderManager.Begin();
             Gl.BindBuffer(Gl.GL_ARRAY_BUFFER, 0);
-            m_renderManager.End();
         }
 
-	    private Single[] GetVertexData(T[] vertices)
+        private void Resize(Int32 newSize)
         {
-            var ret = new List<Single>();
+            Capacity = newSize;
+            Gl.BufferData(Gl.GL_ARRAY_BUFFER, Capacity * m_StructSize, IntPtr.Zero, Gl.GL_DYNAMIC_DRAW);
+        }
 
-            for (var i = 0; i < vertices.Length; i++)
-                ret.AddRange(vertices[i].GetComponentsFloat());
+        private void SetSubData(T data, Int32 offset)
+        {
+            var ptr = Marshal.AllocHGlobal(m_StructSize);
+            Marshal.StructureToPtr(data, ptr, false);
+            Gl.BufferSubData(Gl.GL_ARRAY_BUFFER, offset * m_StructSize, m_StructSize, ptr);
+            Marshal.FreeHGlobal(ptr);
+        }
 
-            return ret.ToArray();
+        private void SetSubData(T[] data, Int32 offset)
+        {
+            var ptr = StructArrayToPtr(data);
+            Gl.BufferSubData(Gl.GL_ARRAY_BUFFER, offset * m_StructSize, m_StructSize * data.Length, ptr);
+            Marshal.FreeHGlobal(ptr);
+        }
+
+        private IntPtr StructArrayToPtr(T[] data)
+        {
+            var ptr = Marshal.AllocHGlobal(m_StructSize * data.Length);
+
+            for (var i = 0; i < data.Length; i++)
+            {
+                var cur = ptr + i * m_StructSize;
+                Marshal.StructureToPtr(data[i], cur, false);
+            }
+
+            return ptr;
         }
 
         public void Dispose()
         {
-            m_renderManager.Begin();
-            Gl.DeleteBuffers(1, m_id);
-            m_renderManager.End();
+            Bind();
+            Gl.DeleteBuffers(1, m_Id);
         }
     }
 }

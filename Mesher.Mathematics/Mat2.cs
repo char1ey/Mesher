@@ -6,22 +6,16 @@ namespace Mesher.Mathematics
     /// <summary>
     /// Represents a 2x2 matrix.
     /// </summary>
-    public class Mat2
+    public struct Mat2
     {
         #region Construction
-
-        private Mat2()
-        {
-            m_cols[0] = new Vec2(1, 0);
-            m_cols[1] = new Vec2(0, 1);
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Mat2"/> struct.
         /// This matrix is the identity matrix scaled by <paramref name="scale"/>.
         /// </summary>
         /// <param name="scale">The scale.</param>
-        public Mat2(Double scale)
+        public Mat2(Single scale)
         {
             m_cols = new[]
             {
@@ -52,7 +46,7 @@ namespace Mesher.Mathematics
             };
         }
 
-        public Mat2(Double a, Double b, Double c, Double d)
+        public Mat2(Single a, Single b, Single c, Single d)
         {
             m_cols = new[]
             {
@@ -98,7 +92,7 @@ namespace Mesher.Mathematics
         /// <returns>
         /// The element at <paramref name="column"/> and <paramref name="row"/>.
         /// </returns>
-        public Double this[Int32 column, Int32 row]
+        public Single this[Int32 column, Int32 row]
         {
             get { return m_cols[column][row]; }
             set { m_cols[column][row] = value; }
@@ -107,15 +101,6 @@ namespace Mesher.Mathematics
         #endregion
 
         #region Conversion
-
-        /// <summary>
-        /// Returns the matrix as a flat array of elements, column major.
-        /// </summary>
-        /// <returns></returns>
-        public Double[] to_array()
-        {
-            return m_cols.SelectMany(v => v.GetComponentsDouble()).ToArray();
-        }
 
         #endregion
 
@@ -150,7 +135,7 @@ namespace Mesher.Mathematics
             });
         }
 
-        public static Mat2 operator * (Mat2 lhs, Double s)
+        public static Mat2 operator * (Mat2 lhs, Single s)
         {
             return new Mat2(new[]
             {

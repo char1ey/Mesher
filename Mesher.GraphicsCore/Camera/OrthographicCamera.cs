@@ -5,12 +5,12 @@ namespace Mesher.GraphicsCore.Camera
 {
     public class OrthographicCamera : Camera
     {
-        private const Double ZNear = -1000000;
-        private const Double ZFar = 1000000;
+        private const Single ZNear = -1000000;
+        private const Single ZFar = 1000000;
 
         public OrthographicCamera() { }
 
-        public OrthographicCamera(Double width, Double height, Vec3 position, Vec3 upVector, Vec3 lookAtPoint) 
+        public OrthographicCamera(Single width, Single height, Vec3 position, Vec3 upVector, Vec3 lookAtPoint) 
             : base(Mat4.Ortho(-width/2, width/2, -height/2, height/2, ZNear, ZFar), position, upVector, lookAtPoint)
         {
         }
@@ -20,7 +20,7 @@ namespace Mesher.GraphicsCore.Camera
             ProjectionMatrix = Mat4.Ortho(-width / 2, width / 2, -height / 2, height / 2, ZNear, ZFar);
         }
 
-        public override void Zoom(Double zoom)
+        public override void Zoom(Single zoom)
         {
             ProjectionMatrix *= Mat4.Scale(zoom);
         }

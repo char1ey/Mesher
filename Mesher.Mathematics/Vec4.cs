@@ -5,16 +5,14 @@ namespace Mesher.Mathematics
     /// <summary>
     /// Represents a four dimensional vector.
     /// </summary>
-    public class Vec4 : VecN
+    public struct Vec4
     {
-        public override Int32 ComponentsCount { get { return 4; } }
+        public Single X;
+        public Single Y;
+        public Single Z;
+        public Single W;
 
-        public Double X;
-        public Double Y;
-        public Double Z;
-        public Double W;
-
-        public Double this[Int32 index]
+        public Single this[Int32 index]
         {
             get
             {
@@ -34,14 +32,12 @@ namespace Mesher.Mathematics
             }
         }
 
-		public Vec4() : this(0) { }
-
-		public Vec4(Double s)
+		public Vec4(Single s)
         {
             X = Y = Z = W = s;
         }
 
-        public Vec4(Double x, Double y, Double z, Double w)
+        public Vec4(Single x, Single y, Single z, Single w)
         {
             X = x;
             Y = y;
@@ -57,7 +53,7 @@ namespace Mesher.Mathematics
             W = v.W;
         }
 
-        public Vec4(Vec3 xyz, Double w)
+        public Vec4(Vec3 xyz, Single w)
         {
             X = xyz.X;
             Y = xyz.Y;
@@ -70,12 +66,12 @@ namespace Mesher.Mathematics
             return new Vec4(lhs.X + rhs.X, lhs.Y + rhs.Y, lhs.Z + rhs.Z, lhs.W + rhs.W);
         }
 
-        public static Vec4 operator +(Vec4 lhs, Double rhs)
+        public static Vec4 operator +(Vec4 lhs, Single rhs)
         {
             return new Vec4(lhs.X + rhs, lhs.Y + rhs, lhs.Z + rhs, lhs.W + rhs);
         }
 
-        public static Vec4 operator -(Vec4 lhs, Double rhs)
+        public static Vec4 operator -(Vec4 lhs, Single rhs)
         {
             return new Vec4(lhs.X - rhs, lhs.Y - rhs, lhs.Z - rhs, lhs.W - rhs);
         }
@@ -85,12 +81,12 @@ namespace Mesher.Mathematics
             return new Vec4(lhs.X - rhs.X, lhs.Y - rhs.Y, lhs.Z - rhs.Z, lhs.W - rhs.W);
         }
 
-        public static Vec4 operator * (Vec4 self, Double s)
+        public static Vec4 operator * (Vec4 self, Single s)
         {
             return new Vec4(self.X * s, self.Y * s, self.Z * s, self.W * s);
         }
 
-        public static Vec4 operator * (Double lhs, Vec4 rhs)
+        public static Vec4 operator * (Single lhs, Vec4 rhs)
         {
             return new Vec4(rhs.X * lhs, rhs.Y * lhs, rhs.Z * lhs, rhs.W * lhs);
         }
@@ -100,7 +96,7 @@ namespace Mesher.Mathematics
             return new Vec4(rhs.X * lhs.X, rhs.Y * lhs.Y, rhs.Z * lhs.Z, rhs.W * lhs.W);
         }
 
-        public static Vec4 operator / (Vec4 lhs, Double rhs)
+        public static Vec4 operator / (Vec4 lhs, Single rhs)
         {
             return new Vec4(lhs.X/rhs, lhs.Y/rhs, lhs.Z/rhs, lhs.W/rhs);
         }
@@ -108,23 +104,13 @@ namespace Mesher.Mathematics
         public static Vec4 Normalize(Vec4 v)
         {
             var sqr = v.X * v.X + v.Y * v.Y + v.Z * v.Z + v.W * v.W;
-            return v * (1.0f / (Double)Math.Sqrt(sqr));
+            return v * (1.0f / (Single)Math.Sqrt(sqr));
         }
 
-        public static Double Dot(Vec4 x, Vec4 y)
+        public static Single Dot(Vec4 x, Vec4 y)
         {
             var tmp = new Vec4(x * y);
             return tmp.X + tmp.Y + (tmp.Z + tmp.W);
-        }
-
-        public override Single[] GetComponentsFloat()
-        {
-            return new[] { (Single)X, (Single)Y, (Single)Z, (Single)W };
-        }
-
-        public override Double[] GetComponentsDouble()
-        {
-            return new[] { X, Y, Z, W };
         }
     }
 }

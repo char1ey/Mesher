@@ -6,7 +6,7 @@ namespace Mesher.Mathematics
     /// <summary>
     /// Represents a 3x3 matrix.
     /// </summary>
-    public class Mat3
+    public struct Mat3
     {
         #region Construction
 
@@ -15,37 +15,13 @@ namespace Mesher.Mathematics
         /// This matrix is the identity matrix scaled by <paramref name="scale"/>.
         /// </summary>
         /// <param name="scale">The scale.</param>
-        public Mat3(Double scale)
+        public Mat3(Single scale)
         {
             m_cols = new[]
             {
                 new Vec3(scale, 0.0f, 0.0f),
                 new Vec3(0.0f, scale, 0.0f),
                 new Vec3(0.0f, 0.0f, scale)
-            };
-        }
-
-        public Mat3(Mat4 mat)
-        {
-            m_cols = new[]
-            {
-                new Vec3(0),
-                new Vec3(0),
-                new Vec3(0)
-            };
-
-            for (var i = 0; i < 3; i++)
-                for (var j = 0; j < 3; j++)
-                    m_cols[i][j] = mat[i][j];
-        }
-
-        public Mat3()
-        {
-            m_cols = new[]
-            {
-                new Vec3(1, 0, 0),
-                new Vec3(0, 1, 0),
-                new Vec3(0, 0, 1)
             };
         }
 
@@ -110,7 +86,7 @@ namespace Mesher.Mathematics
         /// <returns>
         /// The element at <paramref name="column"/> and <paramref name="row"/>.
         /// </returns>
-        public Double this[Int32 column, Int32 row]
+        public Single this[Int32 column, Int32 row]
         {
             get { return m_cols[column][row]; }
             set { m_cols[column][row] = value; }
@@ -119,15 +95,6 @@ namespace Mesher.Mathematics
         #endregion
 
         #region Conversion
-
-        /// <summary>
-        /// Returns the matrix as a flat array of elements, column major.
-        /// </summary>
-        /// <returns></returns>
-        public Double[] to_array()
-        {
-            return m_cols.SelectMany(v => v.GetComponentsDouble()).ToArray();
-        }
 
         /// <summary>
         /// Returns the <see cref="Mat3"/> portion of this matrix.
@@ -175,7 +142,7 @@ namespace Mesher.Mathematics
             });
         }
 
-        public static Mat3 operator * (Mat3 lhs, Double s)
+        public static Mat3 operator * (Mat3 lhs, Single s)
         {
             return new Mat3(new[]
             {
@@ -194,18 +161,18 @@ namespace Mesher.Mathematics
                                          - m[1][0] * (m[0][1] * m[2][2] - m[2][1] * m[0][2])
                                          + m[2][0] * (m[0][1] * m[1][2] - m[1][1] * m[0][2]));
 
-            var Inverse = new Mat3(0);
-            Inverse[0, 0] = +(m[1][1] * m[2][2] - m[2][1] * m[1][2]) * oneOverDeterminant;
-            Inverse[1, 0] = -(m[1][0] * m[2][2] - m[2][0] * m[1][2]) * oneOverDeterminant;
-            Inverse[2, 0] = +(m[1][0] * m[2][1] - m[2][0] * m[1][1]) * oneOverDeterminant;
-            Inverse[0, 1] = -(m[0][1] * m[2][2] - m[2][1] * m[0][2]) * oneOverDeterminant;
-            Inverse[1, 1] = +(m[0][0] * m[2][2] - m[2][0] * m[0][2]) * oneOverDeterminant;
-            Inverse[2, 1] = -(m[0][0] * m[2][1] - m[2][0] * m[0][1]) * oneOverDeterminant;
-            Inverse[0, 2] = +(m[0][1] * m[1][2] - m[1][1] * m[0][2]) * oneOverDeterminant;
-            Inverse[1, 2] = -(m[0][0] * m[1][2] - m[1][0] * m[0][2]) * oneOverDeterminant;
-            Inverse[2, 2] = +(m[0][0] * m[1][1] - m[1][0] * m[0][1]) * oneOverDeterminant;
+            var inverse = new Mat3(0);
+            inverse[0, 0] = +(m[1][1] * m[2][2] - m[2][1] * m[1][2]) * oneOverDeterminant;
+            inverse[1, 0] = -(m[1][0] * m[2][2] - m[2][0] * m[1][2]) * oneOverDeterminant;
+            inverse[2, 0] = +(m[1][0] * m[2][1] - m[2][0] * m[1][1]) * oneOverDeterminant;
+            inverse[0, 1] = -(m[0][1] * m[2][2] - m[2][1] * m[0][2]) * oneOverDeterminant;
+            inverse[1, 1] = +(m[0][0] * m[2][2] - m[2][0] * m[0][2]) * oneOverDeterminant;
+            inverse[2, 1] = -(m[0][0] * m[2][1] - m[2][0] * m[0][1]) * oneOverDeterminant;
+            inverse[0, 2] = +(m[0][1] * m[1][2] - m[1][1] * m[0][2]) * oneOverDeterminant;
+            inverse[1, 2] = -(m[0][0] * m[1][2] - m[1][0] * m[0][2]) * oneOverDeterminant;
+            inverse[2, 2] = +(m[0][0] * m[1][1] - m[1][0] * m[0][1]) * oneOverDeterminant;
 
-            return Inverse;
+            return inverse;
 
         }
 

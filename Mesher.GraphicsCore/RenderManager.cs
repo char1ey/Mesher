@@ -79,10 +79,10 @@ namespace Mesher.GraphicsCore
             return buffer;
         }
 
-        public VertexBuffer<T> CreateVertexBuffer<T>(T[] vertieces) where T : VecN, new()
+        public VertexBuffer<T> CreateVertexBuffer<T>(T[] vertieces)
         {
             m_defaultRenderWindow.Begin();
-            var buffer = new VertexBuffer<T>(vertieces, this);
+            var buffer = new VertexBuffer<T>(vertieces);
             m_defaultRenderWindow.End();
             m_buffers.Add(buffer);
             return buffer;
