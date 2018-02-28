@@ -77,9 +77,9 @@ namespace Mesher.Mathematics
         public Mat3 ToMat3()
         {
             return new Mat3(new[] {
-            new Vec3(this.Col0[0], this.Col0[1], this.Col0[2]),
-            new Vec3(this.Col1[0], this.Col1[1], this.Col1[2]),
-            new Vec3(this.Col2[0], this.Col2[1], this.Col2[2])});
+            new Vec3(this.Col0.X, this.Col0.Y, this.Col0.Z),
+            new Vec3(this.Col1.X, this.Col1.Y, this.Col1.Z),
+            new Vec3(this.Col2.X, this.Col2.Y, this.Col2.Z)});
         }
 
         #endregion
@@ -95,10 +95,10 @@ namespace Mesher.Mathematics
         public static Vec4 operator *(Mat4 lhs, Vec4 rhs)
         {
             return new Vec4(
-                lhs.Col0[0] * rhs[0] + lhs.Col1[0] * rhs[1] + lhs.Col2[0] * rhs[2] + lhs.Col3[0] * rhs[3],
-                lhs.Col0[1] * rhs[0] + lhs.Col1[1] * rhs[1] + lhs.Col2[1] * rhs[2] + lhs.Col3[1] * rhs[3],
-                lhs.Col0[2] * rhs[0] + lhs.Col1[2] * rhs[1] + lhs.Col2[2] * rhs[2] + lhs.Col3[2] * rhs[3],
-                lhs.Col0[3] * rhs[0] + lhs.Col1[3] * rhs[1] + lhs.Col2[3] * rhs[2] + lhs.Col3[3] * rhs[3]
+                lhs.Col0.X * rhs.X + lhs.Col1.X * rhs.Y + lhs.Col2.X * rhs.Z + lhs.Col3.X * rhs.W,
+                lhs.Col0.Y * rhs.X + lhs.Col1.Y * rhs.Y + lhs.Col2.Y * rhs.Z + lhs.Col3.Y * rhs.W,
+                lhs.Col0.Z * rhs.X + lhs.Col1.Z * rhs.Y + lhs.Col2.Z * rhs.Z + lhs.Col3.Z * rhs.W,
+                lhs.Col0.W * rhs.X + lhs.Col1.W * rhs.Y + lhs.Col2.W * rhs.Z + lhs.Col3.W * rhs.W
             );
         }
 
@@ -112,10 +112,10 @@ namespace Mesher.Mathematics
         {
             return new Mat4(new[]
             {
-                lhs.Col0[0] * rhs.Col0 + lhs.Col1[0] * rhs.Col1 + lhs.Col2[0] * rhs.Col2 + lhs.Col3[0] * rhs.Col3,
-                lhs.Col0[1] * rhs.Col0 + lhs.Col1[1] * rhs.Col1 + lhs.Col2[1] * rhs.Col2 + lhs.Col3[1] * rhs.Col3,
-                lhs.Col0[2] * rhs.Col0 + lhs.Col1[2] * rhs.Col1 + lhs.Col2[2] * rhs.Col2 + lhs.Col3[2] * rhs.Col3,
-                lhs.Col0[3] * rhs.Col0 + lhs.Col1[3] * rhs.Col1 + lhs.Col2[3] * rhs.Col2 + lhs.Col3[3] * rhs.Col3
+                lhs.Col0.X * rhs.Col0 + lhs.Col1.X * rhs.Col1 + lhs.Col2.X * rhs.Col2 + lhs.Col3.X * rhs.Col3,
+                lhs.Col0.Y * rhs.Col0 + lhs.Col1.Y * rhs.Col1 + lhs.Col2.Y * rhs.Col2 + lhs.Col3.Y * rhs.Col3,
+                lhs.Col0.Z * rhs.Col0 + lhs.Col1.Z * rhs.Col1 + lhs.Col2.Z * rhs.Col2 + lhs.Col3.Z * rhs.Col3,
+                lhs.Col0.W * rhs.Col0 + lhs.Col1.W * rhs.Col1 + lhs.Col2.W * rhs.Col2 + lhs.Col3.W * rhs.Col3
             });
         }
 
@@ -145,13 +145,13 @@ namespace Mesher.Mathematics
         public static Mat4 Frustum(Single left, Single right, Single bottom, Single top, Single nearVal, Single farVal)
         {
             var result = Identity();
-            result.Col0[0] = 2.0f * nearVal / (right - left);
-            result.Col1[1] = 2.0f * nearVal / (top - bottom);
-            result.Col2[0] = (right + left) / (right - left);
-            result.Col2[1] = (top + bottom) / (top - bottom);
-            result.Col2[2] = -(farVal + nearVal) / (farVal - nearVal);
-            result.Col2[3] = -1.0f;
-            result.Col3[2] = -(2.0f * farVal * nearVal) / (farVal - nearVal);
+            result.Col0.X = 2.0f * nearVal / (right - left);
+            result.Col1.Y = 2.0f * nearVal / (top - bottom);
+            result.Col2.X = (right + left) / (right - left);
+            result.Col2.Y = (top + bottom) / (top - bottom);
+            result.Col2.Z = -(farVal + nearVal) / (farVal - nearVal);
+            result.Col2.W = -1.0f;
+            result.Col3.Z = -(2.0f * farVal * nearVal) / (farVal - nearVal);
             return result;
         }
 
@@ -173,11 +173,11 @@ namespace Mesher.Mathematics
             var top = range;
 
             var result = new Mat4(0);
-            result.Col0[0] = 2f * zNear / (right - left);
-            result.Col1[1] = 2f * zNear / (top - bottom);
-            result.Col2[2] = -1f;
-            result.Col2[3] = -1f;
-            result.Col3[2] = -2f * zNear;
+            result.Col0.X = 2f * zNear / (right - left);
+            result.Col1.Y = 2f * zNear / (top - bottom);
+            result.Col2.Z = -1f;
+            result.Col2.W = -1f;
+            result.Col3.Z = -2f * zNear;
             return result;
         }
 
@@ -195,18 +195,18 @@ namespace Mesher.Mathematics
             var u = new Vec3(Vec3.Cross(s, f));
 
             var result = new Mat4(1);
-            result.Col0[0] = s.X;
-            result.Col1[0] = s.Y;
-            result.Col2[0] = s.Z;
-            result.Col0[1] = u.X;
-            result.Col1[1] = u.Y;
-            result.Col2[1] = u.Z;
-            result.Col0[2] = -f.X;
-            result.Col1[2] = -f.Y;
-            result.Col2[2] = -f.Z;
-            result.Col3[0] = -Vec3.Dot(s, eye);
-            result.Col3[1] = -Vec3.Dot(u, eye);
-            result.Col3[2] = Vec3.Dot(f, eye);
+            result.Col0.X = s.X;
+            result.Col1.X = s.Y;
+            result.Col2.X = s.Z;
+            result.Col0.Y = u.X;
+            result.Col1.Y = u.Y;
+            result.Col2.Y = u.Z;
+            result.Col0.Z = -f.X;
+            result.Col1.Z = -f.Y;
+            result.Col2.Z = -f.Z;
+            result.Col3.X = -Vec3.Dot(s, eye);
+            result.Col3.Y = -Vec3.Dot(u, eye);
+            result.Col3.Z = Vec3.Dot(f, eye);
             return result;
         }
 
@@ -223,12 +223,12 @@ namespace Mesher.Mathematics
         public static Mat4 Ortho(Single left, Single right, Single bottom, Single top, Single zNear, Single zFar)
         {
             var result = Identity();
-            result.Col0[0] = 2f / (right - left);
-            result.Col1[1] = 2f / (top - bottom);
-            result.Col2[2] = -2f / (zFar - zNear);
-            result.Col3[0] = -(right + left) / (right - left);
-            result.Col3[1] = -(top + bottom) / (top - bottom);
-            result.Col3[2] = -(zFar + zNear) / (zFar - zNear);
+            result.Col0.X = 2f / (right - left);
+            result.Col1.Y = 2f / (top - bottom);
+            result.Col2.Z = -2f / (zFar - zNear);
+            result.Col3.X = -(right + left) / (right - left);
+            result.Col3.Y = -(top + bottom) / (top - bottom);
+            result.Col3.Z = -(zFar + zNear) / (zFar - zNear);
             return result;
         }
 
@@ -243,11 +243,11 @@ namespace Mesher.Mathematics
         public static Mat4 Ortho(Single left, Single right, Single bottom, Single top)
         {
             var result = Identity();
-            result.Col0[0] = 2f / (right - left);
-            result.Col1[1] = 2f / (top - bottom);
-            result.Col2[2] = -1f;
-            result.Col3[0] = -(right + left) / (right - left);
-            result.Col3[1] = -(top + bottom) / (top - bottom);
+            result.Col0.X = 2f / (right - left);
+            result.Col1.Y = 2f / (top - bottom);
+            result.Col2.Z = -1f;
+            result.Col3.X = -(right + left) / (right - left);
+            result.Col3.Y = -(top + bottom) / (top - bottom);
             return result;
         }
 
@@ -264,11 +264,11 @@ namespace Mesher.Mathematics
             var tanHalfFovy = (Single)Math.Tan(fovy / 2.0f);
 
             var result = Identity();
-            result.Col0[0] = 1.0f / (aspect * tanHalfFovy);
-            result.Col1[1] = 1.0f / tanHalfFovy;
-            result.Col2[2] = -(zFar + zNear) / (zFar - zNear);
-            result.Col2[3] = -1.0f;
-            result.Col3[2] = -(2.0f * zFar * zNear) / (zFar - zNear);
+            result.Col0.X = 1.0f / (aspect * tanHalfFovy);
+            result.Col1.Y = 1.0f / tanHalfFovy;
+            result.Col2.Z = -(zFar + zNear) / (zFar - zNear);
+            result.Col2.W = -1.0f;
+            result.Col3.Z = -(2.0f * zFar * zNear) / (zFar - zNear);
             return result;
         }
 
@@ -293,11 +293,11 @@ namespace Mesher.Mathematics
             var w = h * height / width;
 
             var result = new Mat4(0);
-            result.Col0[0] = w;
-            result.Col1[1] = h;
-            result.Col2[2] = -(zFar + zNear) / (zFar - zNear);
-            result.Col2[3] = -1f;
-            result.Col3[2] = -(2f * zFar * zNear) / (zFar - zNear);
+            result.Col0.X = w;
+            result.Col1.Y = h;
+            result.Col2.Z = -(zFar + zNear) / (zFar - zNear);
+            result.Col2.W = -1f;
+            result.Col3.Z = -(2f * zFar * zNear) / (zFar - zNear);
             return result;
         }
 
@@ -319,13 +319,13 @@ namespace Mesher.Mathematics
                 return result; // Error
 
             var temp = new Vec3(
-                (viewport[2] - 2f * (center.X - viewport[0])) / delta.X,
-                (viewport[3] - 2f * (center.Y - viewport[1])) / delta.Y,
+                (viewport.Z - 2f * (center.X - viewport.X)) / delta.X,
+                (viewport.W - 2f * (center.Y - viewport.Y)) / delta.Y,
                 0f);
 
             // Translate and scale the picked region to the entire window
             result = Translate(result, temp);
-            return Scale(result, new Vec3(viewport[2] / delta.X, viewport[3] / delta.Y, 1));
+            return Scale(result, new Vec3(viewport.Z / delta.X, viewport.W / delta.Y, 1));
         }
 
         /// <summary>
@@ -345,8 +345,8 @@ namespace Mesher.Mathematics
 
             tmp /= tmp.W;
             tmp = tmp * 0.5f + 0.5f;
-            tmp[0] = tmp[0] * viewport[2] + viewport[0];
-            tmp[1] = tmp[1] * viewport[3] + viewport[1];
+            tmp.X = tmp.X * viewport.Z + viewport.X;
+            tmp.Y = tmp.Y * viewport.W + viewport.Y;
 
             return new Vec3(tmp.X, tmp.Y, tmp.Z);
         }
@@ -367,20 +367,20 @@ namespace Mesher.Mathematics
             var temp = (1.0f - c) * axis;
 
             var rotate = Identity();
-            rotate.Col0[0] = c + temp[0] * axis[0];
-            rotate.Col0[1] = 0 + temp[0] * axis[1] + s * axis[2];
-            rotate.Col0[2] = 0 + temp[0] * axis[2] - s * axis[1];
-            rotate.Col1[0] = 0 + temp[1] * axis[0] - s * axis[2];
-            rotate.Col1[1] = c + temp[1] * axis[1];
-            rotate.Col1[2] = 0 + temp[1] * axis[2] + s * axis[0];
-            rotate.Col2[0] = 0 + temp[2] * axis[0] + s * axis[1];
-            rotate.Col2[1] = 0 + temp[2] * axis[1] - s * axis[0];
-            rotate.Col2[2] = c + temp[2] * axis[2];
+            rotate.Col0.X = c + temp.X * axis.X;
+            rotate.Col0.Y = 0 + temp.X * axis.Y + s * axis.Z;
+            rotate.Col0.Z = 0 + temp.X * axis.Z - s * axis.Y;
+            rotate.Col1.X = 0 + temp.Y * axis.X - s * axis.Z;
+            rotate.Col1.Y = c + temp.Y * axis.Y;
+            rotate.Col1.Z = 0 + temp.Y * axis.Z + s * axis.X;
+            rotate.Col2.X = 0 + temp.Z * axis.X + s * axis.Y;
+            rotate.Col2.Y = 0 + temp.Z * axis.Y - s * axis.X;
+            rotate.Col2.Z = c + temp.Z * axis.Z;
 
             var result = Identity();
-            result.Col0 = m.Col0 * rotate.Col0[0] + m.Col1 * rotate.Col0[1] + m.Col2 * rotate.Col0[2];
-            result.Col1 = m.Col0 * rotate.Col1[0] + m.Col1 * rotate.Col1[1] + m.Col2 * rotate.Col1[2];
-            result.Col2 = m.Col0 * rotate.Col2[0] + m.Col1 * rotate.Col2[1] + m.Col2 * rotate.Col2[2];
+            result.Col0 = m.Col0 * rotate.Col0.X + m.Col1 * rotate.Col0.Y + m.Col2 * rotate.Col0.Z;
+            result.Col1 = m.Col0 * rotate.Col1.X + m.Col1 * rotate.Col1.Y + m.Col2 * rotate.Col1.Z;
+            result.Col2 = m.Col0 * rotate.Col2.X + m.Col1 * rotate.Col2.Y + m.Col2 * rotate.Col2.Z;
             result.Col3 = m.Col3;
             return result;
         }
@@ -402,9 +402,9 @@ namespace Mesher.Mathematics
         public static Mat4 Scale(Mat4 m, Vec3 v)
         {
             var result = m;
-            result.Col0 = m.Col0 * v[0];
-            result.Col1 = m.Col1 * v[1];
-            result.Col2 = m.Col2 * v[2];
+            result.Col0 = m.Col0 * v.X;
+            result.Col1 = m.Col1 * v.Y;
+            result.Col2 = m.Col2 * v.Z;
             result.Col3 = m.Col3;
             return result;
         }
@@ -428,7 +428,7 @@ namespace Mesher.Mathematics
         public static Mat4 Translate(Mat4 m, Vec3 v)
         {
             var result = m;
-            result.Col3 = m.Col0 * v[0] + m.Col1 * v[1] + m.Col2 * v[2] + m.Col3;
+            result.Col3 = m.Col0 * v.X + m.Col1 * v.Y + m.Col2 * v.Z + m.Col3;
             return result;
         }
 
@@ -454,11 +454,11 @@ namespace Mesher.Mathematics
             var top = range;
 
             var result = new Mat4(0f);
-            result.Col0[0] = 2 * zNear / (right - left);
-            result.Col1[1] = 2 * zNear / (top - bottom);
-            result.Col2[2] = 0.0001f - 1f;
-            result.Col2[3] = -1;
-            result.Col3[2] = -(0.0001f - 2) * zNear;
+            result.Col0.X = 2 * zNear / (right - left);
+            result.Col1.Y = 2 * zNear / (top - bottom);
+            result.Col2.Z = 0.0001f - 1f;
+            result.Col2.W = -1;
+            result.Col3.Z = -(0.0001f - 2) * zNear;
             return result;
         }
 
@@ -475,8 +475,8 @@ namespace Mesher.Mathematics
             var inverse = Inverse(proj);
 
             var tmp = new Vec4(win, 1f);
-            tmp.X = (tmp.X - viewport[0]) / viewport[2];
-            tmp.Y = (tmp.Y - viewport[1]) / viewport[3];
+            tmp.X = (tmp.X - viewport.X) / viewport.Z;
+            tmp.Y = (tmp.Y - viewport.Y) / viewport.W;
             tmp = tmp * 2f - 1f;
 
             var obj = inverse * tmp;
@@ -494,29 +494,29 @@ namespace Mesher.Mathematics
 
         public static Mat4 Inverse(Mat4 m)
         {
-            var coef00 = m.Col2[2] * m.Col3[3] - m.Col3[2] * m.Col2[3];
-            var coef02 = m.Col1[2] * m.Col3[3] - m.Col3[2] * m.Col1[3];
-            var coef03 = m.Col1[2] * m.Col2[3] - m.Col2[2] * m.Col1[3];
+            var coef00 = m.Col2.Z * m.Col3.W - m.Col3.Z * m.Col2.W;
+            var coef02 = m.Col1.Z * m.Col3.W - m.Col3.Z * m.Col1.W;
+            var coef03 = m.Col1.Z * m.Col2.W - m.Col2.Z * m.Col1.W;
 
-            var coef04 = m.Col2[1] * m.Col3[3] - m.Col3[1] * m.Col2[3];
-            var coef06 = m.Col1[1] * m.Col3[3] - m.Col3[1] * m.Col1[3];
-            var coef07 = m.Col1[1] * m.Col2[3] - m.Col2[1] * m.Col1[3];
+            var coef04 = m.Col2.Y * m.Col3.W - m.Col3.Y * m.Col2.W;
+            var coef06 = m.Col1.Y * m.Col3.W - m.Col3.Y * m.Col1.W;
+            var coef07 = m.Col1.Y * m.Col2.W - m.Col2.Y * m.Col1.W;
 
-            var coef08 = m.Col2[1] * m.Col3[2] - m.Col3[1] * m.Col2[2];
-            var coef10 = m.Col1[1] * m.Col3[2] - m.Col3[1] * m.Col1[2];
-            var coef11 = m.Col1[1] * m.Col2[2] - m.Col2[1] * m.Col1[2];
+            var coef08 = m.Col2.Y * m.Col3.Z - m.Col3.Y * m.Col2.Z;
+            var coef10 = m.Col1.Y * m.Col3.Z - m.Col3.Y * m.Col1.Z;
+            var coef11 = m.Col1.Y * m.Col2.Z - m.Col2.Y * m.Col1.Z;
 
-            var coef12 = m.Col2[0] * m.Col3[3] - m.Col3[0] * m.Col2[3];
-            var coef14 = m.Col1[0] * m.Col3[3] - m.Col3[0] * m.Col1[3];
-            var coef15 = m.Col1[0] * m.Col2[3] - m.Col2[0] * m.Col1[3];
+            var coef12 = m.Col2.X * m.Col3.W - m.Col3.X * m.Col2.W;
+            var coef14 = m.Col1.X * m.Col3.W - m.Col3.X * m.Col1.W;
+            var coef15 = m.Col1.X * m.Col2.W - m.Col2.X * m.Col1.W;
 
-            var coef16 = m.Col2[0] * m.Col3[2] - m.Col3[0] * m.Col2[2];
-            var coef18 = m.Col1[0] * m.Col3[2] - m.Col3[0] * m.Col1[2];
-            var coef19 = m.Col1[0] * m.Col2[2] - m.Col2[0] * m.Col1[2];
+            var coef16 = m.Col2.X * m.Col3.Z - m.Col3.X * m.Col2.Z;
+            var coef18 = m.Col1.X * m.Col3.Z - m.Col3.X * m.Col1.Z;
+            var coef19 = m.Col1.X * m.Col2.Z - m.Col2.X * m.Col1.Z;
 
-            var coef20 = m.Col2[0] * m.Col3[1] - m.Col3[0] * m.Col2[1];
-            var coef22 = m.Col1[0] * m.Col3[1] - m.Col3[0] * m.Col1[1];
-            var coef23 = m.Col1[0] * m.Col2[1] - m.Col2[0] * m.Col1[1];
+            var coef20 = m.Col2.X * m.Col3.Y - m.Col3.X * m.Col2.Y;
+            var coef22 = m.Col1.X * m.Col3.Y - m.Col3.X * m.Col1.Y;
+            var coef23 = m.Col1.X * m.Col2.Y - m.Col2.X * m.Col1.Y;
 
             var fac0 = new Vec4(coef00, coef00, coef02, coef03);
             var fac1 = new Vec4(coef04, coef04, coef06, coef07);
@@ -525,10 +525,10 @@ namespace Mesher.Mathematics
             var fac4 = new Vec4(coef16, coef16, coef18, coef19);
             var fac5 = new Vec4(coef20, coef20, coef22, coef23);
 
-            var vec0 = new Vec4(m.Col1[0], m.Col0[0], m.Col0[0], m.Col0[0]);
-            var vec1 = new Vec4(m.Col1[1], m.Col0[1], m.Col0[1], m.Col0[1]);
-            var vec2 = new Vec4(m.Col1[2], m.Col0[2], m.Col0[2], m.Col0[2]);
-            var vec3 = new Vec4(m.Col1[3], m.Col0[3], m.Col0[3], m.Col0[3]);
+            var vec0 = new Vec4(m.Col1.X, m.Col0.X, m.Col0.X, m.Col0.X);
+            var vec1 = new Vec4(m.Col1.Y, m.Col0.Y, m.Col0.Y, m.Col0.Y);
+            var vec2 = new Vec4(m.Col1.Z, m.Col0.Z, m.Col0.Z, m.Col0.Z);
+            var vec3 = new Vec4(m.Col1.W, m.Col0.W, m.Col0.W, m.Col0.W);
 
             var inv0 = new Vec4(vec1 * fac0 - vec2 * fac1 + vec3 * fac2);
             var inv1 = new Vec4(vec0 * fac0 - vec2 * fac3 + vec3 * fac4);
@@ -539,7 +539,7 @@ namespace Mesher.Mathematics
             var signB = new Vec4(-1, +1, -1, +1);
             var inverse = new Mat4(inv0 * signA, inv1 * signB, inv2 * signA, inv3 * signB);
 
-            var row0 = new Vec4(inverse.Col0[0], inverse.Col1[0], inverse.Col2[0], inverse.Col3[0]);
+            var row0 = new Vec4(inverse.Col0.X, inverse.Col1.X, inverse.Col2.X, inverse.Col3.X);
 
             var dot0 = new Vec4(m.Col0 * row0);
             var dot1 = dot0.X + dot0.Y + (dot0.Z + dot0.W);

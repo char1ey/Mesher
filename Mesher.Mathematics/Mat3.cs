@@ -1,13 +1,17 @@
 using System;
 using System.Linq;
 
-namespace Mesher.Mathematics 
+namespace Mesher.Mathematics
 {
     /// <summary>
     /// Represents a 3x3 matrix.
     /// </summary>
     public struct Mat3
     {
+        public Vec3 Col0;
+        public Vec3 Col1;
+        public Vec3 Col2;
+
         #region Construction
 
         /// <summary>
@@ -17,12 +21,9 @@ namespace Mesher.Mathematics
         /// <param name="scale">The scale.</param>
         public Mat3(Single scale)
         {
-            m_cols = new[]
-            {
-                new Vec3(scale, 0.0f, 0.0f),
-                new Vec3(0.0f, scale, 0.0f),
-                new Vec3(0.0f, 0.0f, scale)
-            };
+            Col0 = new Vec3(scale, 0.0f, 0.0f);
+            Col1 = new Vec3(0.0f, scale, 0.0f);
+            Col2 = new Vec3(0.0f, 0.0f, scale);
         }
 
         /// <summary>
@@ -32,20 +33,16 @@ namespace Mesher.Mathematics
         /// <param name="cols">The colums of the matrix.</param>
         public Mat3(Vec3[] cols)
         {
-            m_cols = new[]
-            {
-                cols[0],
-                cols[1],
-                cols[2]
-            };
+            Col0 = cols[0];
+            Col1 = cols[1];
+            Col2 = cols[2];
         }
 
         public Mat3(Vec3 a, Vec3 b, Vec3 c)
         {
-            m_cols = new[]
-            {
-                a, b, c
-            };
+            Col0 = a;
+            Col1 = b;
+            Col2 = c;
         }
 
         /// <summary>
@@ -69,11 +66,11 @@ namespace Mesher.Mathematics
         /// </value>
         /// <param name="column">The column index.</param>
         /// <returns>The column at index <paramref name="column"/>.</returns>
-        public Vec3 this[Int32 column]
+       /* public Vec3 this[Int32 column]
         {
             get { return m_cols[column]; }
             set { m_cols[column] = value; }
-        }
+        }*/
 
         /// <summary>
         /// Gets or sets the element at <paramref name="column"/> and <paramref name="row"/>.
@@ -86,11 +83,11 @@ namespace Mesher.Mathematics
         /// <returns>
         /// The element at <paramref name="column"/> and <paramref name="row"/>.
         /// </returns>
-        public Single this[Int32 column, Int32 row]
+      /*  public Single this[Int32 column, Int32 row]
         {
             get { return m_cols[column][row]; }
             set { m_cols[column][row] = value; }
-        }
+        }*/
 
         #endregion
 
@@ -102,9 +99,11 @@ namespace Mesher.Mathematics
         /// <returns>The <see cref="Mat3"/> portion of this matrix.</returns>
         public Mat2 to_mat2()
         {
-            return new Mat2(new[] {
-			new Vec2(m_cols[0][0], m_cols[0][1]),
-			new Vec2(m_cols[1][0], m_cols[1][1])});
+            return new Mat2(new[]
+            {
+                new Vec2(Col0.X, Col0.Y),
+                new Vec2(Col1.X, Col1.Y)
+            });
         }
 
         #endregion
@@ -120,9 +119,9 @@ namespace Mesher.Mathematics
         public static Vec3 operator *(Mat3 lhs, Vec3 rhs)
         {
             return new Vec3(
-                lhs[0, 0] * rhs[0] + lhs[1, 0] * rhs[1] + lhs[2, 0] * rhs[2],
-                lhs[0, 1] * rhs[0] + lhs[1, 1] * rhs[1] + lhs[2, 1] * rhs[2],
-                lhs[0, 2] * rhs[0] + lhs[1, 2] * rhs[1] + lhs[2, 2] * rhs[2]
+                lhs.Col0.X * rhs.X + lhs.Col1[0] * rhs[1] + lhs.Col2[0] * rhs[2],
+                lhs.Col0.Y * rhs.X + lhs.Col1[1] * rhs[1] + lhs.Col2[1] * rhs[2],
+                lhs.Col0.Z * rhs.X + lhs.Col1[2] * rhs[1] + lhs.Col2[2] * rhs[2]
             );
         }
 
@@ -136,41 +135,39 @@ namespace Mesher.Mathematics
         {
             return new Mat3(new[]
             {
-			    lhs[0][0] * rhs[0] + lhs[1][0] * rhs[1] + lhs[2][0] * rhs[2],
-			    lhs[0][1] * rhs[0] + lhs[1][1] * rhs[1] + lhs[2][1] * rhs[2],
-			    lhs[0][2] * rhs[0] + lhs[1][2] * rhs[1] + lhs[2][2] * rhs[2]
+                lhs.Col0[0] * rhs.Col0 + lhs.Col1[0] * rhs.Col1 + lhs.Col2[0] * rhs.Col2,
+                lhs.Col0[1] * rhs.Col0 + lhs.Col1[1] * rhs.Col1 + lhs.Col2[1] * rhs.Col2,
+                lhs.Col0[2] * rhs.Col0 + lhs.Col1[2] * rhs.Col1 + lhs.Col2[2] * rhs.Col2
             });
         }
 
-        public static Mat3 operator * (Mat3 lhs, Single s)
+        public static Mat3 operator *(Mat3 lhs, Single s)
         {
             return new Mat3(new[]
             {
-                lhs[0]*s,
-                lhs[1]*s,
-                lhs[2]*s
+                lhs.Col0*s,
+                lhs.Col1*s,
+                lhs.Col2*s
             });
         }
 
         #endregion
 
         public static Mat3 Inverse(Mat3 m)
-        {
+        { var inverse = new Mat3(0);  
             var oneOverDeterminant = 1f / (
-                                         +m[0][0] * (m[1][1] * m[2][2] - m[2][1] * m[1][2])
-                                         - m[1][0] * (m[0][1] * m[2][2] - m[2][1] * m[0][2])
-                                         + m[2][0] * (m[0][1] * m[1][2] - m[1][1] * m[0][2]));
-
-            var inverse = new Mat3(0);
-            inverse[0, 0] = +(m[1][1] * m[2][2] - m[2][1] * m[1][2]) * oneOverDeterminant;
-            inverse[1, 0] = -(m[1][0] * m[2][2] - m[2][0] * m[1][2]) * oneOverDeterminant;
-            inverse[2, 0] = +(m[1][0] * m[2][1] - m[2][0] * m[1][1]) * oneOverDeterminant;
-            inverse[0, 1] = -(m[0][1] * m[2][2] - m[2][1] * m[0][2]) * oneOverDeterminant;
-            inverse[1, 1] = +(m[0][0] * m[2][2] - m[2][0] * m[0][2]) * oneOverDeterminant;
-            inverse[2, 1] = -(m[0][0] * m[2][1] - m[2][0] * m[0][1]) * oneOverDeterminant;
-            inverse[0, 2] = +(m[0][1] * m[1][2] - m[1][1] * m[0][2]) * oneOverDeterminant;
-            inverse[1, 2] = -(m[0][0] * m[1][2] - m[1][0] * m[0][2]) * oneOverDeterminant;
-            inverse[2, 2] = +(m[0][0] * m[1][1] - m[1][0] * m[0][1]) * oneOverDeterminant;
+                                         + m.Col0[0] * (m.Col1[1] * m.Col2[2] - m.Col2[1] * m.Col1[2])
+                                         - m.Col1[0] * (m.Col0[1] * m.Col2[2] - m.Col2[1] * m.Col0[2])
+                                         + m.Col2[0] * (m.Col0[1] * m.Col1[2] - m.Col1[1] * m.Col0[2]));
+                          inverse.Col0[0] = +(m.Col1[1] * m.Col2[2] - m.Col2[1] * m.Col1[2]) * oneOverDeterminant;
+                          inverse.Col1[0] = -(m.Col1[0] * m.Col2[2] - m.Col2[0] * m.Col1[2]) * oneOverDeterminant;
+                          inverse.Col2[0] = +(m.Col1[0] * m.Col2[1] - m.Col2[0] * m.Col1[1]) * oneOverDeterminant;
+                          inverse.Col0[1] = -(m.Col0[1] * m.Col2[2] - m.Col2[1] * m.Col0[2]) * oneOverDeterminant;
+                          inverse.Col1[1] = +(m.Col0[0] * m.Col2[2] - m.Col2[0] * m.Col0[2]) * oneOverDeterminant;
+                          inverse.Col2[1] = -(m.Col0[0] * m.Col2[1] - m.Col2[0] * m.Col0[1]) * oneOverDeterminant;
+                          inverse.Col0[2] = +(m.Col0[1] * m.Col1[2] - m.Col1[1] * m.Col0[2]) * oneOverDeterminant;
+                          inverse.Col1[2] = -(m.Col0[0] * m.Col1[2] - m.Col1[0] * m.Col0[2]) * oneOverDeterminant;
+                          inverse.Col2[2] = +(m.Col0[0] * m.Col1[1] - m.Col1[0] * m.Col0[1]) * oneOverDeterminant;
 
             return inverse;
 
@@ -178,15 +175,18 @@ namespace Mesher.Mathematics
 
         public Single[] ToArray()
         {
-            var ret = new Single[9];
-            for (var i = 0; i < ret.Length; i++)
-                ret[i] = (Single)this[i / 3, i % 3];
+            var ret = new []
+            {
+                Col0.X, Col0.Y, Col0.Z,
+                Col1.X, Col1.Y, Col1.Z,
+                Col2.X, Col2.Y, Col2.Z
+            };
             return ret;
         }
 
         /// <summary>
         /// The columms of the matrix.
         /// </summary>
-        private Vec3[] m_cols;
+       // private Vec3[] m_cols;
     }
 }
