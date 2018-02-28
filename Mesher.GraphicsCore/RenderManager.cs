@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using Mesher.GraphicsCore.Buffers;
-using Mesher.GraphicsCore.Objects;
 using Mesher.Mathematics;
 
 namespace Mesher.GraphicsCore
@@ -21,13 +20,12 @@ namespace Mesher.GraphicsCore
 
         private List<Texture.Texture> m_textures;
 
-
         public IntPtr GlrcHandle
         {
             get { return m_hglrc; }
         }
         
-        internal ShaderProgram.ShaderProgram ShaderProgram
+        public ShaderProgram.ShaderProgram ShaderProgram
         {
             get
             {

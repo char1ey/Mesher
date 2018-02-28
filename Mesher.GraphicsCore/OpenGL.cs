@@ -7,7 +7,7 @@ using Mesher.Mathematics;
 
 namespace Mesher.GraphicsCore
 {
-    internal static class Gl
+    public static class Gl
     {
         #region constants
 

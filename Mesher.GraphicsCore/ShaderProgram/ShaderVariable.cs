@@ -1,6 +1,6 @@
 ﻿namespace Mesher.GraphicsCore.ShaderProgram
 {
-    internal enum ShaderVariable
+    public enum ShaderVariable
     {
         ProjectionMatrix,
         ModelMatrix,

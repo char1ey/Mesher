@@ -1,5 +1,4 @@
-﻿using Mesher.GraphicsCore.Objects;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -102,13 +101,6 @@ namespace Mesher.GraphicsCore
         public void SwapBuffers()
         {
             Win32.SwapBuffers(m_hdc);
-        }
-
-        public void Render(Scene scene, Int32 cameraId)
-        {
-            Begin();
-            RenderManager.ShaderProgram.Render(scene, cameraId);
-            End();
         }
 
         public void Dispose()

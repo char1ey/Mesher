@@ -61,23 +61,12 @@
   <ItemGroup>
     <Compile Include="Buffers\IndexBuffer.cs" />
     <Compile Include="Buffers\VertexBuffer.cs" />
-    <Compile Include="Camera\Cameras.cs" />
-    <Compile Include="Light\Lights.cs" />
-    <Compile Include="Light\LightType.cs" />
-    <Compile Include="Objects\Meshes.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="RenderWindow.cs" />
-    <Compile Include="Objects\Mesh.cs" />
-    <Compile Include="Camera\Camera.cs" />
-    <Compile Include="Camera\OrthographicCamera.cs" />
-    <Compile Include="Camera\PerspectiveCamera.cs" />
-    <Compile Include="Light\Light.cs" />
-    <Compile Include="Material\Material.cs" />
-    <Compile Include="Objects\Scene.cs" />
     <Compile Include="OpenGL.cs" />
     <Compile Include="RenderManager.cs" />
     <Compile Include="ShaderProgram\ShaderProgram.cs" />
