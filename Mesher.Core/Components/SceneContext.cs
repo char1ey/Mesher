@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Mesher.Core.Camera;
+using Mesher.Core.Light;
+using Mesher.Core.Objects;
 using Mesher.GraphicsCore;
-using Mesher.GraphicsCore.Camera;
-using Mesher.GraphicsCore.Light;
-using Mesher.GraphicsCore.Material;
-using Mesher.GraphicsCore.Objects;
 using Mesher.GraphicsCore.ShaderProgram;
 using Mesher.Mathematics;
 
@@ -22,7 +21,7 @@ namespace Mesher.Core.Components
         private MouseButtons m_previousMouseButton;
         private Vec2 m_previousMousePosition;
 
-        public Camera Camera { get; set; }
+        public Camera.Camera Camera { get; set; }
 
         public SceneContext(RenderManager renderManager)
         {
@@ -55,7 +54,7 @@ namespace Mesher.Core.Components
             Render(scene, Camera.Id);
         }
 
-        public void SetMaterialValue(Material material)
+        public void SetMaterialValue(Material.Material material)
         {
            m_renderWindow.RenderManager.ShaderProgram.SetVariableValue(ShaderVariable.MaterialHasColorAmbient, material.HasColorAmbient);
             if (material.HasColorAmbient)

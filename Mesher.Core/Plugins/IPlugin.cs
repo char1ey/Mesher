@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Mesher.Core.Objects;
 using Mesher.GraphicsCore;
-using Mesher.GraphicsCore.Objects;
 
 namespace Mesher.Core.Plugins
 {

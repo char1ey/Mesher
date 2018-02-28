@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Mesher.Core.Plugins;
 using System.Windows.Forms;
+using Mesher.Core.Objects;
 using Mesher.GraphicsCore;
-using Mesher.GraphicsCore.Objects;
 
 namespace Mesher.Plugins.EditLight
 {

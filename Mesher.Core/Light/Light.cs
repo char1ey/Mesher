@@ -1,8 +1,7 @@
 ﻿using System;
 using Mesher.Mathematics;
-using System.Drawing;
 
-namespace Mesher.GraphicsCore.Light
+namespace Mesher.Core.Light
 {
     public class Light
     {

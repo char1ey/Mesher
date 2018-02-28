@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Drawing;
 using Mesher.Mathematics;
 
-namespace Mesher.GraphicsCore.Material
+namespace Mesher.Core.Material
 {
     public class Material : IDisposable
     {
@@ -17,18 +16,18 @@ namespace Mesher.GraphicsCore.Material
         public Color4 ColorSpecular { get; set; }
 
         public Boolean HasTextureAmbient { get; set; }
-        public Texture.Texture TextureAmbient { get; set; }
+        public GraphicsCore.Texture.Texture TextureAmbient { get; set; }
 
         public Boolean HasTextureDiffuse { get; set; }
-        public Texture.Texture TextureDiffuse { get; set; }
+        public GraphicsCore.Texture.Texture TextureDiffuse { get; set; }
 
         public Boolean HasTextureSpecular { get; set; }
-        public Texture.Texture TextureSpecular { get; set; }
+        public GraphicsCore.Texture.Texture TextureSpecular { get; set; }
 
         public Boolean HasTextureEmissive { get; set; }
-        public Texture.Texture TextureEmissive { get; set; }
+        public GraphicsCore.Texture.Texture TextureEmissive { get; set; }
         public Boolean HasTextureNormal { get; set; }
-        public Texture.Texture TextureNormal { get; set; }
+        public GraphicsCore.Texture.Texture TextureNormal { get; set; }
 
         public void Activate()
         {

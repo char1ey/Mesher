@@ -2,10 +2,9 @@
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using Mesher.Core.Light;
+using Mesher.Core.Objects;
 using Mesher.GraphicsCore;
-using Mesher.GraphicsCore.Light;
-using Mesher.GraphicsCore.Material;
-using Mesher.GraphicsCore.Objects;
 using Mesher.GraphicsCore.Texture;
 using Mesher.Mathematics;
 
@@ -79,9 +78,9 @@ namespace Mesher.Core.Data
             return scene;
         }
 
-        private static Material GetMaterial(Assimp.Material aiMaterial, String filePath, RenderManager renderManager)
+        private static Material.Material GetMaterial(Assimp.Material aiMaterial, String filePath, RenderManager renderManager)
         {      
-            var material = new Material();                       
+            var material = new Material.Material();                       
 
             if (aiMaterial.HasColorAmbient)
                 material.ColorAmbient = GetColor(aiMaterial.ColorAmbient);
@@ -147,9 +146,9 @@ namespace Mesher.Core.Data
             return renderManager.CreateTexture((Bitmap)Image.FromFile(filePath + aiTexture.FilePath));
         }
 
-        private static Light InitLight(Assimp.Light aiLight)
+        private static Light.Light InitLight(Assimp.Light aiLight)
         {
-            var light = new Light
+            var light = new Light.Light
             {
                 LightType = (LightType) aiLight.LightType,
                 Name = aiLight.Name,

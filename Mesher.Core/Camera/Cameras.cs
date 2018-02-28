@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Mesher.GraphicsCore.Camera
+namespace Mesher.Core.Camera
 {
     public class Cameras : List<Camera>
     {

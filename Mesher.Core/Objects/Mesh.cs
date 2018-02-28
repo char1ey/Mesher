@@ -1,8 +1,9 @@
-﻿using Mesher.GraphicsCore.Buffers;
+﻿using System;
+using Mesher.GraphicsCore;
+using Mesher.GraphicsCore.Buffers;
 using Mesher.Mathematics;
-using System;
 
-namespace Mesher.GraphicsCore.Objects
+namespace Mesher.Core.Objects
 {
     public class Mesh : IDisposable
     {

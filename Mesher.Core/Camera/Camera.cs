@@ -1,8 +1,8 @@
 ﻿using System;
-using Mesher.Mathematics;
 using System.Collections.Generic;
+using Mesher.Mathematics;
 
-namespace Mesher.GraphicsCore.Camera
+namespace Mesher.Core.Camera
 {
     public abstract class Camera
     {

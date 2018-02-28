@@ -1,8 +1,8 @@
 ﻿using System;
-using Mesher.GraphicsCore.Camera;
-using Mesher.GraphicsCore.Light;
+using Mesher.Core.Camera;
+using Mesher.Core.Light;
 
-namespace Mesher.GraphicsCore.Objects
+namespace Mesher.Core.Objects
 {
     public class Scene : IDisposable
     {

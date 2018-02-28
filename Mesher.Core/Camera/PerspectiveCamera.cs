@@ -1,7 +1,7 @@
 ﻿using System;
 using Mesher.Mathematics;
 
-namespace Mesher.GraphicsCore.Camera
+namespace Mesher.Core.Camera
 {
     public class PerspectiveCamera : Camera
     {

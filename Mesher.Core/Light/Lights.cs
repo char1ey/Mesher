@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 
-namespace Mesher.GraphicsCore.Light
+namespace Mesher.Core.Light
 {
     public class Lights : List<Light>
     {
