@@ -31,20 +31,20 @@ namespace Mesher.Core.Material
 
         public void Activate()
         {
-            TextureAmbient?.Activate();
-            TextureDiffuse?.Activate();
-            TextureSpecular?.Activate();
-            TextureEmissive?.Activate();
-            TextureNormal?.Activate();
+            TextureAmbient?.Bind();
+            TextureDiffuse?.Bind();
+            TextureSpecular?.Bind();
+            TextureEmissive?.Bind();
+            TextureNormal?.Bind();
         }
 
         public void Deactivate()
         {
-            TextureAmbient?.Deactivate();
-            TextureDiffuse?.Deactivate();
-            TextureSpecular?.Deactivate();
-            TextureEmissive?.Deactivate();
-            TextureNormal?.Deactivate();
+            TextureAmbient?.Unbind();
+            TextureDiffuse?.Unbind();
+            TextureSpecular?.Unbind();
+            TextureEmissive?.Unbind();
+            TextureNormal?.Unbind();
         }
 
         public void Dispose()

@@ -30,9 +30,6 @@ uniform struct Material
 	bool hasTextureSpecular;
 	sampler2D textureSpecular;
 
-	bool hasTextureEmissive;
-	sampler2D textureEmissive;
-
 	bool hasTextureNormal;
 	sampler2D textureNormal;  
 } material;

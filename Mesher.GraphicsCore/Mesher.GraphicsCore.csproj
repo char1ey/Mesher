@@ -59,6 +59,7 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Buffers\IBindableItem.cs" />
     <Compile Include="Buffers\IndexBuffer.cs" />
     <Compile Include="Buffers\VertexBuffer.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -74,8 +75,6 @@
     <Compile Include="ShaderProgram\Exceptions\CompileShaderException.cs" />
     <Compile Include="ShaderProgram\Exceptions\ValidateShaderProgramException.cs" />
     <Compile Include="ShaderProgram\ShaderProgramType.cs" />
-    <Compile Include="ShaderProgram\ShaderVariable.cs" />
-    <Compile Include="ShaderProgram\ShaderVariablesNames.cs" />
     <Compile Include="Texture\Texture.cs" />
     <Compile Include="Win32.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

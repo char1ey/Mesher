@@ -2,7 +2,7 @@
 
 namespace Mesher.GraphicsCore.Buffers
 {
-    public class IndexBuffer : IDisposable
+    public class IndexBuffer : IDisposable, IBindableItem
     {
         private RenderManager m_renderManager;
 
@@ -23,7 +23,7 @@ namespace Mesher.GraphicsCore.Buffers
             GenBuffer();
             Bind();
             SetData(indicies);
-            UnBind();
+            Unbind();
         }
 
         private void SetData(Int32[] indicies)
@@ -41,17 +41,27 @@ namespace Mesher.GraphicsCore.Buffers
             m_renderManager.End();
         }
 
+        void IBindableItem.Bind()
+        {
+            Bind();
+        }
+
+        void IBindableItem.Unbind()
+        {
+            Unbind();
+        }
+
+        public void Unbind()
+        {
+            m_renderManager.Begin();
+            Gl.BindBuffer(Gl.GL_ELEMENT_ARRAY_BUFFER, 0);
+            m_renderManager.End();
+        }
+
         public void Bind()
         {
             m_renderManager.Begin();
             Gl.BindBuffer(Gl.GL_ELEMENT_ARRAY_BUFFER, Id);
-            m_renderManager.End();
-        }
-
-        public void UnBind()
-        {
-            m_renderManager.Begin();
-            Gl.BindBuffer(Gl.GL_ELEMENT_ARRAY_BUFFER, 0);
             m_renderManager.End();
         }
 

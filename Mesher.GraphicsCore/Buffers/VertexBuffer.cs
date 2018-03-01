@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace Mesher.GraphicsCore.Buffers
 {
-    public class VertexBuffer<T> : IDisposable
+    public class VertexBuffer<T> : IDisposable, IBindableItem
     {
         private UInt32[] m_Id;
 
@@ -69,7 +69,7 @@ namespace Mesher.GraphicsCore.Buffers
             }
             else SetSubData(data, Count - 1);
 
-            UnBind();
+            Unbind();
         }
 
         public void Add(T data)
@@ -88,7 +88,7 @@ namespace Mesher.GraphicsCore.Buffers
             }
             else SetSubData(data, Count - 1);
 
-            UnBind();
+            Unbind();
         }
 
         public void Clear()
@@ -102,7 +102,7 @@ namespace Mesher.GraphicsCore.Buffers
             Gl.BindBuffer(Gl.GL_ARRAY_BUFFER, Id);
         }
 
-        public void UnBind()
+        public void Unbind()
         {
             Gl.BindBuffer(Gl.GL_ARRAY_BUFFER, 0);
         }
@@ -145,6 +145,16 @@ namespace Mesher.GraphicsCore.Buffers
         {
             Bind();
             Gl.DeleteBuffers(1, m_Id);
+        }
+
+        void IBindableItem.Bind()
+        {
+            Bind();
+        }
+
+        void IBindableItem.Unbind()
+        {
+            Unbind();
         }
     }
 }

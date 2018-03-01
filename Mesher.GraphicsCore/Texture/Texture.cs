@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using Mesher.GraphicsCore.Buffers;
 
 namespace Mesher.GraphicsCore.Texture
 {
-    public class Texture: IDisposable
+    public class Texture: IDisposable, IBindableItem
     {
         private static readonly Int32[] ActiveTextures;
 		private readonly UInt32[] m_id;
@@ -34,14 +35,14 @@ namespace Mesher.GraphicsCore.Texture
            
             Gl.GenTextures(1, m_id);
 
-            Activate();       
+            Bind();       
 
             Gl.TexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGBA, image.Width, image.Height, 0, Gl.GL_BGRA, Gl.GL_UNSIGNED_BYTE, d.Scan0);
             
             Gl.TexParameter(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST);
             Gl.TexParameter(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST);
             
-            Deactivate();
+            Unbind();
 
             image.UnlockBits(d);
         }
@@ -55,23 +56,23 @@ namespace Mesher.GraphicsCore.Texture
 
 			Gl.GenTextures(1, m_id);
 
-			Activate();
+			Bind();
 
 			Gl.TexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGBA, width, height, 0, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, IntPtr.Zero);
 
-			Deactivate();
+			Unbind();
 		}
 
 	    public void SetSubTexture(Int32 posX, Int32 posY, Int32 width, Int32 height, Int32[] pixelsData)
 	    {
-		    Activate();
+		    Bind();
 
 		    Gl.TexSubImage2D(Gl.GL_TEXTURE_2D, 0, posX, posY, width, height, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, pixelsData);
 
-			Deactivate();
+			Unbind();
 	    }
 
-        public Int32 Activate()
+        public Int32 Bind()
         {
             for (UInt32 i = 0; i < ActiveTextures.Length; i++)
             {
@@ -92,7 +93,7 @@ namespace Mesher.GraphicsCore.Texture
             return -1;
         }
 
-        public void Deactivate()
+        public void Unbind()
         {
             for(UInt32 i = 0; i < ActiveTextures.Length; i++)
                 if (ActiveTextures[i] == m_id[0])
@@ -107,8 +108,18 @@ namespace Mesher.GraphicsCore.Texture
 
         public void Dispose()
         {
-            Deactivate();
+            Unbind();
             Gl.DeleteTextures(1, m_id);
+        }
+
+        void IBindableItem.Bind()
+        {
+            Bind();
+        }
+
+        void IBindableItem.Unbind()
+        {
+            Unbind();
         }
     }
 }

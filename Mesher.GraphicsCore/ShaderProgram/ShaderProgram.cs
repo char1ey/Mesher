@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -9,11 +10,16 @@ using Mesher.Mathematics;
 
 namespace Mesher.GraphicsCore.ShaderProgram
 {
-    public class ShaderProgram : IDisposable
+    public class ShaderProgram : IDisposable, IBindableItem
     {
         private const Int32 LOG_INFO_MAX_SIZE = 1000000;
 
         private UInt32 m_shaderProgramId;
+
+        private List<IBindableItem> m_items;
+
+        private Int32 m_IndiciesCount;
+        private Int32 m_VerticesCount;
 
         public UInt32 ShaderProgramId { get { return m_shaderProgramId; } }
 
@@ -36,6 +42,8 @@ namespace Mesher.GraphicsCore.ShaderProgram
 
             Gl.DeleteShader(vertexShaderId);
             Gl.DeleteShader(fragmentShaderId);
+
+            m_items = new List<IBindableItem>();
         }
 
         private String GetShaderSource(ShaderProgramType shaderProgramType)
@@ -109,19 +117,18 @@ namespace Mesher.GraphicsCore.ShaderProgram
             return ret;
         }
 
-        public void Begin()
+        public void Bind()
         {
             Gl.UseProgram(m_shaderProgramId);
         }
 
-        public void End()
+        public void Unbind()
         {
             Gl.UseProgram(0);
         }
 
-        public void SetVertexBuffer<T>(ShaderVariable variableName, VertexBuffer<T> vertexBuffer) where T : struct
+        public void SetVertexBuffer<T>(String name, VertexBuffer<T> vertexBuffer) where T : struct
         {
-            var name = ShaderVariablesNames.GetVariableName(variableName);
             var variableLocation = Gl.GetAttribLocation(m_shaderProgramId, name);
 
             if (variableLocation != -1)
@@ -137,119 +144,96 @@ namespace Mesher.GraphicsCore.ShaderProgram
             var size = Marshal.SizeOf(typeof(T));
 
             Gl.VertexAttribPointer(variableLocation, size / 4, Gl.GL_FLOAT, false, 0, IntPtr.Zero);
+
+            m_items.Add(vertexBuffer);
         }
 
-        public void SetVariableValue(ShaderVariable variableName, Texture.Texture value)
+        public void SetIndexBuffer(IndexBuffer indexBuffer)
         {
-            var name = ShaderVariablesNames.GetVariableName(variableName);
-            Gl.Uniform1(Gl.GetUniformLocation(m_shaderProgramId, name), value.Activate());
+            indexBuffer.Bind();
+
+            m_IndiciesCount = indexBuffer.Count;
+
+            m_items.Add(indexBuffer);
         }
 
-        public void SetVariableValue(ShaderVariable variableName, Mat4 matrix)
+        public void SetVariableValue(String name, Texture.Texture value)
         {
-            var name = ShaderVariablesNames.GetVariableName(variableName);
+            value.Bind();
+            Gl.Uniform1(Gl.GetUniformLocation(m_shaderProgramId, name), value.Bind());
+            m_items.Add(value);
+        }
+
+        public void SetVariableValue(String name, Mat4 matrix)
+        {
             Gl.UniformMatrix4(Gl.GetUniformLocation(m_shaderProgramId, name), 1, false, matrix.ToArray());
         }
 
-        public void SetVariableValue(ShaderVariable variableName, Mat3 matrix)
+        public void SetVariableValue(String name, Mat3 matrix)
         {
-            var name = ShaderVariablesNames.GetVariableName(variableName);
             Gl.UniformMatrix3(Gl.GetUniformLocation(m_shaderProgramId, name), 1, false, matrix.ToArray());
         }
 
-        public void SetVariableValue(ShaderVariable variableName, Vec3 v)
+        public void SetVariableValue(String name, Vec3 v)
         {
-            var name = ShaderVariablesNames.GetVariableName(variableName);
             Gl.Uniform3(Gl.GetUniformLocation(m_shaderProgramId, name), (Single)v.X, (Single)v.Y, (Single)v.Z);
         }
 
-        public void SetVariableValue(ShaderVariable variableName, Vec4 v)
+        public void SetVariableValue(String name, Vec4 v)
         {
-            var name = ShaderVariablesNames.GetVariableName(variableName);
             Gl.Uniform4(Gl.GetUniformLocation(m_shaderProgramId, name), (Single)v.X, (Single)v.Y, (Single)v.Z, (Single)v.W);
         }
 
-        public void SetVariableValue(ShaderVariable variableName, Color3 v)
+        public void SetVariableValue(String name, Color3 v)
         {
-            var name = ShaderVariablesNames.GetVariableName(variableName);
             Gl.Uniform3(Gl.GetUniformLocation(m_shaderProgramId, name), v.R, v.G, v.B);
         }
 
-        public void SetVariableValue(ShaderVariable variableName, Color4 v)
+        public void SetVariableValue(String name, Color4 v)
         {
-            var name = ShaderVariablesNames.GetVariableName(variableName);
             Gl.Uniform4(Gl.GetUniformLocation(m_shaderProgramId, name), v.R, v.G, v.B, v.A);
         }
 
-        public void SetVariableValue(ShaderVariable variableName, Single v)
+        public void SetVariableValue(String name, Single v)
         {
-            var name = ShaderVariablesNames.GetVariableName(variableName);
             Gl.Uniform1(Gl.GetUniformLocation(m_shaderProgramId, name), v);
         }
 
-        public void SetVariableValue(ShaderVariable variableName, Int32 v)
+        public void SetVariableValue(String name, Int32 v)
         {
-            var name = ShaderVariablesNames.GetVariableName(variableName);
             Gl.Uniform1(Gl.GetUniformLocation(m_shaderProgramId, name), v);
         }
 
-        public void SetVariableValue(ShaderVariable variableName, Boolean v)
+        public void SetVariableValue(String name, Boolean v)
         {
-            var name = ShaderVariablesNames.GetVariableName(variableName);
             Gl.Uniform1(Gl.GetUniformLocation(m_shaderProgramId, name), v ? 1 : 0);
         }
 
-        public void SetArrayValue(Int32 index, ShaderVariable variableName, Texture.Texture value)
+        public void Render(Boolean indexed)
         {
-            var name = String.Format(ShaderVariablesNames.GetVariableName(variableName), index);
-            Gl.Uniform1(Gl.GetUniformLocation(m_shaderProgramId, name), value.Activate());
-        }
+            if (indexed)
+                Gl.DrawElements(Gl.GL_TRIANGLES, m_IndiciesCount, Gl.GL_UNSIGNED_INT, IntPtr.Zero);
+            else Gl.DrawArrays(Gl.GL_TRIANGLES, 0, m_VerticesCount);
 
-        public void SetArrayValue(Int32 index, ShaderVariable variableName, Mat4 matrix)
-        {
-            var name = String.Format(ShaderVariablesNames.GetVariableName(variableName), index);
-            Gl.UniformMatrix4(Gl.GetUniformLocation(m_shaderProgramId, name), 1, false, matrix.ToArray());
-        }
+            foreach(var item in m_items)
+                item.Unbind();
 
-        public void SetArrayValue(Int32 index, ShaderVariable variableName, Mat3 matrix)
-        {
-            var name = String.Format(ShaderVariablesNames.GetVariableName(variableName), index);
-            Gl.UniformMatrix3(Gl.GetUniformLocation(m_shaderProgramId, name), 1, false, matrix.ToArray());
-        }
-
-        public void SetArrayValue(Int32 index, ShaderVariable variableName, Vec3 v)
-        {
-            var name = String.Format(ShaderVariablesNames.GetVariableName(variableName), index);
-            Gl.Uniform3(Gl.GetUniformLocation(m_shaderProgramId, name), (Single)v.X, (Single)v.Y, (Single)v.Z);
-        }
-
-        public void SetArrayValue(Int32 index, ShaderVariable variableName, Vec4 v)
-        {
-            var name = String.Format(ShaderVariablesNames.GetVariableName(variableName), index);
-            Gl.Uniform4(Gl.GetUniformLocation(m_shaderProgramId, name), (Single)v.X, (Single)v.Y, (Single)v.Z, (Single)v.W);
-        }
-
-        public void SetArrayValue(Int32 index, ShaderVariable variableName, Color3 v)
-        {
-            var name = String.Format(ShaderVariablesNames.GetVariableName(variableName), index);
-            Gl.Uniform3(Gl.GetUniformLocation(m_shaderProgramId, name), v.R, v.G, v.B);
-        }
-
-        public void SetArrayValue(Int32 index, ShaderVariable variableName, Color4 v)
-        {
-            var name = String.Format(ShaderVariablesNames.GetVariableName(variableName), index);
-            Gl.Uniform4(Gl.GetUniformLocation(m_shaderProgramId, name), v.R, v.G, v.B, v.A);
-        }
-
-        public void SetArrayValue(Int32 index, ShaderVariable variableName, Single v)
-        {
-            var name = String.Format(ShaderVariablesNames.GetVariableName(variableName), index);
-            Gl.Uniform1(Gl.GetUniformLocation(m_shaderProgramId, name), v);
+            m_items.Clear();
         }
 
         public void Dispose()
         {
             Gl.DeleteProgram(ShaderProgramId);
+        }
+
+        void IBindableItem.Bind()
+        {
+            Bind();
+        }
+
+        void IBindableItem.Unbind()
+        {
+            Unbind();  
         }
     }
 }
