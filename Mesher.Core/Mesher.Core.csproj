@@ -78,6 +78,7 @@
     <Compile Include="Plugins\PluginSystem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShaderVariableNameAttribute.cs" />
     <EmbeddedResource Include="Components\SceneContext.resx">
       <DependentUpon>SceneContext.cs</DependentUpon>
     </EmbeddedResource>

@@ -159,9 +159,7 @@ namespace Mesher.Core.Components
             m_renderWindow.ResizeWindow(Width, Height);
 
             if (Camera != null)
-            {
                 ((OrthographicCamera)Camera).UpdateSize(Width, Height);
-            }
 
             base.OnResize(e);
         }
