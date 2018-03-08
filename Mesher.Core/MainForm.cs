@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 using Mesher.Core.Objects;
+using Mesher.Core.Objects.Scene;
 using Mesher.Core.Plugins;
 using Mesher.GraphicsCore;
 using DataLoader = Mesher.Core.Data.DataLoader;
@@ -32,7 +33,7 @@ namespace Mesher.Core
         {
             var plugin = (IPlugin) ((ToolStripItem) sender).Tag;
 
-            plugin.Execute(renderManager, Scene);
+            plugin.Execute(m_renderContext, Scene);
         }
 
         private void SceneContext1_MouseWheel(Object sender, MouseEventArgs e)
@@ -77,7 +78,7 @@ namespace Mesher.Core
 
                 if (File.Exists(openFileDialog.FileName))
                 {
-                    Scene = DataLoader.LoadScene(openFileDialog.FileName, renderManager);
+                    Scene = DataLoader.LoadScene(openFileDialog.FileName, m_renderContext);
                 }
             }
 

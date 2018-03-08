@@ -18,12 +18,25 @@ namespace Mesher.GraphicsCore.ShaderProgram
 
         private List<IBindableItem> m_items;
 
-        private Int32 m_IndiciesCount;
-        private Int32 m_VerticesCount;
+        private Int32 m_indiciesCount;
+        private Int32 m_verticesCount;
+
+        private RenderContext m_renderContext;
+
+        internal RenderContext RenderContext { get { return m_renderContext; } }
 
         public UInt32 ShaderProgramId { get { return m_shaderProgramId; } }
 
-        public ShaderProgram()
+        internal ShaderProgram(RenderContext renderContext)
+        {
+            m_renderContext = renderContext;
+
+            CreateShaderProgram();
+
+            m_items = new List<IBindableItem>();
+        }
+
+        private void CreateShaderProgram()
         {
             var vertexShaderSource = GetShaderSource(ShaderProgramType.Vertex);
             var fragmentShaderSource = GetShaderSource(ShaderProgramType.Fragment);
@@ -42,8 +55,6 @@ namespace Mesher.GraphicsCore.ShaderProgram
 
             Gl.DeleteShader(vertexShaderId);
             Gl.DeleteShader(fragmentShaderId);
-
-            m_items = new List<IBindableItem>();
         }
 
         private String GetShaderSource(ShaderProgramType shaderProgramType)
@@ -127,84 +138,84 @@ namespace Mesher.GraphicsCore.ShaderProgram
             Gl.UseProgram(0);
         }
 
-        public void SetVertexBuffer<T>(String name, VertexBuffer<T> vertexBuffer) where T : struct
+        public void SetBuffer(String name, VertexBufferBase vertexBuffer, Int32 componentsCount)
         {
             var variableLocation = Gl.GetAttribLocation(m_shaderProgramId, name);
 
             if (variableLocation != -1)
-                SetVertexBuffer((UInt32)variableLocation, vertexBuffer);
+                SetBuffer((UInt32)variableLocation, vertexBuffer, componentsCount);
         }
 
-        public void SetVertexBuffer<T>(UInt32 variableLocation, VertexBuffer<T> vertexBuffer) where T : struct
+        public void SetBuffer(UInt32 variableLocation, VertexBufferBase vertexBuffer, Int32 componentsCount)
         {
             vertexBuffer.Bind();
 
             Gl.EnableVertexAttribArray(variableLocation);
 
-            var size = Marshal.SizeOf(typeof(T));
+            Gl.VertexAttribPointer(variableLocation, componentsCount, Gl.GL_FLOAT, false, 0, IntPtr.Zero);
 
-            Gl.VertexAttribPointer(variableLocation, size / 4, Gl.GL_FLOAT, false, 0, IntPtr.Zero);
+            m_verticesCount = vertexBuffer.Count;
 
             m_items.Add(vertexBuffer);
         }
 
-        public void SetIndexBuffer(IndexBuffer indexBuffer)
+        public void SetBuffer(IndexBuffer indexBuffer)
         {
             indexBuffer.Bind();
 
-            m_IndiciesCount = indexBuffer.Count;
+            m_indiciesCount = indexBuffer.Count;
 
             m_items.Add(indexBuffer);
         }
 
-        public void SetVariableValue(String name, Texture.Texture value)
+        public void SetValue(String name, Texture.Texture value)
         {
             value.Bind();
             Gl.Uniform1(Gl.GetUniformLocation(m_shaderProgramId, name), value.Bind());
             m_items.Add(value);
         }
 
-        public void SetVariableValue(String name, Mat4 matrix)
+        public void SetValue(String name, Mat4 matrix)
         {
             Gl.UniformMatrix4(Gl.GetUniformLocation(m_shaderProgramId, name), 1, false, matrix.ToArray());
         }
 
-        public void SetVariableValue(String name, Mat3 matrix)
+        public void SetValue(String name, Mat3 matrix)
         {
             Gl.UniformMatrix3(Gl.GetUniformLocation(m_shaderProgramId, name), 1, false, matrix.ToArray());
         }
 
-        public void SetVariableValue(String name, Vec3 v)
+        public void SetValue(String name, Vec3 v)
         {
             Gl.Uniform3(Gl.GetUniformLocation(m_shaderProgramId, name), (Single)v.X, (Single)v.Y, (Single)v.Z);
         }
 
-        public void SetVariableValue(String name, Vec4 v)
+        public void SetValue(String name, Vec4 v)
         {
             Gl.Uniform4(Gl.GetUniformLocation(m_shaderProgramId, name), (Single)v.X, (Single)v.Y, (Single)v.Z, (Single)v.W);
         }
 
-        public void SetVariableValue(String name, Color3 v)
+        public void SetValue(String name, Color3 v)
         {
             Gl.Uniform3(Gl.GetUniformLocation(m_shaderProgramId, name), v.R, v.G, v.B);
         }
 
-        public void SetVariableValue(String name, Color4 v)
+        public void SetValue(String name, Color4 v)
         {
             Gl.Uniform4(Gl.GetUniformLocation(m_shaderProgramId, name), v.R, v.G, v.B, v.A);
         }
 
-        public void SetVariableValue(String name, Single v)
+        public void SetValue(String name, Single v)
         {
             Gl.Uniform1(Gl.GetUniformLocation(m_shaderProgramId, name), v);
         }
 
-        public void SetVariableValue(String name, Int32 v)
+        public void SetValue(String name, Int32 v)
         {
             Gl.Uniform1(Gl.GetUniformLocation(m_shaderProgramId, name), v);
         }
 
-        public void SetVariableValue(String name, Boolean v)
+        public void SetValue(String name, Boolean v)
         {
             Gl.Uniform1(Gl.GetUniformLocation(m_shaderProgramId, name), v ? 1 : 0);
         }
@@ -212,8 +223,8 @@ namespace Mesher.GraphicsCore.ShaderProgram
         public void Render(Boolean indexed)
         {
             if (indexed)
-                Gl.DrawElements(Gl.GL_TRIANGLES, m_IndiciesCount, Gl.GL_UNSIGNED_INT, IntPtr.Zero);
-            else Gl.DrawArrays(Gl.GL_TRIANGLES, 0, m_VerticesCount);
+                Gl.DrawElements(Gl.GL_TRIANGLES, m_indiciesCount, Gl.GL_UNSIGNED_INT, IntPtr.Zero);
+            else Gl.DrawArrays(Gl.GL_TRIANGLES, 0, m_verticesCount);
 
             foreach(var item in m_items)
                 item.Unbind();

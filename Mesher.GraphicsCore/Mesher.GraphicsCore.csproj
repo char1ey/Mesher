@@ -62,6 +62,7 @@
     <Compile Include="Buffers\IBindableItem.cs" />
     <Compile Include="Buffers\IndexBuffer.cs" />
     <Compile Include="Buffers\VertexBuffer.cs" />
+    <Compile Include="Buffers\VertexBufferBase.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -69,7 +70,7 @@
     </Compile>
     <Compile Include="RenderWindow.cs" />
     <Compile Include="OpenGL.cs" />
-    <Compile Include="RenderManager.cs" />
+    <Compile Include="RenderContext.cs" />
     <Compile Include="ShaderProgram\ShaderProgram.cs" />
     <Compile Include="ShaderProgram\Exceptions\LinkShaderProgramException.cs" />
     <Compile Include="ShaderProgram\Exceptions\CompileShaderException.cs" />

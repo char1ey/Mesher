@@ -32,7 +32,7 @@ namespace Mesher.Plugins.EditLight
         private void InitializeComponent()
         {
             this.SuspendLayout();
-            this.sceneContext1 = new SceneContext(this.renderManager);
+            this.sceneContext1 = new SceneContext(this.m_renderContext);
             // 
             // sceneContext1
             // 
@@ -62,7 +62,7 @@ namespace Mesher.Plugins.EditLight
         #endregion
 
         private Core.Components.SceneContext sceneContext1;
-        private RenderManager renderManager;
+        private RenderContext m_renderContext;
     }
 }
 

@@ -8,7 +8,12 @@ namespace Mesher.GraphicsCore.Texture
     public class Texture: IDisposable, IBindableItem
     {
         private static readonly Int32[] ActiveTextures;
-		private readonly UInt32[] m_id;
+
+		private UInt32[] m_id;
+
+        private RenderContext m_renderContext;
+
+        internal RenderContext RenderContext { get { return m_renderContext; } }
 
 		public Int32 Width { get; private set; }
 		public Int32 Height { get; private set; }
@@ -24,53 +29,81 @@ namespace Mesher.GraphicsCore.Texture
                 ActiveTextures[i] = -1;
         }
 
-        internal Texture(Bitmap image)
+        internal Texture(Bitmap image, RenderContext renderContext)
         {
-            m_id = new UInt32[1];
+            m_renderContext = renderContext;
 
 	        Width = image.Width;
 	        Height = image.Height;
 
             var d = image.LockBits(new Rectangle(Point.Empty, image.Size), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
            
-            Gl.GenTextures(1, m_id);
-
-            Bind();       
-
-            Gl.TexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGBA, image.Width, image.Height, 0, Gl.GL_BGRA, Gl.GL_UNSIGNED_BYTE, d.Scan0);
-            
-            Gl.TexParameter(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST);
-            Gl.TexParameter(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST);
-            
-            Unbind();
+            GenTexture();
+            SetSize(Width, Height, d.Scan0);
 
             image.UnlockBits(d);
         }
 
-	    public Texture(Int32 width, Int32 height)
+	    internal Texture(Int32 width, Int32 height, RenderContext renderContext) : this(width, height, IntPtr.Zero, renderContext)
 	    {
-			m_id = new UInt32[1];
-
-		    Width = width;
-		    Height = height;
-
-			Gl.GenTextures(1, m_id);
-
-			Bind();
-
-			Gl.TexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGBA, width, height, 0, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, IntPtr.Zero);
-
-			Unbind();
 		}
 
-	    public void SetSubTexture(Int32 posX, Int32 posY, Int32 width, Int32 height, Int32[] pixelsData)
-	    {
-		    Bind();
+        internal Texture(Int32 width, Int32 height, IntPtr pixels, RenderContext renderContext)
+        {
+            m_renderContext = renderContext;
 
-		    Gl.TexSubImage2D(Gl.GL_TEXTURE_2D, 0, posX, posY, width, height, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, pixelsData);
+            Width = width;
+            Height = height;
 
-			Unbind();
-	    }
+            GenTexture();
+            SetSize(width, height, pixels);
+        }
+
+        private void GenTexture()
+        {
+            m_id = new UInt32[1];
+
+            Bind();
+
+            Gl.GenTextures(1, m_id);
+
+            Unbind();
+        }
+
+        public void SetSize(Int32 width, Int32 height, IntPtr data)
+        {
+            Bind();
+            Gl.TexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGBA, width, height, 0, Gl.GL_BGRA, Gl.GL_UNSIGNED_BYTE, data);
+            Gl.TexParameter(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST);
+            Gl.TexParameter(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST);
+            Gl.TexParameter(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_CLAMP_TO_EDGE);
+            Gl.TexParameter(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_CLAMP_TO_EDGE);
+            Unbind();
+            Width = width;
+            Height = height;
+        }
+
+        public unsafe void SetSubTexture(Int32 posX, Int32 posY, Int32 width, Int32 height, Int32[] pixelsData, Int32 offset = 0)
+        {
+            fixed (Int32* p = pixelsData)
+                SetSubTexture(posX, posY, width, height, new IntPtr(p + offset));
+        }
+
+        public unsafe void SetSubTexture(Int32 posX, Int32 posY, Int32 width, Int32 height, UInt32[] pixelsData, Int32 offset = 0)
+        {
+            fixed (UInt32* p = pixelsData)
+                SetSubTexture(posX, posY, width, height, new IntPtr(p + offset));
+        }
+
+        private void SetSubTexture(Int32 posX, Int32 posY, Int32 width, Int32 height, IntPtr p)
+        {
+            Bind();
+
+            Gl.TexSubImage2D(Gl.GL_TEXTURE_2D, 0, posX, posY, width, height, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, p);
+
+            Unbind();
+        }
+
 
         public Int32 Bind()
         {

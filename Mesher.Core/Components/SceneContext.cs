@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using Mesher.Core.Camera;
-using Mesher.Core.Light;
 using Mesher.Core.Objects;
+using Mesher.Core.Objects.Camera;
+using Mesher.Core.Objects.Scene;
 using Mesher.GraphicsCore;
 using Mesher.GraphicsCore.ShaderProgram;
 using Mesher.Mathematics;
@@ -22,11 +22,11 @@ namespace Mesher.Core.Components
         private MouseButtons m_previousMouseButton;
         private Vec2 m_previousMousePosition;
 
-        public Camera.Camera Camera { get; set; }
+        public Camera Camera { get; set; }
 
-        public SceneContext(RenderManager renderManager)
+        public SceneContext(RenderContext renderContext)
         {
-            m_renderWindow = renderManager.CreateRenderWindow(Handle);
+            m_renderWindow = renderContext.CreateRenderWindow(Handle);
             m_renderWindow.ClearColor = Color.DimGray;
             InitializeComponent();
         }
@@ -52,106 +52,7 @@ namespace Mesher.Core.Components
                 scene.Cameras.Add((OrthographicCamera)Camera);
             }
 
-            Render(scene, Camera.Id);
-        }
-
-        public void SetMaterialValue(Material.Material material)
-        {
-            m_renderWindow.RenderManager.ShaderProgram.SetVariableValue("material.hasColorAmbient", material.HasColorAmbient);
-            if (material.HasColorAmbient)
-                m_renderWindow.RenderManager.ShaderProgram.SetVariableValue("material.colorAmbient", material.ColorAmbient);
-
-            m_renderWindow.RenderManager.ShaderProgram.SetVariableValue("material.hasColorDiffuse", material.HasColorDiffuse);
-            if (material.HasColorDiffuse)
-                m_renderWindow.RenderManager.ShaderProgram.SetVariableValue("material.colorDiffuse", material.ColorDiffuse);
-
-            m_renderWindow.RenderManager.ShaderProgram.SetVariableValue("material.hasColorSpecular", material.HasColorSpecular);
-            if (material.HasColorSpecular)
-                m_renderWindow.RenderManager.ShaderProgram.SetVariableValue("material.colorSpecular", material.ColorSpecular);
-
-            m_renderWindow.RenderManager.ShaderProgram.SetVariableValue("material.hasTextureAmbient", material.HasTextureAmbient);
-            if (material.HasTextureAmbient)
-                m_renderWindow.RenderManager.ShaderProgram.SetVariableValue("material.textureAmbient", material.TextureAmbient);
-
-            m_renderWindow.RenderManager.ShaderProgram.SetVariableValue("material.hasTextureDiffuse", material.HasTextureDiffuse);
-            if (material.HasTextureDiffuse)
-                m_renderWindow.RenderManager.ShaderProgram.SetVariableValue("material.textureDiffuse", material.TextureDiffuse);
-
-            m_renderWindow.RenderManager.ShaderProgram.SetVariableValue("material.hasTextureSpecular", material.HasTextureSpecular);
-            if (material.HasTextureSpecular)
-                m_renderWindow.RenderManager.ShaderProgram.SetVariableValue("material.textureSpecular", material.TextureSpecular);
-
-            m_renderWindow.RenderManager.ShaderProgram.SetVariableValue("material.hasTextureNormal", material.HasTextureNormal);
-            if (material.HasTextureNormal)
-                m_renderWindow.RenderManager.ShaderProgram.SetVariableValue("material.textureNormal", material.TextureNormal);
-        }
-
-        public void SetMeshValue(Mesh mesh)
-        {
-            m_renderWindow.RenderManager.ShaderProgram.SetVariableValue("hasPosition", mesh.HasVertexes);
-            if (mesh.HasVertexes)
-                m_renderWindow.RenderManager.ShaderProgram.SetVertexBuffer("position", mesh.Vertexes);
-
-            m_renderWindow.RenderManager.ShaderProgram.SetVariableValue("hasNormal", mesh.HasNormals);
-            if (mesh.HasNormals)
-                m_renderWindow.RenderManager.ShaderProgram.SetVertexBuffer("normal", mesh.Normals);
-
-            m_renderWindow.RenderManager.ShaderProgram.SetVariableValue("hasTexCoord", mesh.HasTextureVertexes);
-            if (mesh.HasTextureVertexes)
-                m_renderWindow.RenderManager.ShaderProgram.SetVertexBuffer("texCoord", mesh.TextureVertexes);
-
-            m_renderWindow.RenderManager.ShaderProgram.SetVariableValue("hasTangentBasis", mesh.HasTangentBasis);
-            if (mesh.HasTangentBasis)
-            {
-                m_renderWindow.RenderManager.ShaderProgram.SetVertexBuffer("tangent", mesh.Tangents);
-                m_renderWindow.RenderManager.ShaderProgram.SetVertexBuffer("biTangent", mesh.BiTangents);
-            }
-
-            if (mesh.HasMaterial)
-                SetMaterialValue(mesh.Material);
-        }
-
-        public void SetLights(Lights lights)
-        {
-            m_renderWindow.RenderManager.ShaderProgram.SetVariableValue("lightsCount", lights.Count);
-
-            for (var i = 0; i < lights.Count; i++)
-            {
-                var light = lights[i];
-
-                m_renderWindow.RenderManager.ShaderProgram.SetVariableValue(String.Format("lights[{0}].lightType", i), (Int32)light.LightType);
-                m_renderWindow.RenderManager.ShaderProgram.SetVariableValue(String.Format("lights[{0}].ambientColor", i), light.AmbientColor);
-                m_renderWindow.RenderManager.ShaderProgram.SetVariableValue(String.Format("lights[{0}].diffuseColor", i), light.DiffuseColor);
-                m_renderWindow.RenderManager.ShaderProgram.SetVariableValue(String.Format("lights[{0}].specularColor", i), light.SpecularColor);
-                m_renderWindow.RenderManager.ShaderProgram.SetVariableValue(String.Format("lights[{0}].position", i), light.Position);
-                m_renderWindow.RenderManager.ShaderProgram.SetVariableValue(String.Format("lights[{0}].direction", i), light.Direction);
-                m_renderWindow.RenderManager.ShaderProgram.SetVariableValue(String.Format("lights[{0}].innerAngle", i), light.InnerAngle);
-                m_renderWindow.RenderManager.ShaderProgram.SetVariableValue(String.Format("lights[{0}].outerAngle", i), light.OuterAngle);
-                m_renderWindow.RenderManager.ShaderProgram.SetVariableValue(String.Format("lights[{0}].attenuationConstant", i), light.AttenuationConstant);
-                m_renderWindow.RenderManager.ShaderProgram.SetVariableValue(String.Format("lights[{0}].attenuationLinear", i), light.AttenuationLinear);
-                m_renderWindow.RenderManager.ShaderProgram.SetVariableValue(String.Format("lights[{0}].attenuationQuadratic", i), light.AttenuationQuadratic);
-            }
-        }
-
-        public void Render(Scene scene, Int32 cameraId)
-        {
-            m_renderWindow.RenderManager.ShaderProgram.Bind();
-
-            for (var i = 0; i < scene.Meshes.Count; i++)
-            {
-                SetLights(scene.Lights);
-
-                m_renderWindow.RenderManager.ShaderProgram.SetVariableValue("proj", scene.Cameras[cameraId].ProjectionMatrix);
-                m_renderWindow.RenderManager.ShaderProgram.SetVariableValue("modelView", scene.Cameras[cameraId].ViewMatrix);
-
-                SetMeshValue(scene.Meshes[i]);
-
-                m_renderWindow.RenderManager.ShaderProgram.SetIndexBuffer(scene.Meshes[i].Indicies);
-
-                m_renderWindow.RenderManager.ShaderProgram.Render(scene.Meshes[i].IndexedRendering);
-            }
-
-            m_renderWindow.RenderManager.ShaderProgram.Unbind();
+            scene.Render(this, m_renderWindow.RenderContext.ShaderProgram);
         }
 
         protected override void OnResize(EventArgs e)

@@ -6,15 +6,15 @@ using Mesher.Mathematics;
 
 namespace Mesher.GraphicsCore
 {
-    public sealed class RenderManager : IDisposable 
+    public sealed class RenderContext : IDisposable 
     {
         private ShaderProgram.ShaderProgram m_shaderProgram;
 
         private IntPtr m_hglrc;
 
-        private List<RenderWindow> m_renderWindows;
-
         private RenderWindow m_defaultRenderWindow;
+
+        private List<RenderWindow> m_renderWindows;
 
         private List<IDisposable> m_buffers;
 
@@ -36,7 +36,7 @@ namespace Mesher.GraphicsCore
             }
         }
 
-        public RenderManager(IntPtr defaultRenderWindowHandge)
+        public RenderContext(IntPtr defaultRenderWindowHandge)
         {
             m_textures = new List<Texture.Texture>();
             m_buffers = new List<IDisposable>();
@@ -59,7 +59,7 @@ namespace Mesher.GraphicsCore
             
             Win32.wglMakeCurrent(renderWindow.RenderWindowHandle, m_hglrc);
 
-            renderWindow.RenderManager = this;
+            renderWindow.RenderContext = this;
 
             m_renderWindows.Add(renderWindow);
 
@@ -80,7 +80,7 @@ namespace Mesher.GraphicsCore
         public VertexBuffer<T> CreateVertexBuffer<T>(T[] vertieces)
         {
             m_defaultRenderWindow.Begin();
-            var buffer = new VertexBuffer<T>(vertieces);
+            var buffer = new VertexBuffer<T>(vertieces, this);
             m_defaultRenderWindow.End();
             m_buffers.Add(buffer);
             return buffer;
@@ -99,7 +99,7 @@ namespace Mesher.GraphicsCore
         public Texture.Texture CreateTexture(Int32 width, Int32 height)
         {
             m_defaultRenderWindow.Begin();
-            var texture = new Texture.Texture(width, height);
+            var texture = new Texture.Texture(width, height, this);
             m_defaultRenderWindow.End();
             m_textures.Add(texture);
             return texture;
@@ -108,7 +108,7 @@ namespace Mesher.GraphicsCore
         public Texture.Texture CreateTexture(Bitmap bitmap)
         {
             m_defaultRenderWindow.Begin();
-            var texture = new Texture.Texture(bitmap);
+            var texture = new Texture.Texture(bitmap, this);
             m_defaultRenderWindow.End();
             m_textures.Add(texture);
             return texture;
@@ -117,7 +117,7 @@ namespace Mesher.GraphicsCore
         private void CreateShaderProgram()
         {
             m_defaultRenderWindow.Begin();
-            m_shaderProgram = new ShaderProgram.ShaderProgram();
+            m_shaderProgram = new ShaderProgram.ShaderProgram(this);
             m_defaultRenderWindow.End();
         }        
 

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Mesher.Core.Plugins;
 using System.Windows.Forms;
 using Mesher.Core.Objects;
+using Mesher.Core.Objects.Scene;
 using Mesher.GraphicsCore;
 
 namespace Mesher.Plugins.EditLight
@@ -21,9 +22,9 @@ namespace Mesher.Plugins.EditLight
             Name = @"Edit light";
         }
 
-        public void Execute(RenderManager manager, Scene scene)
+        public void Execute(RenderContext context, Scene scene)
         {
-            m_form = new MainForm(manager, scene);
+            m_form = new MainForm(context, scene);
             m_form.Show();
         }
     }

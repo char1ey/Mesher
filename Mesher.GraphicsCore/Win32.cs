@@ -261,7 +261,7 @@ namespace Mesher.GraphicsCore
             /// </summary>
             WS_EX_CONTEXTHELP = 0x00000400,
             /// <summary>
-            /// The window itself contains child windows that should take part in dialog box navigation. If this style is specified, the dialog manager recurses into children of this window when performing navigation operations such as handling the TAB key, an arrow key, or a keyboard mnemonic.
+            /// The window itself contains child windows that should take part in dialog box navigation. If this style is specified, the dialog context recurses into children of this window when performing navigation operations such as handling the TAB key, an arrow key, or a keyboard mnemonic.
             /// </summary>
             WS_EX_CONTROLPARENT = 0x00010000,
             /// <summary>

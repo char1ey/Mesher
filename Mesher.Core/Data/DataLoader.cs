@@ -2,8 +2,11 @@
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using Mesher.Core.Light;
 using Mesher.Core.Objects;
+using Mesher.Core.Objects.Light;
+using Mesher.Core.Objects.Material;
+using Mesher.Core.Objects.Mesh;
+using Mesher.Core.Objects.Scene;
 using Mesher.GraphicsCore;
 using Mesher.GraphicsCore.Texture;
 using Mesher.Mathematics;
@@ -12,7 +15,7 @@ namespace Mesher.Core.Data
 {
     public static class DataLoader
     {
-        public static Scene LoadScene(String filePath, RenderManager renderManager)
+        public static Scene LoadScene(String filePath, RenderContext renderContext)
         {
             var path = filePath.Substring(0, filePath.LastIndexOf("\\") + 1);
 
@@ -36,27 +39,27 @@ namespace Mesher.Core.Data
                     if (aiMesh.HasVertices)
                     {
                         var verts = aiMesh.Vertices.Select(t => GetVec3(t)).ToArray();
-                        mesh.Vertexes = renderManager.CreateVertexBuffer(verts);
+                        mesh.Vertexes = renderContext.CreateVertexBuffer(verts);
                     }
 
                     if (aiMesh.HasNormals)
                     {
                         var normals = aiMesh.Normals.Select(t => GetVec3(t)).ToArray();
-                        mesh.Normals = renderManager.CreateVertexBuffer(normals);
+                        mesh.Normals = renderContext.CreateVertexBuffer(normals);
                     }
 
                     if (aiMesh.HasTangentBasis)
                     {
                         var tangents = aiMesh.Tangents.Select(t => GetVec3(t)).ToArray();
                         var biTangents = aiMesh.BiTangents.Select(t => GetVec3(t)).ToArray();
-                        mesh.Tangents = renderManager.CreateVertexBuffer(tangents);
-                        mesh.BiTangents = renderManager.CreateVertexBuffer(biTangents);
+                        mesh.Tangents = renderContext.CreateVertexBuffer(tangents);
+                        mesh.BiTangents = renderContext.CreateVertexBuffer(biTangents);
                     }
 
                     if (aiMesh.HasTextureCoords(0))
                     {
                         var texcoord = aiMesh.GetTextureCoords(0).Select(t => new Vec2(t.X, 1 - t.Y)).ToArray();
-                        mesh.TextureVertexes = renderManager.CreateVertexBuffer(texcoord);
+                        mesh.TextureVertexes = renderContext.CreateVertexBuffer(texcoord);
                     }
 
                     mesh.HasVertexes = aiMesh.HasVertices;
@@ -67,20 +70,20 @@ namespace Mesher.Core.Data
                     var inds = aiMesh.GetIndices().Select(t => (Int32)t).ToArray();                    
 
                     mesh.IndexedRendering = true;
-                    mesh.Indicies = renderManager.CreateIndexBuffer(inds);
+                    mesh.Indicies = renderContext.CreateIndexBuffer(inds);
 
                     mesh.HasMaterial = aiMesh.MaterialIndex != -1;
 
                     if(mesh.HasMaterial)
-                        mesh.Material = GetMaterial(aiScene.Materials[aiMesh.MaterialIndex], path, renderManager);                    
+                        mesh.Material = GetMaterial(aiScene.Materials[aiMesh.MaterialIndex], path, renderContext);                    
                 }
 
             return scene;
         }
 
-        private static Material.Material GetMaterial(Assimp.Material aiMaterial, String filePath, RenderManager renderManager)
+        private static Material GetMaterial(Assimp.Material aiMaterial, String filePath, RenderContext renderContext)
         {      
-            var material = new Material.Material();                       
+            var material = new Material();                       
 
             if (aiMaterial.HasColorAmbient)
                 material.ColorAmbient = GetColor(aiMaterial.ColorAmbient);
@@ -98,7 +101,7 @@ namespace Mesher.Core.Data
 
             if (aiMaterial.GetTextureCount(Assimp.TextureType.Ambient) > 0)
             {
-                material.TextureAmbient = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Ambient, 0), filePath, renderManager);
+                material.TextureAmbient = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Ambient, 0), filePath, renderContext);
                 if (material.TextureAmbient != null)
                     material.HasTextureAmbient = true;
             }
@@ -106,7 +109,7 @@ namespace Mesher.Core.Data
 
             if (aiMaterial.GetTextureCount(Assimp.TextureType.Diffuse) > 0)
             {
-                material.TextureDiffuse = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Diffuse, 0), filePath, renderManager);
+                material.TextureDiffuse = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Diffuse, 0), filePath, renderContext);
                 if (material.TextureDiffuse != null)
                     material.HasTextureDiffuse = true;
             }
@@ -114,7 +117,7 @@ namespace Mesher.Core.Data
 
             if (aiMaterial.GetTextureCount(Assimp.TextureType.Emissive) > 0)
             {
-                material.TextureEmissive = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Emissive, 0), filePath, renderManager);
+                material.TextureEmissive = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Emissive, 0), filePath, renderContext);
                 if (material.TextureEmissive != null)
                     material.HasTextureEmissive = true;
             }
@@ -122,7 +125,7 @@ namespace Mesher.Core.Data
 
             if (aiMaterial.GetTextureCount(Assimp.TextureType.Specular) > 0)
             {
-                material.TextureSpecular = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Specular, 0), filePath, renderManager);
+                material.TextureSpecular = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Specular, 0), filePath, renderContext);
                 if (material.TextureSpecular != null)
                     material.HasTextureSpecular = true;
             }
@@ -130,7 +133,7 @@ namespace Mesher.Core.Data
 
             if (aiMaterial.GetTextureCount(Assimp.TextureType.Height) > 0)
             {
-                material.TextureNormal = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Height, 0), filePath, renderManager);
+                material.TextureNormal = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Height, 0), filePath, renderContext);
                 if (material.TextureNormal != null)
                     material.HasTextureNormal = true;
             }
@@ -139,16 +142,16 @@ namespace Mesher.Core.Data
             return material;
         }
 
-        private static Texture GetTexture(Assimp.TextureSlot aiTexture, String filePath, RenderManager renderManager)
+        private static Texture GetTexture(Assimp.TextureSlot aiTexture, String filePath, RenderContext renderContext)
         {
             if (!File.Exists(filePath + aiTexture.FilePath))
                 return null;
-            return renderManager.CreateTexture((Bitmap)Image.FromFile(filePath + aiTexture.FilePath));
+            return renderContext.CreateTexture((Bitmap)Image.FromFile(filePath + aiTexture.FilePath));
         }
 
-        private static Light.Light InitLight(Assimp.Light aiLight)
+        private static Light InitLight(Assimp.Light aiLight)
         {
-            var light = new Light.Light
+            var light = new Light
             {
                 LightType = (LightType) aiLight.LightType,
                 Name = aiLight.Name,

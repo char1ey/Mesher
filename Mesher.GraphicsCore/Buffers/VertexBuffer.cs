@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace Mesher.GraphicsCore.Buffers
 {
-    public class VertexBuffer<T> : IDisposable, IBindableItem
+    public class VertexBuffer<T> : VertexBufferBase, IDisposable
     {
         private UInt32[] m_Id;
 
@@ -14,27 +14,33 @@ namespace Mesher.GraphicsCore.Buffers
 
         private Int32 m_StructSize;
 
+        private RenderContext m_renderContext;
+
+        internal RenderContext RenderContext { get { return m_renderContext; } }
+
         public UInt32 Id
         {
             get { return m_Id[0]; }
         }
 
-        public Int32 Count
+        public override Int32 Count
         {
             get { return m_Data.Count; }
         }
 
         public Int32 Capacity { get; private set; }
 
-        public VertexBuffer(T[] data) : this()
+        public VertexBuffer(T[] data, RenderContext renderContext) : this(renderContext)
         {
             m_Data = data.ToList();
             Resize(m_Data.Count);
             SetSubData(data, 0);
         }
 
-        public VertexBuffer()
+        public VertexBuffer(RenderContext renderContext)
         {
+            m_renderContext = renderContext;
+
             m_StructSize = Marshal.SizeOf(typeof(T));
             Capacity = 1;
 
@@ -97,12 +103,12 @@ namespace Mesher.GraphicsCore.Buffers
             Resize(1);
         }
 
-        public void Bind()
+        public override void Bind()
         {
             Gl.BindBuffer(Gl.GL_ARRAY_BUFFER, Id);
         }
 
-        public void Unbind()
+        public override void Unbind()
         {
             Gl.BindBuffer(Gl.GL_ARRAY_BUFFER, 0);
         }
@@ -147,7 +153,7 @@ namespace Mesher.GraphicsCore.Buffers
             Gl.DeleteBuffers(1, m_Id);
         }
 
-        void IBindableItem.Bind()
+       /* void IBindableItem.Bind()
         {
             Bind();
         }
@@ -155,6 +161,6 @@ namespace Mesher.GraphicsCore.Buffers
         void IBindableItem.Unbind()
         {
             Unbind();
-        }
+        }*/
     }
 }

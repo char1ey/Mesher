@@ -1,7 +1,7 @@
 ﻿using System;
 using Mesher.Mathematics;
 
-namespace Mesher.Core.Camera
+namespace Mesher.Core.Objects.Camera
 {
     public class OrthographicCamera : Camera
     {

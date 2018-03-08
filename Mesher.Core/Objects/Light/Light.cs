@@ -1,9 +1,11 @@
 ﻿using System;
+using Mesher.Core.Components;
+using Mesher.GraphicsCore.ShaderProgram;
 using Mesher.Mathematics;
 
-namespace Mesher.Core.Light
+namespace Mesher.Core.Objects.Light
 {
-    public class Light
+    public class Light : IRenderItem
     {
         public Int32 Id { get; internal set; }
         public String Name { get; set; }
@@ -18,5 +20,9 @@ namespace Mesher.Core.Light
         public Single AttenuationConstant { get; set; }
         public Single AttenuationLinear { get; set; }
         public Single AttenuationQuadratic { get; set; }
+
+        public void Render(SceneContext sceneContext, ShaderProgram shaderProgram)
+        {
+        }
     }
 }

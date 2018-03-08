@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 using Mesher.Core.Objects;
+using Mesher.Core.Objects.Scene;
 using Mesher.GraphicsCore;
 using DataLoader = Mesher.Core.Data.DataLoader;
 
@@ -11,10 +12,10 @@ namespace Mesher.Plugins.EditLight
     {
         public Scene m_scene;
 
-        public MainForm(RenderManager manager, Scene scene)
+        public MainForm(RenderContext context, Scene scene)
         {
             m_scene = scene;
-            renderManager = manager;
+            m_renderContext = context;
 
             InitializeComponent();
             

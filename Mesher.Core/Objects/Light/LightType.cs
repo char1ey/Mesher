@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Mesher.Core.Light
+namespace Mesher.Core.Objects.Light
 {
     [Flags]
     public enum LightType

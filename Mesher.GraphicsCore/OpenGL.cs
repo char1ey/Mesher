@@ -7,7 +7,7 @@ using Mesher.Mathematics;
 
 namespace Mesher.GraphicsCore
 {
-    public static class Gl
+    internal static class Gl
     {
         #region constants
 
@@ -1506,6 +1506,7 @@ namespace Mesher.GraphicsCore
         [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexParameteriv(UInt32 target, UInt32 pname, Int32[] params_notkeyword);
         [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexSubImage1D(UInt32 target, Int32 level, Int32 xoffset, Int32 width, UInt32 format, UInt32 type, Int32[] pixels);
         [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTexSubImage2D(UInt32 target, Int32 level, Int32 xoffset, Int32 yoffset, Int32 width, Int32 height, UInt32 format, UInt32 type, Int32[] pixels);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static unsafe extern void glTexSubImage2D(uint target, int level, int xoffset, int yoffset, int width, int height, uint format, uint type, void* pixels);
         [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTranslated(Double x, Double y, Double z);
         [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glTranslatef(Single x, Single y, Single z);
         [DllImport(LIBRARY_OPENGL, SetLastError = true)] private static extern void glVertex2d(Double x, Double y);
@@ -3196,6 +3197,10 @@ namespace Mesher.GraphicsCore
         public static void TexSubImage2D(UInt32 target, Int32 level, Int32 xoffset, Int32 yoffset, Int32 width, Int32 height, UInt32 format, UInt32 type, Int32[] pixels)
         {
             glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels);
+        }
+        public static unsafe void TexSubImage2D(UInt32 target, Int32 level, Int32 xoffset, Int32 yoffset, Int32 width, Int32 height, UInt32 format, UInt32 type, IntPtr pixels)
+        {
+            glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels.ToPointer());
         }
         public static void Translate(Double x, Double y, Double z)
         {

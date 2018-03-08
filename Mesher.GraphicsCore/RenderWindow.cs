@@ -22,7 +22,7 @@ namespace Mesher.GraphicsCore
 
         public Color ClearColor { get; set; }
 
-        public RenderManager RenderManager { get; internal set; }
+        public RenderContext RenderContext { get; internal set; }
 
         internal RenderWindow(IntPtr handle)
         {
@@ -75,8 +75,8 @@ namespace Mesher.GraphicsCore
             m_previousHdc = Win32.wglGetCurrentDC();
             m_previousHglrc = Win32.wglGetCurrentContext();
 
-            if (m_previousHdc != RenderWindowHandle || m_previousHglrc != RenderManager.GlrcHandle)
-                Win32.wglMakeCurrent(RenderWindowHandle, RenderManager.GlrcHandle);
+            if (m_previousHdc != RenderWindowHandle || m_previousHglrc != RenderContext.GlrcHandle)
+                Win32.wglMakeCurrent(RenderWindowHandle, RenderContext.GlrcHandle);
         }
 
         public void End()
@@ -86,7 +86,7 @@ namespace Mesher.GraphicsCore
             if (m_beginModeDepth != 0)
                 return;
 
-            if (m_previousHdc != RenderWindowHandle || m_previousHglrc != RenderManager.GlrcHandle)
+            if (m_previousHdc != RenderWindowHandle || m_previousHglrc != RenderContext.GlrcHandle)
                 Win32.wglMakeCurrent(m_previousHdc, m_previousHglrc);
         }
 
