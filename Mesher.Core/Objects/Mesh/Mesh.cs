@@ -69,6 +69,10 @@ namespace Mesher.Core.Objects.Mesh
 
             if (HasMaterial)
                 Material.Render(sceneContext, shaderProgram);
+
+            shaderProgram.SetBuffer(Indicies);
+
+            shaderProgram.Render(IndexedRendering);
         }
     }
 }

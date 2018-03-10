@@ -76,7 +76,7 @@ namespace Mesher.GraphicsCore
             m_previousHglrc = Win32.wglGetCurrentContext();
 
             if (m_previousHdc != RenderWindowHandle || m_previousHglrc != RenderContext.GlrcHandle)
-                Win32.wglMakeCurrent(RenderWindowHandle, RenderContext.GlrcHandle);
+                Win32.wglMakeCurrent(RenderWindowHandle, RenderContext.GlrcHandle);           
         }
 
         public void End()

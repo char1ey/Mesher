@@ -7,15 +7,12 @@ namespace Mesher.Core.Objects.Scene
 {
     public class Scene : IRenderItem, IDisposable
     {
-        public Cameras Cameras { get; }
-
         public Meshes Meshes { get; }
 
         public Lights Lights { get; }
 
         public Scene()
         {
-            Cameras = new Cameras();
             Meshes = new Meshes();
             Lights = new Lights();
         }
@@ -36,10 +33,6 @@ namespace Mesher.Core.Objects.Scene
                 sceneContext.Camera.Render(sceneContext, shaderProgram);
      
                 Meshes[i].Render(sceneContext, shaderProgram);
-
-                shaderProgram.SetBuffer(Meshes[i].Indicies);
-
-                shaderProgram.Render(Meshes[i].IndexedRendering);
             }
 
             shaderProgram.Unbind();
