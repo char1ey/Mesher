@@ -6,7 +6,7 @@ using Mesher.Mathematics;
 
 namespace Mesher.Core.Objects.Camera
 {
-    public abstract class Camera : IRenderItem
+    public abstract class Camera
     {
 	    private const Double EPS = 1e-9;
 
@@ -99,10 +99,5 @@ namespace Mesher.Core.Objects.Camera
         }
 
         public abstract void Zoom(Single zoom);
-        public void Render(SceneContext sceneContext, ShaderProgram shaderProgram)
-        {
-            shaderProgram.SetValue("proj", ProjectionMatrix);
-            shaderProgram.SetValue("modelView", ViewMatrix);
-        }
     }
 }

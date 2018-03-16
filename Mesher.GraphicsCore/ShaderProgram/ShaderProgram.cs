@@ -232,7 +232,7 @@ namespace Mesher.GraphicsCore.ShaderProgram
             foreach(var item in m_items)
                 item.Unbind();
 
-            m_items.Clear();
+            m_items.Clear();    
         }
 
         public void Dispose()

@@ -6,7 +6,7 @@ using Mesher.Mathematics;
 
 namespace Mesher.Core.Objects.Mesh
 {
-    public class Mesh : IRenderItem, IDisposable
+    public class Mesh : IDisposable
     {
         public Int32 Id { get; internal set; }
         
@@ -44,35 +44,6 @@ namespace Mesher.Core.Objects.Mesh
             Tangents?.Dispose();
             BiTangents?.Dispose();
             Material?.Dispose();
-        }
-
-        public void Render(SceneContext sceneContext, ShaderProgram shaderProgram)
-        {
-            shaderProgram.SetValue("hasPosition", HasVertexes);
-            if (HasVertexes)
-                shaderProgram.SetBuffer("position", Vertexes, 3);
-
-            shaderProgram.SetValue("hasNormal", HasNormals);
-            if (HasNormals)
-                shaderProgram.SetBuffer("normal", Normals, 3);
-
-            shaderProgram.SetValue("hasTexCoord", HasTextureVertexes);
-            if (HasTextureVertexes)
-                shaderProgram.SetBuffer("texCoord", TextureVertexes, 2);
-
-            shaderProgram.SetValue("hasTangentBasis", HasTangentBasis);
-            if (HasTangentBasis)
-            {
-                shaderProgram.SetBuffer("tangent", Tangents, 3);
-                shaderProgram.SetBuffer("biTangent", BiTangents, 3);
-            }
-
-            if (HasMaterial)
-                Material.Render(sceneContext, shaderProgram);
-
-            shaderProgram.SetBuffer(Indicies);
-
-            shaderProgram.Render(IndexedRendering);
         }
     }
 }

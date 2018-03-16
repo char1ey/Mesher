@@ -32,8 +32,8 @@ namespace Mesher.Core
                 item.Click += Item_Click;
             }
 
-            m_renderer = new RendererDefault(m_renderContext, GetShaderSource(Properties.Resources.VertexShaderProgramSource), 
-                                                              GetShaderSource(Properties.Resources.FragmentShaderProgramSource));
+            m_renderer = new RendererDefault(m_renderContext, GetShaderSource(Properties.Resources.DefaultVertexShaderProgramSource), 
+                                                              GetShaderSource(Properties.Resources.DefaultFragmentShaderProgramSource));
         }
 
         private String GetShaderSource(Byte[] bytes)

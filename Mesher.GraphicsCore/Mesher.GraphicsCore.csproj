@@ -93,9 +93,5 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="ShaderProgram\FragmentShaderProgram.glsl" />
-    <None Include="ShaderProgram\VertexShaderProgram.glsl" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

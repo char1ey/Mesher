@@ -5,7 +5,7 @@ using Mesher.Mathematics;
 
 namespace Mesher.Core.Objects.Material
 {
-    public class Material : IRenderItem, IDisposable
+    public class Material : IDisposable
     {
         public Int32 Id { get; internal set; }
         public Boolean HasColorAmbient { get; set; }
@@ -31,24 +31,6 @@ namespace Mesher.Core.Objects.Material
         public Boolean HasTextureNormal { get; set; }
         public GraphicsCore.Texture.Texture TextureNormal { get; set; }
 
-        public void Activate()
-        {
-            TextureAmbient?.Bind();
-            TextureDiffuse?.Bind();
-            TextureSpecular?.Bind();
-            TextureEmissive?.Bind();
-            TextureNormal?.Bind();
-        }
-
-        public void Deactivate()
-        {
-            TextureAmbient?.Unbind();
-            TextureDiffuse?.Unbind();
-            TextureSpecular?.Unbind();
-            TextureEmissive?.Unbind();
-            TextureNormal?.Unbind();
-        }
-
         public void Dispose()
         {
             TextureAmbient?.Dispose();
@@ -56,37 +38,6 @@ namespace Mesher.Core.Objects.Material
             TextureSpecular?.Dispose();
             TextureEmissive?.Dispose();
             TextureNormal?.Dispose();
-        }
-
-        public void Render(SceneContext sceneContext, ShaderProgram shaderProgram)
-        {
-            shaderProgram.SetValue("material.hasColorAmbient", HasColorAmbient);
-            if (HasColorAmbient)
-                shaderProgram.SetValue("material.colorAmbient", ColorAmbient);
-
-            shaderProgram.SetValue("material.hasColorDiffuse", HasColorDiffuse);
-            if (HasColorDiffuse)
-                shaderProgram.SetValue("material.colorDiffuse", ColorDiffuse);
-
-            shaderProgram.SetValue("material.hasColorSpecular", HasColorSpecular);
-            if (HasColorSpecular)
-                shaderProgram.SetValue("material.colorSpecular", ColorSpecular);
-
-            shaderProgram.SetValue("material.hasTextureAmbient", HasTextureAmbient);
-            if (HasTextureAmbient)
-                shaderProgram.SetValue("material.textureAmbient", TextureAmbient);
-
-            shaderProgram.SetValue("material.hasTextureDiffuse", HasTextureDiffuse);
-            if (HasTextureDiffuse)
-                shaderProgram.SetValue("material.textureDiffuse", TextureDiffuse);
-
-            shaderProgram.SetValue("material.hasTextureSpecular", HasTextureSpecular);
-            if (HasTextureSpecular)
-                shaderProgram.SetValue("material.textureSpecular", TextureSpecular);
-
-            shaderProgram.SetValue("material.hasTextureNormal", HasTextureNormal);
-            if (HasTextureNormal)
-                shaderProgram.SetValue("material.textureNormal", TextureNormal);
         }
     }
 }
