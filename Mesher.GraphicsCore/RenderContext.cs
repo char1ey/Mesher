@@ -8,8 +8,6 @@ namespace Mesher.GraphicsCore
 {
     public sealed class RenderContext : IDisposable 
     {
-        private ShaderProgram.ShaderProgram m_shaderProgram;
-
         private IntPtr m_hglrc;
 
         private RenderWindow m_defaultRenderWindow;
@@ -20,20 +18,11 @@ namespace Mesher.GraphicsCore
 
         private List<Texture.Texture> m_textures;
 
+        private List<ShaderProgram.ShaderProgram> m_shaderPrograms;
+
         public IntPtr GlrcHandle
         {
             get { return m_hglrc; }
-        }
-        
-        public ShaderProgram.ShaderProgram ShaderProgram
-        {
-            get
-            {
-                if (m_shaderProgram == null)
-                    CreateShaderProgram();
-
-                return m_shaderProgram;
-            }
         }
 
         public RenderContext(IntPtr defaultRenderWindowHandge)
@@ -41,6 +30,7 @@ namespace Mesher.GraphicsCore
             m_textures = new List<Texture.Texture>();
             m_buffers = new List<IDisposable>();
             m_renderWindows = new List<RenderWindow>();     
+            m_shaderPrograms = new List<ShaderProgram.ShaderProgram>();
             m_defaultRenderWindow = new RenderWindow(defaultRenderWindowHandge);
             m_hglrc = Win32.wglCreateContext(m_defaultRenderWindow.RenderWindowHandle);
         }
@@ -114,11 +104,19 @@ namespace Mesher.GraphicsCore
             return texture;
         }
 
-        private void CreateShaderProgram()
+        public ShaderProgram.ShaderProgram CreateShaderProgram(String vertexShaderSource, String fragmentShaderSource)
+        {
+            return CreateShaderProgram(vertexShaderSource, null, fragmentShaderSource);
+        }
+
+        public ShaderProgram.ShaderProgram CreateShaderProgram(String vertexShaderSource, String geometryShaderSource, String fragmentShaderSource)
         {
             m_defaultRenderWindow.Begin();
-            m_shaderProgram = new ShaderProgram.ShaderProgram(this);
+            var shaderProgram = new ShaderProgram.ShaderProgram(this, vertexShaderSource, geometryShaderSource, fragmentShaderSource);
             m_defaultRenderWindow.End();
+
+            m_shaderPrograms.Add(shaderProgram);
+            return shaderProgram;
         }        
 
         public void Dispose()
@@ -129,7 +127,8 @@ namespace Mesher.GraphicsCore
                 window.Dispose();
             foreach(var texture in m_textures)
                 texture.Dispose();
-            m_shaderProgram?.Dispose();
+            foreach(var shaderProgram in m_shaderPrograms)
+                shaderProgram.Dispose();
 
             Win32.wglDeleteContext(m_hglrc);
         }

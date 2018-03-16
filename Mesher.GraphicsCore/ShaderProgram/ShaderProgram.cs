@@ -16,6 +16,10 @@ namespace Mesher.GraphicsCore.ShaderProgram
 
         private UInt32 m_shaderProgramId;
 
+        private String m_vertexShaderSource;
+        private String m_geometryShaderSource;
+        private String m_fragmentShaderSource;
+
         private List<IBindableItem> m_items;
 
         private Int32 m_indiciesCount;
@@ -25,28 +29,40 @@ namespace Mesher.GraphicsCore.ShaderProgram
 
         internal RenderContext RenderContext { get { return m_renderContext; } }
 
-        public UInt32 ShaderProgramId { get { return m_shaderProgramId; } }
+        internal UInt32 ShaderProgramId { get { return m_shaderProgramId; } }
 
-        internal ShaderProgram(RenderContext renderContext)
+        internal ShaderProgram(RenderContext renderContext, String vertexShaderSource, String geometryShaderSource, String fragmentShaderSource)
         {
             m_renderContext = renderContext;
+
+            m_vertexShaderSource = vertexShaderSource;
+            m_geometryShaderSource = geometryShaderSource;
+            m_fragmentShaderSource = fragmentShaderSource;
 
             CreateShaderProgram();
 
             m_items = new List<IBindableItem>();
         }
 
+        internal ShaderProgram(RenderContext renderContext, String vertexShaderSource, String fragmentShaderSource)
+            :this(renderContext, vertexShaderSource, null, fragmentShaderSource) { }
+
         private void CreateShaderProgram()
         {
-            var vertexShaderSource = GetShaderSource(ShaderProgramType.Vertex);
-            var fragmentShaderSource = GetShaderSource(ShaderProgramType.Fragment);
-
             m_shaderProgramId = Gl.CreateProgram();
 
-            var vertexShaderId = CreateShader(Gl.GL_VERTEX_SHADER, vertexShaderSource);
+            var vertexShaderId = CreateShader(Gl.GL_VERTEX_SHADER, m_vertexShaderSource);
             Gl.AttachShader(m_shaderProgramId, vertexShaderId);
 
-            var fragmentShaderId = CreateShader(Gl.GL_FRAGMENT_SHADER, fragmentShaderSource);
+            UInt32 geometryShaderId = UInt32.MaxValue;
+
+            if (m_geometryShaderSource != null)
+            {
+                geometryShaderId = CreateShader(Gl.GL_GEOMETRY_SHADER, m_vertexShaderSource);
+                Gl.AttachShader(m_shaderProgramId, geometryShaderId);
+            }
+
+            var fragmentShaderId = CreateShader(Gl.GL_FRAGMENT_SHADER, m_fragmentShaderSource);
             Gl.AttachShader(m_shaderProgramId, fragmentShaderId);
 
             LinkShaderProgram();
@@ -54,24 +70,11 @@ namespace Mesher.GraphicsCore.ShaderProgram
             ValidateShaderProgram();
 
             Gl.DeleteShader(vertexShaderId);
+
+            if(geometryShaderId != UInt32.MaxValue)
+                Gl.DeleteShader(geometryShaderId);
+
             Gl.DeleteShader(fragmentShaderId);
-        }
-
-        private String GetShaderSource(ShaderProgramType shaderProgramType)
-        {
-            Byte[] bytes = null;
-
-            switch (shaderProgramType)
-            {
-                case ShaderProgramType.Vertex:
-                    bytes = Properties.Resources.VertexShaderProgramSource;
-                    break;
-                case ShaderProgramType.Fragment:
-                    bytes = Properties.Resources.FragmentShaderProgramSource;
-                    break;
-            }
-
-            return new String(bytes.Select(t => (Char)t).ToArray());
         }
 
         private void ValidateShaderProgram()

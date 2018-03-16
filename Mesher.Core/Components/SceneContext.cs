@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using Mesher.Core.Objects;
 using Mesher.Core.Objects.Camera;
 using Mesher.Core.Objects.Scene;
+using Mesher.Core.Renderers;
 using Mesher.GraphicsCore;
 using Mesher.GraphicsCore.ShaderProgram;
 using Mesher.Mathematics;
@@ -43,12 +44,12 @@ namespace Mesher.Core.Components
             m_renderWindow.SwapBuffers();
         }
 
-        public void Render(Scene scene)
+        public void Render(Scene scene, RendererBase renderer)
         {
             if (Camera == null)
                 Camera = new OrthographicCamera(Width, Height, new Vec3(0, 0, 1), new Vec3(0, 1, 0), new Vec3(0, 0, 0));
 
-            scene.Render(this, m_renderWindow.RenderContext.ShaderProgram);
+            scene.Render(this, renderer.ShaderProgram);
         }
 
         protected override void OnResize(EventArgs e)

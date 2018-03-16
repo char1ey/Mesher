@@ -1,9 +1,11 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using Mesher.Core.Objects;
 using Mesher.Core.Objects.Scene;
 using Mesher.Core.Plugins;
+using Mesher.Core.Renderers;
 using Mesher.GraphicsCore;
 using DataLoader = Mesher.Core.Data.DataLoader;
 
@@ -11,8 +13,10 @@ namespace Mesher.Core
 {
     public partial class MainForm : Form
     {
-        public Scene Scene;
+        private RendererBase m_renderer;
 
+        public Scene Scene;
+        
         public MainForm()
         {
             InitializeComponent();
@@ -27,13 +31,21 @@ namespace Mesher.Core
                 item.Tag = plugin;
                 item.Click += Item_Click;
             }
+
+            m_renderer = new RendererDefault(m_renderContext, GetShaderSource(Properties.Resources.VertexShaderProgramSource), 
+                                                              GetShaderSource(Properties.Resources.FragmentShaderProgramSource));
+        }
+
+        private String GetShaderSource(Byte[] bytes)
+        {
+            return new String(bytes.Select(t => (Char)t).ToArray());
         }
 
         private void Item_Click(object sender, EventArgs e)
         {
             var plugin = (IPlugin) ((ToolStripItem) sender).Tag;
 
-            plugin.Execute(m_renderContext, Scene);
+            plugin.Execute(m_renderContext, Scene, m_renderer);
         }
 
         private void SceneContext1_MouseWheel(Object sender, MouseEventArgs e)
@@ -48,7 +60,7 @@ namespace Mesher.Core
 
             sceneContext1.BeginRender();
 
-            sceneContext1.Render(Scene);
+            sceneContext1.Render(Scene, m_renderer);
 
             sceneContext1.EndRender();
         }

@@ -80,6 +80,8 @@
     <Compile Include="Plugins\PluginSystem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Renderers\RendererBase.cs" />
+    <Compile Include="Renderers\RendererDefault.cs" />
     <Compile Include="RenderManager.cs" />
     <EmbeddedResource Include="Components\SceneContext.resx">
       <DependentUpon>SceneContext.cs</DependentUpon>
@@ -106,6 +108,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Resources\FragmentShaderProgram.glsl" />
+    <None Include="Resources\VertexShaderProgram.glsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

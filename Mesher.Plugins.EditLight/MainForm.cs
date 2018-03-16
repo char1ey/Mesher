@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows.Forms;
 using Mesher.Core.Objects;
 using Mesher.Core.Objects.Scene;
+using Mesher.Core.Renderers;
 using Mesher.GraphicsCore;
 using DataLoader = Mesher.Core.Data.DataLoader;
 
@@ -11,8 +12,9 @@ namespace Mesher.Plugins.EditLight
     public partial class MainForm : Form
     {
         public Scene m_scene;
+        private RendererBase m_renderer;
 
-        public MainForm(RenderContext context, Scene scene)
+        public MainForm(RenderContext context, Scene scene, RendererBase renderer)
         {
             m_scene = scene;
             m_renderContext = context;
@@ -20,6 +22,8 @@ namespace Mesher.Plugins.EditLight
             InitializeComponent();
             
             sceneContext1.MouseWheel += SceneContext1_MouseWheel;
+
+            m_renderer = renderer;
         }
 
         private void SceneContext1_MouseWheel(Object sender, MouseEventArgs e)
@@ -34,7 +38,7 @@ namespace Mesher.Plugins.EditLight
 
             sceneContext1.BeginRender();
 
-            sceneContext1.Render(m_scene);
+            sceneContext1.Render(m_scene, m_renderer);
 
             sceneContext1.EndRender();
         }
