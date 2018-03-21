@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using Mesher.Core.Objects;
 using Mesher.Core.Objects.Light;
 using Mesher.Core.Objects.Material;
 using Mesher.Core.Objects.Mesh;

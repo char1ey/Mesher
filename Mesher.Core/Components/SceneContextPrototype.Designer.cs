@@ -1,6 +1,6 @@
 ﻿namespace Mesher.Core.Components
 {
-    partial class SceneContext
+    partial class SceneContextPrototype
     {
         /// <summary> 
         /// Обязательная переменная конструктора.
@@ -34,7 +34,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Name = "SceneContext";
+            this.Name = "SceneContextPrototype";
             this.Size = new System.Drawing.Size(185, 168);
             this.ResumeLayout(false);
 

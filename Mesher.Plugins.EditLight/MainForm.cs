@@ -1,11 +1,8 @@
 ﻿using System;
-using System.IO;
 using System.Windows.Forms;
-using Mesher.Core.Objects;
 using Mesher.Core.Objects.Scene;
 using Mesher.Core.Renderers;
 using Mesher.GraphicsCore;
-using DataLoader = Mesher.Core.Data.DataLoader;
 
 namespace Mesher.Plugins.EditLight
 {

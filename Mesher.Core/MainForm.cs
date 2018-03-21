@@ -2,11 +2,9 @@
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Mesher.Core.Objects;
 using Mesher.Core.Objects.Scene;
 using Mesher.Core.Plugins;
 using Mesher.Core.Renderers;
-using Mesher.GraphicsCore;
 using DataLoader = Mesher.Core.Data.DataLoader;
 
 namespace Mesher.Core

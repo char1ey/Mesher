@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Assimp;
 using Mesher.Core.Collections;
 using Mesher.Core.Components;
 using Mesher.GraphicsCore;
 using Camera = Mesher.Core.Objects.Camera.Camera;
-using Light = Mesher.Core.Objects.Light.Light;
 using Material = Mesher.Core.Objects.Material.Material;
 using Mesh = Mesher.Core.Objects.Mesh.Mesh;
 using Scene = Mesher.Core.Objects.Scene.Scene;
@@ -22,7 +16,7 @@ namespace Mesher.Core.Renderers
         {
         }
 
-        public override void Render(Scene scene, SceneContext sceneContext)
+        public override void Render(Scene scene, SceneContextPrototype sceneContext)
         {
             ShaderProgram.Bind();
 

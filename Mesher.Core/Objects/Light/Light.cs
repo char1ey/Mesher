@@ -21,7 +21,7 @@ namespace Mesher.Core.Objects.Light
         public Single AttenuationLinear { get; set; }
         public Single AttenuationQuadratic { get; set; }
 
-        public void Render(SceneContext sceneContext, ShaderProgram shaderProgram)
+        public void Render(SceneContextPrototype sceneContext, ShaderProgram shaderProgram)
         {
         }
     }

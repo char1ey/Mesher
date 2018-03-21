@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using Mesher.Core.Objects;
 using Mesher.Core.Objects.Camera;
 using Mesher.Core.Objects.Scene;
 using Mesher.Core.Renderers;
 using Mesher.GraphicsCore;
-using Mesher.GraphicsCore.ShaderProgram;
 using Mesher.Mathematics;
 
 namespace Mesher.Core.Components
 {
-    public partial class SceneContext : UserControl
+    public partial class SceneContextPrototype : UserControl
     {
         private const Single Eps = 1e-9f;
         private const Single ZoomSpeed = 1.2f;
@@ -25,7 +22,7 @@ namespace Mesher.Core.Components
 
         public Camera Camera { get; set; }
 
-        public SceneContext(RenderContext renderContext)
+        public SceneContextPrototype(RenderContext renderContext)
         {
             m_renderWindow = renderContext.CreateRenderWindow(Handle);
             m_renderWindow.ClearColor = Color.DimGray;

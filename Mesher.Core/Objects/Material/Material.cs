@@ -1,6 +1,4 @@
 ﻿using System;
-using Mesher.Core.Components;
-using Mesher.GraphicsCore.ShaderProgram;
 using Mesher.Mathematics;
 
 namespace Mesher.Core.Objects.Material

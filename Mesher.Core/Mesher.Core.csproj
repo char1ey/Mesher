@@ -54,11 +54,11 @@
     <Compile Include="Collections\Cameras.cs" />
     <Compile Include="Objects\Camera\OrthographicCamera.cs" />
     <Compile Include="Objects\Camera\PerspectiveCamera.cs" />
-    <Compile Include="Components\SceneContext.cs">
+    <Compile Include="Components\SceneContextPrototype.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Components\SceneContext.Designer.cs">
-      <DependentUpon>SceneContext.cs</DependentUpon>
+    <Compile Include="Components\SceneContextPrototype.Designer.cs">
+      <DependentUpon>SceneContextPrototype.cs</DependentUpon>
     </Compile>
     <Compile Include="DataManager.cs" />
     <Compile Include="Data\DataLoader.cs" />
@@ -88,8 +88,9 @@
     <Compile Include="Renderers\RendererBase.cs" />
     <Compile Include="Renderers\RendererDefault.cs" />
     <Compile Include="RenderManager.cs" />
-    <EmbeddedResource Include="Components\SceneContext.resx">
-      <DependentUpon>SceneContext.cs</DependentUpon>
+    <Compile Include="SceneContext.cs" />
+    <EmbeddedResource Include="Components\SceneContextPrototype.resx">
+      <DependentUpon>SceneContextPrototype.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

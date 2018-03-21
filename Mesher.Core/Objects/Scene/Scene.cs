@@ -1,7 +1,5 @@
 ﻿using System;
 using Mesher.Core.Collections;
-using Mesher.Core.Components;
-using Mesher.GraphicsCore.ShaderProgram;
 
 namespace Mesher.Core.Objects.Scene
 {

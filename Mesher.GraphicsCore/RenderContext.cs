@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using Mesher.GraphicsCore.Buffers;
-using Mesher.Mathematics;
 
 namespace Mesher.GraphicsCore
 {

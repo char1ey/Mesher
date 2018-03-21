@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Assimp;
 using Mesher.Core.Components;
 using Mesher.GraphicsCore;
 using Mesher.GraphicsCore.ShaderProgram;
@@ -25,6 +20,6 @@ namespace Mesher.Core.Renderers
             ShaderProgram = renderContext.CreateShaderProgram(vertexShaderSource, fragmentShaderSource);
         }
 
-        public abstract void Render(Scene scene, SceneContext sceneContext);
+        public abstract void Render(Scene scene, SceneContextPrototype sceneContext);
     }
 }

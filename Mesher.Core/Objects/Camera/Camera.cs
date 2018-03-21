@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Mesher.Core.Components;
-using Mesher.GraphicsCore.ShaderProgram;
 using Mesher.Mathematics;
 
 namespace Mesher.Core.Objects.Camera
