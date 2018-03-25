@@ -68,9 +68,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="RenderWindow.cs" />
-    <Compile Include="OpenGL.cs" />
     <Compile Include="RenderContext.cs" />
+    <Compile Include="OpenGL.cs" />
+    <Compile Include="DataContext.cs" />
     <Compile Include="ShaderProgram\ShaderProgram.cs" />
     <Compile Include="ShaderProgram\Exceptions\LinkShaderProgramException.cs" />
     <Compile Include="ShaderProgram\Exceptions\CompileShaderException.cs" />

@@ -11,8 +11,8 @@ namespace Mesher.Core.Renderers
 {
     public class RendererDefault : RendererBase
     {
-        public RendererDefault(RenderContext renderContext, String vertexShaderSource, String fragmentShaderSource) 
-            : base(renderContext, vertexShaderSource, fragmentShaderSource)
+        public RendererDefault(DataContext dataContext, String vertexShaderSource, String fragmentShaderSource) 
+            : base(dataContext, vertexShaderSource, fragmentShaderSource)
         {
         }
 

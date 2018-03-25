@@ -14,7 +14,7 @@ namespace Mesher.Core.Data
 {
     public static class DataLoader
     {
-        public static Scene LoadScene(String filePath, RenderContext renderContext)
+        public static Scene LoadScene(String filePath, DataContext dataContext)
         {
             var path = filePath.Substring(0, filePath.LastIndexOf("\\") + 1);
 
@@ -38,27 +38,27 @@ namespace Mesher.Core.Data
                     if (aiMesh.HasVertices)
                     {
                         var verts = aiMesh.Vertices.Select(t => GetVec3(t)).ToArray();
-                        mesh.Vertexes = renderContext.CreateVertexBuffer(verts);
+                        mesh.Vertexes = dataContext.CreateVertexBuffer(verts);
                     }
 
                     if (aiMesh.HasNormals)
                     {
                         var normals = aiMesh.Normals.Select(t => GetVec3(t)).ToArray();
-                        mesh.Normals = renderContext.CreateVertexBuffer(normals);
+                        mesh.Normals = dataContext.CreateVertexBuffer(normals);
                     }
 
                     if (aiMesh.HasTangentBasis)
                     {
                         var tangents = aiMesh.Tangents.Select(t => GetVec3(t)).ToArray();
                         var biTangents = aiMesh.BiTangents.Select(t => GetVec3(t)).ToArray();
-                        mesh.Tangents = renderContext.CreateVertexBuffer(tangents);
-                        mesh.BiTangents = renderContext.CreateVertexBuffer(biTangents);
+                        mesh.Tangents = dataContext.CreateVertexBuffer(tangents);
+                        mesh.BiTangents = dataContext.CreateVertexBuffer(biTangents);
                     }
 
                     if (aiMesh.HasTextureCoords(0))
                     {
                         var texcoord = aiMesh.GetTextureCoords(0).Select(t => new Vec2(t.X, 1 - t.Y)).ToArray();
-                        mesh.TextureVertexes = renderContext.CreateVertexBuffer(texcoord);
+                        mesh.TextureVertexes = dataContext.CreateVertexBuffer(texcoord);
                     }
 
                     mesh.HasVertexes = aiMesh.HasVertices;
@@ -69,18 +69,18 @@ namespace Mesher.Core.Data
                     var inds = aiMesh.GetIndices().Select(t => (Int32)t).ToArray();                    
 
                     mesh.IndexedRendering = true;
-                    mesh.Indicies = renderContext.CreateIndexBuffer(inds);
+                    mesh.Indicies = dataContext.CreateIndexBuffer(inds);
 
                     mesh.HasMaterial = aiMesh.MaterialIndex != -1;
 
                     if(mesh.HasMaterial)
-                        mesh.Material = GetMaterial(aiScene.Materials[aiMesh.MaterialIndex], path, renderContext);                    
+                        mesh.Material = GetMaterial(aiScene.Materials[aiMesh.MaterialIndex], path, dataContext);                    
                 }
 
             return scene;
         }
 
-        private static Material GetMaterial(Assimp.Material aiMaterial, String filePath, RenderContext renderContext)
+        private static Material GetMaterial(Assimp.Material aiMaterial, String filePath, DataContext dataContext)
         {      
             var material = new Material();                       
 
@@ -100,7 +100,7 @@ namespace Mesher.Core.Data
 
             if (aiMaterial.GetTextureCount(Assimp.TextureType.Ambient) > 0)
             {
-                material.TextureAmbient = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Ambient, 0), filePath, renderContext);
+                material.TextureAmbient = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Ambient, 0), filePath, dataContext);
                 if (material.TextureAmbient != null)
                     material.HasTextureAmbient = true;
             }
@@ -108,7 +108,7 @@ namespace Mesher.Core.Data
 
             if (aiMaterial.GetTextureCount(Assimp.TextureType.Diffuse) > 0)
             {
-                material.TextureDiffuse = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Diffuse, 0), filePath, renderContext);
+                material.TextureDiffuse = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Diffuse, 0), filePath, dataContext);
                 if (material.TextureDiffuse != null)
                     material.HasTextureDiffuse = true;
             }
@@ -116,7 +116,7 @@ namespace Mesher.Core.Data
 
             if (aiMaterial.GetTextureCount(Assimp.TextureType.Emissive) > 0)
             {
-                material.TextureEmissive = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Emissive, 0), filePath, renderContext);
+                material.TextureEmissive = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Emissive, 0), filePath, dataContext);
                 if (material.TextureEmissive != null)
                     material.HasTextureEmissive = true;
             }
@@ -124,7 +124,7 @@ namespace Mesher.Core.Data
 
             if (aiMaterial.GetTextureCount(Assimp.TextureType.Specular) > 0)
             {
-                material.TextureSpecular = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Specular, 0), filePath, renderContext);
+                material.TextureSpecular = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Specular, 0), filePath, dataContext);
                 if (material.TextureSpecular != null)
                     material.HasTextureSpecular = true;
             }
@@ -132,7 +132,7 @@ namespace Mesher.Core.Data
 
             if (aiMaterial.GetTextureCount(Assimp.TextureType.Height) > 0)
             {
-                material.TextureNormal = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Height, 0), filePath, renderContext);
+                material.TextureNormal = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Height, 0), filePath, dataContext);
                 if (material.TextureNormal != null)
                     material.HasTextureNormal = true;
             }
@@ -141,11 +141,11 @@ namespace Mesher.Core.Data
             return material;
         }
 
-        private static Texture GetTexture(Assimp.TextureSlot aiTexture, String filePath, RenderContext renderContext)
+        private static Texture GetTexture(Assimp.TextureSlot aiTexture, String filePath, DataContext dataContext)
         {
             if (!File.Exists(filePath + aiTexture.FilePath))
                 return null;
-            return renderContext.CreateTexture((Bitmap)Image.FromFile(filePath + aiTexture.FilePath));
+            return dataContext.CreateTexture((Bitmap)Image.FromFile(filePath + aiTexture.FilePath));
         }
 
         private static Light InitLight(Assimp.Light aiLight)

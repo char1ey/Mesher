@@ -13,9 +13,9 @@ namespace Mesher.GraphicsCore.Buffers
 
         private Int32 m_StructSize;
 
-        private RenderContext m_renderContext;
+        private DataContext m_dataContext;
 
-        internal RenderContext RenderContext { get { return m_renderContext; } }
+        internal DataContext DataContext { get { return m_dataContext; } }
 
         public UInt32 Id
         {
@@ -29,16 +29,16 @@ namespace Mesher.GraphicsCore.Buffers
 
         public Int32 Capacity { get; private set; }
 
-        public VertexBuffer(T[] data, RenderContext renderContext) : this(renderContext)
+        public VertexBuffer(T[] data, DataContext dataContext) : this(dataContext)
         {
             m_Data = data.ToList();
             Resize(m_Data.Count);
             SetSubData(data, 0);
         }
 
-        public VertexBuffer(RenderContext renderContext)
+        public VertexBuffer(DataContext dataContext)
         {
-            m_renderContext = renderContext;
+            m_dataContext = dataContext;
 
             m_StructSize = Marshal.SizeOf(typeof(T));
             Capacity = 1;

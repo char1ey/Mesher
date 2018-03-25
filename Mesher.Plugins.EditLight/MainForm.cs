@@ -11,10 +11,10 @@ namespace Mesher.Plugins.EditLight
         public Scene m_scene;
         private RendererBase m_renderer;
 
-        public MainForm(RenderContext context, Scene scene, RendererBase renderer)
+        public MainForm(DataContext context, Scene scene, RendererBase renderer)
         {
             m_scene = scene;
-            m_renderContext = context;
+            m_dataContext = context;
 
             InitializeComponent();
             

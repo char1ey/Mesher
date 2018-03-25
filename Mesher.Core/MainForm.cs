@@ -30,7 +30,7 @@ namespace Mesher.Core
                 item.Click += Item_Click;
             }
 
-            m_renderer = new RendererDefault(m_renderContext, GetShaderSource(Properties.Resources.DefaultVertexShaderProgramSource), 
+            m_renderer = new RendererDefault(m_dataContext, GetShaderSource(Properties.Resources.DefaultVertexShaderProgramSource), 
                                                               GetShaderSource(Properties.Resources.DefaultFragmentShaderProgramSource));
         }
 
@@ -43,7 +43,7 @@ namespace Mesher.Core
         {
             var plugin = (IPlugin) ((ToolStripItem) sender).Tag;
 
-            plugin.Execute(m_renderContext, Scene, m_renderer);
+            plugin.Execute(m_dataContext, Scene, m_renderer);
         }
 
         private void SceneContext1_MouseWheel(Object sender, MouseEventArgs e)
@@ -88,7 +88,7 @@ namespace Mesher.Core
 
                 if (File.Exists(openFileDialog.FileName))
                 {
-                    Scene = DataLoader.LoadScene(openFileDialog.FileName, m_renderContext);
+                    Scene = DataLoader.LoadScene(openFileDialog.FileName, m_dataContext);
                 }
             }
 

@@ -1,135 +1,110 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using Mesher.GraphicsCore.Buffers;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace Mesher.GraphicsCore
 {
-    public sealed class RenderContext : IDisposable 
+    public sealed class RenderContext : NativeWindow, IDisposable
     {
-        private IntPtr m_hglrc;
+        private IntPtr m_hdc;
 
-        private RenderWindow m_defaultRenderWindow;
+        private IntPtr m_previousHdc;
+        private IntPtr m_previousHglrc;
 
-        private List<RenderWindow> m_renderWindows;
+        internal IntPtr RenderWindowHandle { get { return m_hdc; } }
 
-        private List<IDisposable> m_buffers;
+        private Int32 m_beginModeDepth;
 
-        private List<Texture.Texture> m_textures;
+        public Int32 Width { get; private set; }
+        public Int32 Height { get; private set; }
 
-        private List<ShaderProgram.ShaderProgram> m_shaderPrograms;
+        public Color ClearColor { get; set; }
 
-        public IntPtr GlrcHandle
+        public DataContext DataContext { get; internal set; }
+
+        internal RenderContext(IntPtr handle)
         {
-            get { return m_hglrc; }
+            var createParams = new CreateParams
+            {
+                Parent = handle,
+                Style = (Int32)(Win32.WindowStyles.WS_CHILD | Win32.WindowStyles.WS_VISIBLE | Win32.WindowStyles.WS_DISABLED)
+            };
+
+            CreateHandle(createParams);
+
+            m_hdc = Win32.GetDC(Handle);
+
+            if (m_hdc == null) return;
+
+            var pfd = new Win32.PIXELFORMATDESCRIPTOR
+            {
+                nSize = (UInt16)Marshal.SizeOf(new Win32.PIXELFORMATDESCRIPTOR()),
+                nVersion = 1,
+                dwFlags = Win32.PFD_DRAW_TO_WINDOW | Win32.PFD_SUPPORT_OPENGL | Win32.PFD_DOUBLEBUFFER,
+                iPixelType = Win32.PFD_TYPE_RGBA,
+                cColorBits = 32,
+                cDepthBits = 24,
+                cStencilBits = 8,
+                iLayerType = Win32.PFD_MAIN_PLANE
+            };
+
+            var pixelFrormat = Win32.ChoosePixelFormat(m_hdc, pfd);
+            Win32.SetPixelFormat(m_hdc, pixelFrormat, pfd);
+
+            m_beginModeDepth = 0;
         }
 
-        public RenderContext(IntPtr defaultRenderWindowHandge)
+        public void ResizeWindow(Int32 width, Int32 height)
         {
-            m_textures = new List<Texture.Texture>();
-            m_buffers = new List<IDisposable>();
-            m_renderWindows = new List<RenderWindow>();     
-            m_shaderPrograms = new List<ShaderProgram.ShaderProgram>();
-            m_defaultRenderWindow = new RenderWindow(defaultRenderWindowHandge);
-            m_hglrc = Win32.wglCreateContext(m_defaultRenderWindow.RenderWindowHandle);
+            Width = width;
+            Height = height;
+            Win32.glViewport(0, 0, width, height);
+            Win32.SetWindowPos(Handle, IntPtr.Zero, 0, 0, width, height, Win32.SetWindowPosFlags.SWP_NOMOVE
+                                                                       | Win32.SetWindowPosFlags.SWP_NOZORDER
+                                                                       | Win32.SetWindowPosFlags.SWP_NOACTIVATE);
         }
 
-        public RenderWindow CreateRenderWindow(IntPtr handle)
+        public void Begin()
         {
-            var renderWindow = m_renderWindows.Find(t => t.Handle == handle);
+            m_beginModeDepth++;
+            if (m_beginModeDepth != 1)
+                return;
 
-            if (renderWindow != null)
-                return renderWindow;
+            m_previousHdc = Win32.wglGetCurrentDC();
+            m_previousHglrc = Win32.wglGetCurrentContext();
 
-            if(m_renderWindows.Count == 0)
-                m_defaultRenderWindow.Dispose();
-
-            renderWindow = new RenderWindow(handle);
-            
-            Win32.wglMakeCurrent(renderWindow.RenderWindowHandle, m_hglrc);
-
-            renderWindow.RenderContext = this;
-
-            m_renderWindows.Add(renderWindow);
-
-            m_defaultRenderWindow = renderWindow;
-
-            return renderWindow;
+            if (m_previousHdc != RenderWindowHandle || m_previousHglrc != DataContext.GlrcHandle)
+                Win32.wglMakeCurrent(RenderWindowHandle, DataContext.GlrcHandle);           
         }
 
-        public IndexBuffer CreateIndexBuffer(Int32[] indicies)
+        public void End()
         {
-            m_defaultRenderWindow.Begin();
-            var buffer = new IndexBuffer(indicies, this);
-            m_defaultRenderWindow.End();
-            m_buffers.Add(buffer);
-            return buffer;
+            m_beginModeDepth--;
+
+            if (m_beginModeDepth != 0)
+                return;
+
+            if (m_previousHdc != RenderWindowHandle || m_previousHglrc != DataContext.GlrcHandle)
+                Win32.wglMakeCurrent(m_previousHdc, m_previousHglrc);
         }
 
-        public VertexBuffer<T> CreateVertexBuffer<T>(T[] vertieces)
+        public void Clear()
         {
-            m_defaultRenderWindow.Begin();
-            var buffer = new VertexBuffer<T>(vertieces, this);
-            m_defaultRenderWindow.End();
-            m_buffers.Add(buffer);
-            return buffer;
+            Begin();
+            Gl.ClearColor(ClearColor);
+            Gl.Clear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
+            Gl.Enable(Gl.GL_DEPTH_TEST);
+            End();
         }
-
-        internal void Begin()
+        public void SwapBuffers()
         {
-            m_defaultRenderWindow.Begin();
+            Win32.SwapBuffers(m_hdc);
         }
-
-        internal void End()
-        {
-            m_defaultRenderWindow.End();
-        }
-
-        public Texture.Texture CreateTexture(Int32 width, Int32 height)
-        {
-            m_defaultRenderWindow.Begin();
-            var texture = new Texture.Texture(width, height, this);
-            m_defaultRenderWindow.End();
-            m_textures.Add(texture);
-            return texture;
-        }
-
-        public Texture.Texture CreateTexture(Bitmap bitmap)
-        {
-            m_defaultRenderWindow.Begin();
-            var texture = new Texture.Texture(bitmap, this);
-            m_defaultRenderWindow.End();
-            m_textures.Add(texture);
-            return texture;
-        }
-
-        public ShaderProgram.ShaderProgram CreateShaderProgram(String vertexShaderSource, String fragmentShaderSource)
-        {
-            return CreateShaderProgram(vertexShaderSource, null, fragmentShaderSource);
-        }
-
-        public ShaderProgram.ShaderProgram CreateShaderProgram(String vertexShaderSource, String geometryShaderSource, String fragmentShaderSource)
-        {
-            m_defaultRenderWindow.Begin();
-            var shaderProgram = new ShaderProgram.ShaderProgram(this, vertexShaderSource, geometryShaderSource, fragmentShaderSource);
-            m_defaultRenderWindow.End();
-
-            m_shaderPrograms.Add(shaderProgram);
-            return shaderProgram;
-        }        
 
         public void Dispose()
         {
-            foreach(var buffers in m_buffers)
-                buffers.Dispose();
-            foreach(var window in m_renderWindows)
-                window.Dispose();
-            foreach(var texture in m_textures)
-                texture.Dispose();
-            foreach(var shaderProgram in m_shaderPrograms)
-                shaderProgram.Dispose();
-
-            Win32.wglDeleteContext(m_hglrc);
+            Win32.ReleaseDC(Handle, m_hdc);
         }
     }
 }

@@ -31,7 +31,7 @@ namespace Mesher.Core
         /// </summary>
         private void InitializeComponent()
         {
-            this.m_renderContext = new RenderContext(Handle);
+            this.m_dataContext = new DataContext(Handle);
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItemFile = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -40,7 +40,7 @@ namespace Mesher.Core
             this.toolStripMenuItemPlugins = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
-            this.sceneContext1 = new SceneContextPrototype(this.m_renderContext);
+            this.sceneContext1 = new SceneContextPrototype(this.m_dataContext);
             // 
             // menuStrip
             // 
@@ -124,7 +124,7 @@ namespace Mesher.Core
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private RenderContext m_renderContext;
+        private DataContext m_dataContext;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPlugins;
     }
 }

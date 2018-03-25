@@ -10,14 +10,14 @@ namespace Mesher.Core.Renderers
     {
         public ShaderProgram ShaderProgram { get; }
 
-        public RendererBase(RenderContext renderContext, String vertexShaderSource, String geometryShaderSource, String fragmentShaderSource)
+        public RendererBase(DataContext dataContext, String vertexShaderSource, String geometryShaderSource, String fragmentShaderSource)
         {
-            ShaderProgram = renderContext.CreateShaderProgram(vertexShaderSource, geometryShaderSource, fragmentShaderSource);
+            ShaderProgram = dataContext.CreateShaderProgram(vertexShaderSource, geometryShaderSource, fragmentShaderSource);
         }
 
-        public RendererBase(RenderContext renderContext, String vertexShaderSource, String fragmentShaderSource)
+        public RendererBase(DataContext dataContext, String vertexShaderSource, String fragmentShaderSource)
         {
-            ShaderProgram = renderContext.CreateShaderProgram(vertexShaderSource, fragmentShaderSource);
+            ShaderProgram = dataContext.CreateShaderProgram(vertexShaderSource, fragmentShaderSource);
         }
 
         public abstract void Render(Scene scene, SceneContextPrototype sceneContext);

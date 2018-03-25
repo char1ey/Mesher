@@ -11,9 +11,9 @@ namespace Mesher.GraphicsCore.Texture
 
 		private UInt32[] m_id;
 
-        private RenderContext m_renderContext;
+        private DataContext m_dataContext;
 
-        internal RenderContext RenderContext { get { return m_renderContext; } }
+        internal DataContext DataContext { get { return m_dataContext; } }
 
 		public Int32 Width { get; private set; }
 		public Int32 Height { get; private set; }
@@ -29,9 +29,9 @@ namespace Mesher.GraphicsCore.Texture
                 ActiveTextures[i] = -1;
         }
 
-        internal Texture(Bitmap image, RenderContext renderContext)
+        internal Texture(Bitmap image, DataContext dataContext)
         {
-            m_renderContext = renderContext;
+            m_dataContext = dataContext;
 
 	        Width = image.Width;
 	        Height = image.Height;
@@ -44,13 +44,13 @@ namespace Mesher.GraphicsCore.Texture
             image.UnlockBits(d);
         }
 
-	    internal Texture(Int32 width, Int32 height, RenderContext renderContext) : this(width, height, IntPtr.Zero, renderContext)
+	    internal Texture(Int32 width, Int32 height, DataContext dataContext) : this(width, height, IntPtr.Zero, dataContext)
 	    {
 		}
 
-        internal Texture(Int32 width, Int32 height, IntPtr pixels, RenderContext renderContext)
+        internal Texture(Int32 width, Int32 height, IntPtr pixels, DataContext dataContext)
         {
-            m_renderContext = renderContext;
+            m_dataContext = dataContext;
 
             Width = width;
             Height = height;

@@ -87,8 +87,7 @@
     </Compile>
     <Compile Include="Renderers\RendererBase.cs" />
     <Compile Include="Renderers\RendererDefault.cs" />
-    <Compile Include="RenderManager.cs" />
-    <Compile Include="SceneContext.cs" />
+    <Compile Include="SceneForm.cs" />
     <EmbeddedResource Include="Components\SceneContextPrototype.resx">
       <DependentUpon>SceneContextPrototype.cs</DependentUpon>
     </EmbeddedResource>

@@ -15,30 +15,30 @@ namespace Mesher.Core.Components
         private const Single ZoomSpeed = 1.2f;
         private const Single RotationSpeed = 5f;
 
-        private readonly RenderWindow m_renderWindow;
+        private readonly RenderContext m_renderContext;
 
         private MouseButtons m_previousMouseButton;
         private Vec2 m_previousMousePosition;
 
         public Camera Camera { get; set; }
 
-        public SceneContextPrototype(RenderContext renderContext)
+        public SceneContextPrototype(DataContext dataContext)
         {
-            m_renderWindow = renderContext.CreateRenderWindow(Handle);
-            m_renderWindow.ClearColor = Color.DimGray;
+            m_renderContext = dataContext.CreateRenderWindow(Handle);
+            m_renderContext.ClearColor = Color.DimGray;
             InitializeComponent();
         }
 
         public void BeginRender()
         {
-            m_renderWindow.Begin();
-            m_renderWindow.Clear();
+            m_renderContext.Begin();
+            m_renderContext.Clear();
         }
 
         public void EndRender()
         {
-            m_renderWindow.End();
-            m_renderWindow.SwapBuffers();
+            m_renderContext.End();
+            m_renderContext.SwapBuffers();
         }
 
         public void Render(Scene scene, RendererBase renderer)
@@ -51,7 +51,7 @@ namespace Mesher.Core.Components
 
         protected override void OnResize(EventArgs e)
         {
-            m_renderWindow.ResizeWindow(Width, Height);
+            m_renderContext.ResizeWindow(Width, Height);
 
             if (Camera != null)
                 ((OrthographicCamera)Camera).UpdateSize(Width, Height);
