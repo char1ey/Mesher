@@ -1,5 +1,6 @@
 ﻿using System;
 using Mesher.Core.Components;
+using Mesher.Core.Objects.Camera;
 using Mesher.GraphicsCore;
 using Mesher.GraphicsCore.ShaderProgram;
 using Scene = Mesher.Core.Objects.Scene.Scene;
@@ -20,6 +21,6 @@ namespace Mesher.Core.Renderers
             ShaderProgram = dataContext.CreateShaderProgram(vertexShaderSource, fragmentShaderSource);
         }
 
-        public abstract void Render(Scene scene, SceneContextPrototype sceneContext);
+        public abstract void Render(Scene scene, Camera sceneContext);
     }
 }

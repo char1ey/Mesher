@@ -50,6 +50,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\SceneFormComponents.cs" />
+    <Compile Include="ICameraControler.cs" />
     <Compile Include="Objects\Camera\Camera.cs" />
     <Compile Include="Collections\Cameras.cs" />
     <Compile Include="Objects\Camera\OrthographicCamera.cs" />
@@ -87,7 +89,9 @@
     </Compile>
     <Compile Include="Renderers\RendererBase.cs" />
     <Compile Include="Renderers\RendererDefault.cs" />
-    <Compile Include="SceneForm.cs" />
+    <Compile Include="SceneForm\AxisComponent.cs" />
+    <Compile Include="SceneForm\SceneForm.cs" />
+    <Compile Include="SceneForm\SceneFormComponent.cs" />
     <EmbeddedResource Include="Components\SceneContextPrototype.resx">
       <DependentUpon>SceneContextPrototype.cs</DependentUpon>
     </EmbeddedResource>

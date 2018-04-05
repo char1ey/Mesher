@@ -14,6 +14,8 @@ namespace Mesher.Core
         private RendererBase m_renderer;
 
         public Scene Scene;
+
+        public SceneForm.SceneForm SceneForm;
         
         public MainForm()
         {
@@ -32,6 +34,9 @@ namespace Mesher.Core
 
             m_renderer = new RendererDefault(m_dataContext, GetShaderSource(Properties.Resources.DefaultVertexShaderProgramSource), 
                                                               GetShaderSource(Properties.Resources.DefaultFragmentShaderProgramSource));
+
+            SceneForm = new SceneForm.SceneForm(sceneContext1, m_renderer);
+            SceneForm.Scene = Scene;
         }
 
         private String GetShaderSource(Byte[] bytes)
@@ -55,12 +60,13 @@ namespace Mesher.Core
         {
             if (Scene == null)
                 return;
-
-            sceneContext1.BeginRender();
+            SceneForm.Scene = Scene;
+            SceneForm.Render();
+            /*sceneContext1.BeginRender();
 
             sceneContext1.Render(Scene, m_renderer);
 
-            sceneContext1.EndRender();
+            sceneContext1.EndRender();*/
         }
 
         private void sceneContext1_MouseMove(Object sender, MouseEventArgs e)

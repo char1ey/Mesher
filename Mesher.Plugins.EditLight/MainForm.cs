@@ -32,12 +32,12 @@ namespace Mesher.Plugins.EditLight
         {
             if (m_scene == null)
                 return;
-
-            sceneContext1.BeginRender();
+            
+            /*sceneContext1.BeginRender();
 
             sceneContext1.Render(m_scene, m_renderer);
 
-            sceneContext1.EndRender();
+            sceneContext1.EndRender();*/
         }
 
         private void sceneContext1_MouseMove(Object sender, MouseEventArgs e)

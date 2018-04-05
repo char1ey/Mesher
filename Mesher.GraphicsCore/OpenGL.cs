@@ -7,7 +7,7 @@ using Mesher.Mathematics;
 
 namespace Mesher.GraphicsCore
 {
-    internal static class Gl
+    public static class Gl
     {
         #region constants
 
@@ -3236,6 +3236,11 @@ namespace Mesher.GraphicsCore
         public static void Vertex(Double x, Double y)
         {
             glVertex2d(x, y);
+        }
+
+        public static void Vertex(Vec3 v)
+        {
+            Vertex(v.X, v.Y, v.Z);
         }
 
         public static void Vertex(Double[] v)

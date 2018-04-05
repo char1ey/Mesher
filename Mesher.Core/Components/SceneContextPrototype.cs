@@ -22,6 +22,11 @@ namespace Mesher.Core.Components
 
         public Camera Camera { get; set; }
 
+        public RenderContext RenderContext
+        {
+            get { return m_renderContext; }
+        }
+
         public SceneContextPrototype(DataContext dataContext)
         {
             m_renderContext = dataContext.CreateRenderWindow(Handle);
@@ -46,7 +51,7 @@ namespace Mesher.Core.Components
             if (Camera == null)
                 Camera = new OrthographicCamera(Width, Height, new Vec3(0, 0, 1), new Vec3(0, 1, 0), new Vec3(0, 0, 0));
 
-            renderer.Render(scene, this);
+            renderer.Render(scene, Camera);
         }
 
         protected override void OnResize(EventArgs e)

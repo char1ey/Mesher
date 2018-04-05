@@ -16,7 +16,7 @@ namespace Mesher.Core.Renderers
         {
         }
 
-        public override void Render(Scene scene, SceneContextPrototype sceneContext)
+        public override void Render(Scene scene, Camera camera)
         {
             ShaderProgram.Bind();
 
@@ -24,7 +24,7 @@ namespace Mesher.Core.Renderers
             {
                 InitLights(scene.Lights);
 
-                InitCamera(sceneContext.Camera);
+                InitCamera(camera);
 
                 RenderMesh(mesh);
             }
