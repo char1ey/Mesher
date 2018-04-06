@@ -12,7 +12,7 @@ namespace Mesher.Core
             SceneForm = sceneForm;
         }
 
-        public abstract void ReleseControler(Point currentScreenCoordinate);
+        public abstract void Inaction(Point currentScreenCoordinate);
         public abstract void Move(Point currentScreenCoordinate);
         public abstract void Rotate(Point currentScreeCoordinate);
         public abstract void Zoom(Point currentScreenCoordinate, Single delta);

@@ -88,7 +88,7 @@ namespace Mesher.Core.Components
                 return;
 
             if (e.Button == MouseButtons.None || m_previousMouseButton != e.Button)
-                CameraControler.ReleseControler(e.Location);
+                CameraControler.Inaction(e.Location);
             else
             {
                 if (e.Button == MouseButtons.Left)

@@ -19,7 +19,7 @@ namespace Mesher.Core
         {
         }
 
-        public override void ReleseControler(Point currentScreenCoordinate)
+        public override void Inaction(Point currentScreenCoordinate)
         {
             SceneForm.Camera.ClearStack();
             m_previousMousePosition = currentScreenCoordinate;
