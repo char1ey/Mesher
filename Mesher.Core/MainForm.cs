@@ -37,6 +37,8 @@ namespace Mesher.Core
 
             SceneForm = new SceneForm.SceneForm(sceneContext1, m_renderer);
             SceneForm.Scene = Scene;
+
+            sceneContext1.CameraControler = new ArcBallCameraControler(SceneForm);
         }
 
         private String GetShaderSource(Byte[] bytes)

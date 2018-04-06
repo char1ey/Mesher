@@ -50,8 +50,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArcBallCameraControler.cs" />
     <Compile Include="Collections\SceneFormComponents.cs" />
-    <Compile Include="ICameraControler.cs" />
+    <Compile Include="CameraControler.cs" />
     <Compile Include="Objects\Camera\Camera.cs" />
     <Compile Include="Collections\Cameras.cs" />
     <Compile Include="Objects\Camera\OrthographicCamera.cs" />
