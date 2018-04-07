@@ -7,7 +7,7 @@ using Mesher.Core.SceneForm;
 
 namespace Mesher.Core.Collections
 {
-    public class SceneFormComponents : List<SceneFormComponent>
+    public class SceneFormComponents : List<SceneContextComponent>
     {
     }
 }

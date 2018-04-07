@@ -5,7 +5,7 @@ using Mesher.Mathematics;
 
 namespace Mesher.Core.SceneForm
 {
-    public class AxisComponent : SceneFormComponent
+    public class AxisComponent : SceneContextComponent
     {
         private const Single AXIS_LENGTH = 0.2f;
         public AxisComponent(SceneForm sceneForm) : base(sceneForm)

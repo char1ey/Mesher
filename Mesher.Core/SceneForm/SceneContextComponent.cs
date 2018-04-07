@@ -3,7 +3,7 @@ using Mesher.Core.Collections;
 
 namespace Mesher.Core.SceneForm
 {
-    public abstract class SceneFormComponent
+    public abstract class SceneContextComponent
     {
         public SceneFormComponents ChildComponents { get; private set; }
 
@@ -12,7 +12,7 @@ namespace Mesher.Core.SceneForm
 
         public SceneForm SceneForm { get; private set; }
 
-        public SceneFormComponent(SceneForm sceneForm)
+        public SceneContextComponent(SceneForm sceneForm)
         {
             SceneForm = sceneForm;
             ChildComponents = new SceneFormComponents();

@@ -9,9 +9,9 @@ namespace Mesher.Plugins.EditLight
     public partial class MainForm : Form
     {
         public Scene m_scene;
-        private RendererBase m_renderer;
+        private Renderer m_renderer;
 
-        public MainForm(DataContext context, Scene scene, RendererBase renderer)
+        public MainForm(DataContext context, Scene scene, Renderer renderer)
         {
             m_scene = scene;
             m_dataContext = context;

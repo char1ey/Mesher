@@ -9,7 +9,7 @@ using Scene = Mesher.Core.Objects.Scene.Scene;
 
 namespace Mesher.Core.Renderers
 {
-    public class RendererDefault : RendererBase
+    public class RendererDefault : Renderer
     {
         public RendererDefault(DataContext dataContext, String vertexShaderSource, String fragmentShaderSource) 
             : base(dataContext, vertexShaderSource, fragmentShaderSource)

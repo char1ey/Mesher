@@ -7,16 +7,16 @@ using Scene = Mesher.Core.Objects.Scene.Scene;
 
 namespace Mesher.Core.Renderers
 {
-    public abstract class RendererBase
+    public abstract class Renderer
     {
         public ShaderProgram ShaderProgram { get; }
 
-        public RendererBase(DataContext dataContext, String vertexShaderSource, String geometryShaderSource, String fragmentShaderSource)
+        public Renderer(DataContext dataContext, String vertexShaderSource, String geometryShaderSource, String fragmentShaderSource)
         {
             ShaderProgram = dataContext.CreateShaderProgram(vertexShaderSource, geometryShaderSource, fragmentShaderSource);
         }
 
-        public RendererBase(DataContext dataContext, String vertexShaderSource, String fragmentShaderSource)
+        public Renderer(DataContext dataContext, String vertexShaderSource, String fragmentShaderSource)
         {
             ShaderProgram = dataContext.CreateShaderProgram(vertexShaderSource, fragmentShaderSource);
         }

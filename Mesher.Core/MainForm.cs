@@ -11,7 +11,7 @@ namespace Mesher.Core
 {
     public partial class MainForm : Form
     {
-        private RendererBase m_renderer;
+        private Renderer m_renderer;
 
         public Scene Scene;
 

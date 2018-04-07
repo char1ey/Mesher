@@ -12,7 +12,7 @@ namespace Mesher.Core.SceneForm
     public class SceneForm
     {
         private SceneContextPrototype m_renderContext;
-        private RendererBase m_renderer;
+        private Renderer m_renderer;
 
         public Scene Scene { get; set; }
         public Camera Camera
@@ -31,7 +31,7 @@ namespace Mesher.Core.SceneForm
             get { return m_renderContext.Height; }
         }
 
-        public SceneForm(SceneContextPrototype renderContext, RendererBase renderer)
+        public SceneForm(SceneContextPrototype renderContext, Renderer renderer)
         {
             m_renderer = renderer;
             m_renderContext = renderContext;
