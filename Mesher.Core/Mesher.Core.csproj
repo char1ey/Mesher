@@ -58,10 +58,10 @@
     <Compile Include="Collections\Cameras.cs" />
     <Compile Include="Objects\Camera\OrthographicCamera.cs" />
     <Compile Include="Objects\Camera\PerspectiveCamera.cs" />
-    <Compile Include="Components\SceneContextWinforms.cs">
+    <Compile Include="SceneContexts\SceneContextWinforms.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Components\SceneContextWinforms.Designer.cs">
+    <Compile Include="SceneContexts\SceneContextWinforms.Designer.cs">
       <DependentUpon>SceneContextWinforms.cs</DependentUpon>
     </Compile>
     <Compile Include="DataManager.cs" />
@@ -92,9 +92,8 @@
     <Compile Include="Renderers\Renderer.cs" />
     <Compile Include="Renderers\RendererDefault.cs" />
     <Compile Include="SceneForm\AxisComponent.cs" />
-    <Compile Include="SceneForm\SceneForm.cs" />
     <Compile Include="SceneForm\SceneContextComponent.cs" />
-    <EmbeddedResource Include="Components\SceneContextWinforms.resx">
+    <EmbeddedResource Include="SceneContexts\SceneContextWinforms.resx">
       <DependentUpon>SceneContextWinforms.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
