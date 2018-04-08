@@ -32,7 +32,7 @@ namespace Mesher.Plugins.EditLight
         private void InitializeComponent()
         {
             this.SuspendLayout();
-            this.sceneContext1 = new SceneContextPrototype(this.m_dataContext);
+            this.sceneContext1 = new SceneContextWinforms(this.m_dataContext);
             // 
             // sceneContext1
             // 
@@ -61,7 +61,7 @@ namespace Mesher.Plugins.EditLight
 
         #endregion
 
-        private Core.Components.SceneContextPrototype sceneContext1;
+        private Core.Components.SceneContextWinforms sceneContext1;
         private DataContext m_dataContext;
     }
 }

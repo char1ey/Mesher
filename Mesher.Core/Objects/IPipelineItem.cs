@@ -5,6 +5,6 @@ namespace Mesher.Core.Objects
 {
     public interface IRenderItem
     {
-        void Render(SceneContextPrototype sceneContext, ShaderProgram shaderProgram);
+        void Render(SceneContextWinforms sceneContext, ShaderProgram shaderProgram);
     }
 }

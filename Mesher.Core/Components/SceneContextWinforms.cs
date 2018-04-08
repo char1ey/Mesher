@@ -1,29 +1,51 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Mesher.Core.Collections;
 using Mesher.Core.Objects.Camera;
 using Mesher.Core.Objects.Scene;
 using Mesher.Core.Renderers;
+using Mesher.Core.SceneForm;
 using Mesher.GraphicsCore;
 using Mesher.Mathematics;
 
 namespace Mesher.Core.Components
 {
-    public partial class SceneContextPrototype : UserControl
+    public partial class SceneContextWinforms : UserControl, ISceneContext
     {
         private readonly RenderContext m_renderContext;
 
         private MouseButtons m_previousMouseButton;
 
         public Camera Camera { get; set; }
+        public Scene Scene { get; set; }
+        public Renderer Renderer { get; set; }
+        public CameraControler CameraControler { get; set; }
+        public SceneFormComponents SceneContextComponents { get; private set; }
 
-        public CameraControler CameraControler;
 
-        public SceneContextPrototype(DataContext dataContext)
+        public void Add(SceneContextComponent component)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Remove(SceneContextComponent component)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveAt(Int32 id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public SceneContextWinforms(DataContext dataContext)
         {
             m_renderContext = dataContext.CreateRenderWindow(Handle);
             m_renderContext.ClearColor = Color.DimGray;
             InitializeComponent();
+            SceneContextComponents = new SceneFormComponents();
+            SceneContextComponents.Add(new AxisComponent(this));
         }
 
         public void BeginRender()
@@ -36,6 +58,20 @@ namespace Mesher.Core.Components
         {
             m_renderContext.End();
             m_renderContext.SwapBuffers();
+        }
+
+        public void Render()
+        {
+            if (Camera == null)
+                Camera = new OrthographicCamera(m_renderContext.Width, m_renderContext.Height, new Vec3(0, 0, 1), new Vec3(0, 1, 0), new Vec3(0, 0, 0));
+
+            BeginRender();
+            Renderer.Render(Scene, Camera);
+     
+            Gl.Clear(Gl.GL_DEPTH_BUFFER_BIT);
+            foreach (var component in SceneContextComponents)
+                component.Draw();
+            EndRender();
         }
 
         protected override void OnResize(EventArgs e)

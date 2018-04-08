@@ -40,7 +40,7 @@ namespace Mesher.Core
             this.toolStripMenuItemPlugins = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
-            this.sceneContext1 = new SceneContextPrototype(this.m_dataContext);
+            this.sceneContext1 = new SceneContextWinforms(this.m_dataContext);
             // 
             // menuStrip
             // 
@@ -118,7 +118,7 @@ namespace Mesher.Core
 
         #endregion
 
-        private Components.SceneContextPrototype sceneContext1;
+        private Components.SceneContextWinforms sceneContext1;
         private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItemFile;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;

@@ -11,7 +11,7 @@ namespace Mesher.Core.SceneForm
 {
     public class SceneForm
     {
-        private SceneContextPrototype m_renderContext;
+        private SceneContextWinforms m_renderContext;
         private Renderer m_renderer;
 
         public Scene Scene { get; set; }
@@ -31,12 +31,12 @@ namespace Mesher.Core.SceneForm
             get { return m_renderContext.Height; }
         }
 
-        public SceneForm(SceneContextPrototype renderContext, Renderer renderer)
+        public SceneForm(SceneContextWinforms renderContext, Renderer renderer)
         {
             m_renderer = renderer;
             m_renderContext = renderContext;
             Components = new SceneFormComponents();
-            Components.Add(new AxisComponent(this));
+           // Components.Add(new AxisComponent(this));
         }
 
         public void Render()

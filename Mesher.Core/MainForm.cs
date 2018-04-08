@@ -15,7 +15,7 @@ namespace Mesher.Core
 
         public Scene Scene;
 
-        public SceneForm.SceneForm SceneForm;
+        //public SceneForm.SceneForm SceneForm;
         
         public MainForm()
         {
@@ -35,10 +35,11 @@ namespace Mesher.Core
             m_renderer = new RendererDefault(m_dataContext, GetShaderSource(Properties.Resources.DefaultVertexShaderProgramSource), 
                                                               GetShaderSource(Properties.Resources.DefaultFragmentShaderProgramSource));
 
-            SceneForm = new SceneForm.SceneForm(sceneContext1, m_renderer);
-            SceneForm.Scene = Scene;
+            //SceneForm = new SceneForm.SceneForm(sceneContext1, m_renderer);
+            sceneContext1.Scene = Scene;
+            sceneContext1.Renderer = m_renderer;
 
-            sceneContext1.CameraControler = new ArcBallCameraControler(SceneForm);
+            sceneContext1.CameraControler = new ArcBallCameraControler(sceneContext1);
         }
 
         private String GetShaderSource(Byte[] bytes)
@@ -62,8 +63,8 @@ namespace Mesher.Core
         {
             if (Scene == null)
                 return;
-            SceneForm.Scene = Scene;
-            SceneForm.Render();
+            sceneContext1.Scene = Scene;
+            sceneContext1.Render();
             /*sceneContext1.BeginRender();
 
             sceneContext1.Render(Scene, m_renderer);

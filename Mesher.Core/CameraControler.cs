@@ -5,11 +5,11 @@ namespace Mesher.Core
 {
     public abstract class CameraControler
     {
-        protected SceneForm.SceneForm SceneForm { get; private set; }
+        protected ISceneContext SceneContext { get; private set; }
 
-        public CameraControler(SceneForm.SceneForm sceneForm)
+        public CameraControler(ISceneContext sceneContext)
         {
-            SceneForm = sceneForm;
+            SceneContext = sceneContext;
         }
 
         public abstract void Inaction(Point currentScreenCoordinate);

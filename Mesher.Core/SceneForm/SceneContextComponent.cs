@@ -10,11 +10,11 @@ namespace Mesher.Core.SceneForm
         public Point Location { get; set; }
         public Size Size { get; set; }
 
-        public SceneForm SceneForm { get; private set; }
+        public ISceneContext SceneContext { get; private set; }
 
-        public SceneContextComponent(SceneForm sceneForm)
+        public SceneContextComponent(ISceneContext sceneContext)
         {
-            SceneForm = sceneForm;
+            SceneContext = sceneContext;
             ChildComponents = new SceneFormComponents();
         }
 

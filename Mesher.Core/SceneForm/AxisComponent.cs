@@ -8,16 +8,16 @@ namespace Mesher.Core.SceneForm
     public class AxisComponent : SceneContextComponent
     {
         private const Single AXIS_LENGTH = 0.2f;
-        public AxisComponent(SceneForm sceneForm) : base(sceneForm)
+        public AxisComponent(ISceneContext sceneContext) : base(sceneContext)
         {
         }
 
         public override void Draw()
         {
-            var ratio = (Single) SceneForm.Width / SceneForm.Height;
+            var ratio = (Single) SceneContext.Width / SceneContext.Height;
 
             Single x, y;
-            if (SceneForm.Width > SceneForm.Height)
+            if (SceneContext.Width > SceneContext.Height)
             {
                 x = 1 / ratio;
                 y = 1;
@@ -30,9 +30,9 @@ namespace Mesher.Core.SceneForm
 
             var v = new Vec3(x, y, 1);
 
-            var axisX = new Vec3(SceneForm.Camera.ViewMatrix.Col0).Normalize() * AXIS_LENGTH * v;
-            var axisY = new Vec3(SceneForm.Camera.ViewMatrix.Col1).Normalize() * AXIS_LENGTH * v;
-            var axisZ = new Vec3(SceneForm.Camera.ViewMatrix.Col2).Normalize() * AXIS_LENGTH * v;
+            var axisX = new Vec3(SceneContext.Camera.ViewMatrix.Col0).Normalize() * AXIS_LENGTH * v;
+            var axisY = new Vec3(SceneContext.Camera.ViewMatrix.Col1).Normalize() * AXIS_LENGTH * v;
+            var axisZ = new Vec3(SceneContext.Camera.ViewMatrix.Col2).Normalize() * AXIS_LENGTH * v;
             var p0 = new Vec3(-0.8f * y, -0.9f * x, 0);
 
             DrawAxis(p0, axisX, Color.Blue);
