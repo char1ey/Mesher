@@ -15,28 +15,40 @@ namespace Mesher.Core.SceneContexts
     {
         private readonly RenderContext m_renderContext;
 
+        private SceneContextGraphics m_sceneContextGraphics;
+
         private MouseButtons m_previousMouseButton;
 
         public Camera Camera { get; set; }
         public Scene Scene { get; set; }
-        public Renderer Renderer { get; set; }
+        public SceneRendererBase SceneRenderer { get; set; }
         public CameraControler CameraControler { get; set; }
+        public RenderContext RenderContext
+        {
+            get { return m_renderContext; }
+        }
+
+        public DataContext DataContext
+        {
+            get { return m_renderContext?.DataContext; }
+        }
+
         public SceneFormComponents SceneContextComponents { get; private set; }
 
 
         public void Add(SceneContextComponent component)
         {
-            throw new NotImplementedException();
+            SceneContextComponents.Add(component);
         }
 
         public void Remove(SceneContextComponent component)
         {
-            throw new NotImplementedException();
+            SceneContextComponents.Remove(component);
         }
 
         public void RemoveAt(Int32 id)
         {
-            throw new NotImplementedException();
+            SceneContextComponents.RemoveAt(id);
         }
 
         public SceneContextWinforms(DataContext dataContext)
@@ -45,7 +57,7 @@ namespace Mesher.Core.SceneContexts
             m_renderContext.ClearColor = Color.DimGray;
             InitializeComponent();
             SceneContextComponents = new SceneFormComponents();
-            SceneContextComponents.Add(new Axises(this));
+            m_sceneContextGraphics = new SceneContextGraphics(this);
         }
 
         public void BeginRender()
@@ -66,11 +78,11 @@ namespace Mesher.Core.SceneContexts
                 Camera = new OrthographicCamera(m_renderContext.Width, m_renderContext.Height, new Vec3(0, 0, 1), new Vec3(0, 1, 0), new Vec3(0, 0, 0));
 
             BeginRender();
-            Renderer.Render(Scene, Camera);
+            SceneRenderer.Render(Scene, Camera);
      
             Gl.Clear(Gl.GL_DEPTH_BUFFER_BIT);
             foreach (var component in SceneContextComponents)
-                component.Draw();
+                component.Draw(m_sceneContextGraphics);
             EndRender();
         }
 
@@ -105,6 +117,14 @@ namespace Mesher.Core.SceneContexts
             base.OnKeyDown(e);
         }
 
+        protected override void OnMouseClick(MouseEventArgs e)
+        {
+            if(e.Button == MouseButtons.Left)
+                foreach (var component in SceneContextComponents)
+                    component.MouseClick(new Point(e.Location.X, Height - e.Location.Y));
+            base.OnMouseClick(e);
+        }
+
         protected override void OnMouseMove(MouseEventArgs e)
         {
             if (Camera == null)
@@ -122,7 +142,7 @@ namespace Mesher.Core.SceneContexts
             m_previousMouseButton = e.Button;
 
             foreach (var component in SceneContextComponents)
-                component.MouseMove(e.Location);
+                component.MouseMove(new Point(e.Location.X, Height - e.Location.Y));
 
             base.OnMouseMove(e);
         }

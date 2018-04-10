@@ -103,15 +103,20 @@ namespace Mesher.GraphicsCore
             return texture;
         }
 
-        public ShaderProgram.ShaderProgram CreateShaderProgram(String vertexShaderSource, String fragmentShaderSource)
-        {
-            return CreateShaderProgram(vertexShaderSource, null, fragmentShaderSource);
-        }
-
-        public ShaderProgram.ShaderProgram CreateShaderProgram(String vertexShaderSource, String geometryShaderSource, String fragmentShaderSource)
+        public ShaderProgram.ShaderProgram CreateShaderProgram(Byte[] vertexShaderSource, Byte[] fragmentShaderSource)
         {
             m_defaultRenderContext.Begin();
-            var shaderProgram = new ShaderProgram.ShaderProgram(this, vertexShaderSource, geometryShaderSource, fragmentShaderSource);
+            var shaderProgram = new ShaderProgram.ShaderProgram(this, vertexShaderSource, fragmentShaderSource);
+            m_defaultRenderContext.End();
+
+            m_shaderPrograms.Add(shaderProgram);
+            return shaderProgram;
+        }
+
+        public ShaderProgram.ShaderProgram CreateShaderProgram(String vertexShaderSource, String fragmentShaderSource)
+        {
+            m_defaultRenderContext.Begin();
+            var shaderProgram = new ShaderProgram.ShaderProgram(this, vertexShaderSource, fragmentShaderSource);
             m_defaultRenderContext.End();
 
             m_shaderPrograms.Add(shaderProgram);

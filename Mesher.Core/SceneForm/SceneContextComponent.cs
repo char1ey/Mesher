@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using Mesher.Core.Collections;
+using Mesher.Core.Renderers;
 
 namespace Mesher.Core.SceneForm
 {
@@ -18,7 +19,7 @@ namespace Mesher.Core.SceneForm
             ChildComponents = new SceneFormComponents();
         }
 
-        public virtual void Draw()
+        public virtual void Draw(SceneContextGraphics graphics)
         {
         }
 
@@ -26,7 +27,7 @@ namespace Mesher.Core.SceneForm
         {
         }
 
-        public virtual void MouseClick()
+        public virtual void MouseClick(Point location)
         {
         }
     }

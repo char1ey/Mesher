@@ -2474,7 +2474,7 @@ namespace Mesher.GraphicsCore
         }
         public static void Light(UInt32 light, UInt32 pname, Vec3 position)
         {
-            glLightfv(light, pname, new[] { (Single)position.X, (Single)position.Y, (Single)position.Z, 0 });
+            glLightfv(light, pname, new[] { position.X, position.Y, position.Z, 0 });
         }
         public static void Light(UInt32 light, UInt32 pname, Int32 param)
         {
@@ -3590,9 +3590,9 @@ namespace Mesher.GraphicsCore
 
             for (var i = 0; i < data.Length; i++)
             {
-                *pointer++ = (Single)data[i].X;
-                *pointer++ = (Single)data[i].Y;
-                *pointer++ = (Single)data[i].Z;
+                *pointer++ = data[i].X;
+                *pointer++ = data[i].Y;
+                *pointer++ = data[i].Z;
             }
 
             GetDelegateFor<glBufferData>()(target, data.Length * sizeof(Single) * 3, p, usage);
@@ -3606,8 +3606,8 @@ namespace Mesher.GraphicsCore
 
             for (var i = 0; i < data.Length; i++)
             {
-                *pointer++ = (Single)data[i].X;
-                *pointer++ = (Single)data[i].Y;
+                *pointer++ = data[i].X;
+                *pointer++ = data[i].Y;
             }
 
             GetDelegateFor<glBufferData>()(target, data.Length * sizeof(Single) * 2, p, usage);

@@ -9,9 +9,9 @@ namespace Mesher.Plugins.EditLight
     public partial class MainForm : Form
     {
         public Scene m_scene;
-        private Renderer m_renderer;
+        private SceneRendererBase m_sceneRenderer;
 
-        public MainForm(DataContext context, Scene scene, Renderer renderer)
+        public MainForm(DataContext context, Scene scene, SceneRendererBase sceneRenderer)
         {
             m_scene = scene;
             m_dataContext = context;
@@ -20,7 +20,7 @@ namespace Mesher.Plugins.EditLight
             
             sceneContext1.MouseWheel += SceneContext1_MouseWheel;
 
-            m_renderer = renderer;
+            m_sceneRenderer = sceneRenderer;
         }
 
         private void SceneContext1_MouseWheel(Object sender, MouseEventArgs e)
@@ -35,7 +35,7 @@ namespace Mesher.Plugins.EditLight
             
             /*sceneContext1.BeginRender();
 
-            sceneContext1.Render(m_scene, m_renderer);
+            sceneContext1.RenderTriangles(m_scene, m_sceneRenderer);
 
             sceneContext1.EndRender();*/
         }

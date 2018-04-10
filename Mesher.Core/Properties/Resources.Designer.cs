@@ -63,6 +63,26 @@ namespace Mesher.Core.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] ComponentsFragmentShader {
+            get {
+                object obj = ResourceManager.GetObject("ComponentsFragmentShader", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] ComponentsVertexShader {
+            get {
+                object obj = ResourceManager.GetObject("ComponentsVertexShader", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] DefaultFragmentShaderProgramSource {
             get {
                 object obj = ResourceManager.GetObject("DefaultFragmentShaderProgramSource", resourceCulture);

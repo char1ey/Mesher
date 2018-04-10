@@ -71,6 +71,7 @@
     <Compile Include="RenderContext.cs" />
     <Compile Include="OpenGL.cs" />
     <Compile Include="DataContext.cs" />
+    <Compile Include="ShaderProgram\RenderMode.cs" />
     <Compile Include="ShaderProgram\ShaderProgram.cs" />
     <Compile Include="ShaderProgram\Exceptions\LinkShaderProgramException.cs" />
     <Compile Include="ShaderProgram\Exceptions\CompileShaderException.cs" />

@@ -17,9 +17,9 @@ namespace Mesher.Plugins.EditLight
             Name = @"Edit light";
         }
 
-        public void Execute(DataContext context, Scene scene, Renderer renderer)
+        public void Execute(DataContext context, Scene scene, SceneRendererBase sceneRenderer)
         {
-            m_form = new MainForm(context, scene, renderer);
+            m_form = new MainForm(context, scene, sceneRenderer);
             m_form.Show();
         }
     }

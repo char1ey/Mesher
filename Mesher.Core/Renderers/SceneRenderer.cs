@@ -1,6 +1,7 @@
 ﻿using System;
 using Mesher.Core.Collections;
 using Mesher.GraphicsCore;
+using Mesher.GraphicsCore.ShaderProgram;
 using Camera = Mesher.Core.Objects.Camera.Camera;
 using Material = Mesher.Core.Objects.Material.Material;
 using Mesh = Mesher.Core.Objects.Mesh.Mesh;
@@ -8,9 +9,9 @@ using Scene = Mesher.Core.Objects.Scene.Scene;
 
 namespace Mesher.Core.Renderers
 {
-    public class RendererDefault : Renderer
+    public class SceneRenderer : SceneRendererBase
     {
-        public RendererDefault(DataContext dataContext, String vertexShaderSource, String fragmentShaderSource) 
+        public SceneRenderer(DataContext dataContext, String vertexShaderSource, String fragmentShaderSource) 
             : base(dataContext, vertexShaderSource, fragmentShaderSource)
         {
         }
@@ -63,7 +64,7 @@ namespace Mesher.Core.Renderers
 
             ShaderProgram.SetBuffer(mesh.Indicies);
 
-            ShaderProgram.Render(mesh.IndexedRendering);
+            ShaderProgram.RenderTriangles(mesh.IndexedRendering);
         }
 
         private void InitMaterial(Material material)

@@ -42,7 +42,7 @@ namespace Mesher.Core
 
             SceneContext.Camera.Push();
 
-            var v0 = GetArcBallVector((Int32)m_previousMousePosition.X, (Int32)m_previousMousePosition.Y);
+            var v0 = GetArcBallVector(m_previousMousePosition.X, m_previousMousePosition.Y);
             var v1 = GetArcBallVector(currentScreeCoordinate.X, currentScreeCoordinate.Y);
 
             var axis = Mat3.Inverse(SceneContext.Camera.ViewMatrix.ToMat3()) * (SceneContext.Camera.ProjectionMatrix.ToMat3() * v0.Cross(v1).Normalize()).Normalize();

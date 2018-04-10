@@ -8,6 +8,6 @@ namespace Mesher.Core.Plugins
     public interface IPlugin
     {
         String Name { get; }
-        void Execute(DataContext context, Scene scene, Renderer renderer);
+        void Execute(DataContext context, Scene scene, SceneRendererBase sceneRenderer);
     }
 }

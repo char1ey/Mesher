@@ -58,6 +58,7 @@
     <Compile Include="Collections\Cameras.cs" />
     <Compile Include="Objects\Camera\OrthographicCamera.cs" />
     <Compile Include="Objects\Camera\PerspectiveCamera.cs" />
+    <Compile Include="Renderers\SceneContextGraphics.cs" />
     <Compile Include="SceneContexts\SceneContextWinforms.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -89,8 +90,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Renderers\Renderer.cs" />
-    <Compile Include="Renderers\RendererDefault.cs" />
+    <Compile Include="Renderers\SceneRendererBase.cs" />
+    <Compile Include="Renderers\SceneRenderer.cs" />
     <Compile Include="SceneForm\Axises.cs" />
     <Compile Include="SceneForm\SceneContextComponent.cs" />
     <EmbeddedResource Include="SceneContexts\SceneContextWinforms.resx">
@@ -113,6 +114,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Resources\ComponentsFragmentShader.glsl" />
+    <None Include="Resources\ComponentsVertexShader.glsl" />
     <None Include="Resources\DefaultFragmentShaderProgram.glsl" />
     <None Include="Resources\DefaultVertexShaderProgram.glsl" />
   </ItemGroup>

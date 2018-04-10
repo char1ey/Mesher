@@ -2,6 +2,7 @@
 using Mesher.Core.Objects.Scene;
 using Mesher.Core.Renderers;
 using Mesher.Core.SceneForm;
+using Mesher.GraphicsCore;
 
 namespace Mesher.Core
 {
@@ -14,9 +15,13 @@ namespace Mesher.Core
 
         Scene Scene { get; set; }
 
-        Renderer Renderer { get; set; }
+        SceneRendererBase SceneRenderer { get; set; }
 
         CameraControler CameraControler { get; set; }
+
+        RenderContext RenderContext { get; }
+
+        DataContext DataContext { get; }
 
         void Add(SceneContextComponent component);
         void Remove(SceneContextComponent component);

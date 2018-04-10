@@ -5,13 +5,14 @@ using System.Windows.Forms;
 using Mesher.Core.Objects.Scene;
 using Mesher.Core.Plugins;
 using Mesher.Core.Renderers;
+using Mesher.Core.SceneForm;
 using DataLoader = Mesher.Core.Data.DataLoader;
 
 namespace Mesher.Core
 {
     public partial class MainForm : Form
     {
-        private Renderer m_renderer;
+        private SceneRendererBase m_sceneRenderer;
 
         public Scene Scene;
 
@@ -32,13 +33,13 @@ namespace Mesher.Core
                 item.Click += Item_Click;
             }
 
-            m_renderer = new RendererDefault(m_dataContext, GetShaderSource(Properties.Resources.DefaultVertexShaderProgramSource), 
+            m_sceneRenderer = new SceneRenderer(m_dataContext, GetShaderSource(Properties.Resources.DefaultVertexShaderProgramSource), 
                                                               GetShaderSource(Properties.Resources.DefaultFragmentShaderProgramSource));
 
-            //SceneForm = new SceneForm.SceneForm(sceneContext1, m_renderer);
+            //SceneForm = new SceneForm.SceneForm(sceneContext1, m_sceneRenderer);
             sceneContext1.Scene = Scene;
-            sceneContext1.Renderer = m_renderer;
-
+            sceneContext1.SceneRenderer = m_sceneRenderer;
+            sceneContext1.Add(new Axises(sceneContext1));
             sceneContext1.CameraControler = new ArcBallCameraControler(sceneContext1);
         }
 
@@ -51,7 +52,7 @@ namespace Mesher.Core
         {
             var plugin = (IPlugin) ((ToolStripItem) sender).Tag;
 
-            plugin.Execute(m_dataContext, Scene, m_renderer);
+            plugin.Execute(m_dataContext, Scene, m_sceneRenderer);
         }
 
         private void SceneContext1_MouseWheel(Object sender, MouseEventArgs e)
@@ -67,7 +68,7 @@ namespace Mesher.Core
             sceneContext1.Render();
             /*sceneContext1.BeginRender();
 
-            sceneContext1.Render(Scene, m_renderer);
+            sceneContext1.RenderTriangles(Scene, m_sceneRenderer);
 
             sceneContext1.EndRender();*/
         }
