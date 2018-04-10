@@ -18,6 +18,16 @@ namespace Mesher.Core.SceneForm
             ChildComponents = new SceneFormComponents();
         }
 
-        public abstract void Draw();
+        public virtual void Draw()
+        {
+        }
+
+        public virtual void MouseMove(Point location)
+        {
+        }
+
+        public virtual void MouseClick()
+        {
+        }
     }
 }

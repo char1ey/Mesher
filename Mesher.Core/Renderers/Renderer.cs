@@ -1,5 +1,4 @@
 ﻿using System;
-using Mesher.Core.Components;
 using Mesher.Core.Objects.Camera;
 using Mesher.GraphicsCore;
 using Mesher.GraphicsCore.ShaderProgram;

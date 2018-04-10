@@ -1,5 +1,5 @@
 ﻿using System;
-using Mesher.Core.Components;
+using Mesher.Core.SceneContexts;
 using Mesher.GraphicsCore.ShaderProgram;
 using Mesher.Mathematics;
 

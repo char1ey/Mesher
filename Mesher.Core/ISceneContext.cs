@@ -21,5 +21,7 @@ namespace Mesher.Core
         void Add(SceneContextComponent component);
         void Remove(SceneContextComponent component);
         void RemoveAt(int id);
+
+        void Render();
     }
 }

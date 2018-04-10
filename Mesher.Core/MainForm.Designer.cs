@@ -1,4 +1,4 @@
-﻿using Mesher.Core.Components;
+﻿using Mesher.Core.SceneContexts;
 using Mesher.GraphicsCore;
 
 namespace Mesher.Core
@@ -118,7 +118,7 @@ namespace Mesher.Core
 
         #endregion
 
-        private Components.SceneContextWinforms sceneContext1;
+        private SceneContextWinforms sceneContext1;
         private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItemFile;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;

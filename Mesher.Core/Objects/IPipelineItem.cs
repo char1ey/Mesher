@@ -1,4 +1,4 @@
-﻿using Mesher.Core.Components;
+﻿using Mesher.Core.SceneContexts;
 using Mesher.GraphicsCore.ShaderProgram;
 
 namespace Mesher.Core.Objects

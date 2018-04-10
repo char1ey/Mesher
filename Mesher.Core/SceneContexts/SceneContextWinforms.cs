@@ -9,7 +9,7 @@ using Mesher.Core.SceneForm;
 using Mesher.GraphicsCore;
 using Mesher.Mathematics;
 
-namespace Mesher.Core.Components
+namespace Mesher.Core.SceneContexts
 {
     public partial class SceneContextWinforms : UserControl, ISceneContext
     {
@@ -45,7 +45,7 @@ namespace Mesher.Core.Components
             m_renderContext.ClearColor = Color.DimGray;
             InitializeComponent();
             SceneContextComponents = new SceneFormComponents();
-            SceneContextComponents.Add(new AxisComponent(this));
+            SceneContextComponents.Add(new Axises(this));
         }
 
         public void BeginRender()
@@ -120,6 +120,9 @@ namespace Mesher.Core.Components
                     CameraControler.Rotate(e.Location);
             }
             m_previousMouseButton = e.Button;
+
+            foreach (var component in SceneContextComponents)
+                component.MouseMove(e.Location);
 
             base.OnMouseMove(e);
         }

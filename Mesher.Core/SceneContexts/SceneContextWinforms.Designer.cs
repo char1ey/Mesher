@@ -1,4 +1,4 @@
-﻿namespace Mesher.Core.Components
+﻿namespace Mesher.Core.SceneContexts
 {
     partial class SceneContextWinforms
     {

@@ -1,6 +1,5 @@
 ﻿using System;
 using Mesher.Core.Collections;
-using Mesher.Core.Components;
 using Mesher.GraphicsCore;
 using Camera = Mesher.Core.Objects.Camera.Camera;
 using Material = Mesher.Core.Objects.Material.Material;

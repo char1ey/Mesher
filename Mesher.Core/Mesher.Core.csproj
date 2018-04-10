@@ -91,7 +91,7 @@
     </Compile>
     <Compile Include="Renderers\Renderer.cs" />
     <Compile Include="Renderers\RendererDefault.cs" />
-    <Compile Include="SceneForm\AxisComponent.cs" />
+    <Compile Include="SceneForm\Axises.cs" />
     <Compile Include="SceneForm\SceneContextComponent.cs" />
     <EmbeddedResource Include="SceneContexts\SceneContextWinforms.resx">
       <DependentUpon>SceneContextWinforms.cs</DependentUpon>

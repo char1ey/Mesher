@@ -1,4 +1,4 @@
-﻿using Mesher.Core.Components;
+﻿using Mesher.Core.SceneContexts;
 using Mesher.GraphicsCore;
 
 namespace Mesher.Plugins.EditLight
@@ -61,7 +61,7 @@ namespace Mesher.Plugins.EditLight
 
         #endregion
 
-        private Core.Components.SceneContextWinforms sceneContext1;
+        private SceneContextWinforms sceneContext1;
         private DataContext m_dataContext;
     }
 }
