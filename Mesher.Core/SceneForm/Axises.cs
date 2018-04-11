@@ -8,8 +8,8 @@ namespace Mesher.Core.SceneForm
 {
     public class Axises : SceneContextComponent
     {
-        private const Single AXIS_LENGTH = 100f;
-        private const Single PLANE_SIZE = 25f;
+        private const Single AXIS_LENGTH = 75f;
+        private const Single PLANE_SIZE = 20f;
 
         private static readonly Color XColorSel = Color.Blue;
         private static readonly Color XColor = Color.FromArgb(255, XColorSel.R / 2, XColorSel.G / 2, XColorSel.B / 2);
@@ -31,7 +31,7 @@ namespace Mesher.Core.SceneForm
 
         public Axises(ISceneContext sceneContext) : base(sceneContext)
         {
-            m_axisesCenter = new Vec3(100, 100, 0);
+            m_axisesCenter = new Vec3(80, 80, 0);
             m_axisXColor = XColor;
             m_axisYColor = YColor;
             m_axisZColor = ZColor;
