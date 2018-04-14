@@ -5,7 +5,7 @@ using Mesher.Mathematics;
 
 namespace Mesher.Core.Objects.Light
 {
-    public class Light : IRenderItem
+    public class Light
     {
         public Int32 Id { get; internal set; }
         public String Name { get; set; }
@@ -20,9 +20,5 @@ namespace Mesher.Core.Objects.Light
         public Single AttenuationConstant { get; set; }
         public Single AttenuationLinear { get; set; }
         public Single AttenuationQuadratic { get; set; }
-
-        public void Render(SceneContextWinforms sceneContext, ShaderProgram shaderProgram)
-        {
-        }
     }
 }

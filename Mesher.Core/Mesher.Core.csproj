@@ -65,9 +65,7 @@
     <Compile Include="SceneContexts\SceneContextWinforms.Designer.cs">
       <DependentUpon>SceneContextWinforms.cs</DependentUpon>
     </Compile>
-    <Compile Include="DataManager.cs" />
     <Compile Include="Data\DataLoader.cs" />
-    <Compile Include="Objects\IPipelineItem.cs" />
     <Compile Include="Objects\Light\Light.cs" />
     <Compile Include="Collections\Lights.cs" />
     <Compile Include="Objects\Light\LightType.cs" />
@@ -92,8 +90,8 @@
     </Compile>
     <Compile Include="Renderers\SceneRendererBase.cs" />
     <Compile Include="Renderers\SceneRenderer.cs" />
-    <Compile Include="SceneForm\Axises.cs" />
-    <Compile Include="SceneForm\SceneContextComponent.cs" />
+    <Compile Include="SceneContexts\Components\Axises.cs" />
+    <Compile Include="SceneContexts\Components\SceneContextComponent.cs" />
     <EmbeddedResource Include="SceneContexts\SceneContextWinforms.resx">
       <DependentUpon>SceneContextWinforms.cs</DependentUpon>
     </EmbeddedResource>
