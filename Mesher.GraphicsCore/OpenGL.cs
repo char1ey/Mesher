@@ -11,8 +11,8 @@ namespace Mesher.GraphicsCore
     {
         #region constants
 
-        private const String LIBRARY_OPENGL = "opengl32.dll";
-        private const String LIBRARY_GLU = "Glu32.dll";
+        private const String LIBRARY_OPENGL = "opengl32";
+        private const String LIBRARY_GLU = "Glu32";
 
         #endregion
 
