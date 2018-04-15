@@ -28,6 +28,7 @@ namespace Mesher.Core.Renderers
             InitView();
             m_shaderProgram.SetBuffer("position", new []{p0.X, p0.Y, p0.Z, p1.X, p1.Y, p1.Z}, 3);
             m_shaderProgram.SetValue("color", new Color4(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f));
+            m_shaderProgram.SetValue("hasNormal", 0);
             m_shaderProgram.RenderLines(lineWidth, false);
 
             m_shaderProgram.Unbind();
@@ -38,7 +39,12 @@ namespace Mesher.Core.Renderers
             m_shaderProgram.Bind();
 
             InitView();
+
+            var n = (p1 - p0).Cross(p2 - p0).Normalize();
+
             m_shaderProgram.SetBuffer("position", new[] { p0.X, p0.Y, p0.Z, p1.X, p1.Y, p1.Z, p2.X, p2.Y, p2.Z }, 3);
+            m_shaderProgram.SetBuffer("normal", new[] { n.X, n.Y, n.Z, n.X, n.Y, n.Z, n.X, n.Y, n.Z }, 3);
+            m_shaderProgram.SetValue("hasNormal", 1);
             m_shaderProgram.SetValue("color", new Color4(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f));
             m_shaderProgram.RenderTriangles(false);
 
