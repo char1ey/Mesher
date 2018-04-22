@@ -1,8 +1,9 @@
 ﻿using System;
+using Mesher.GraphicsCore.Data;
 
 namespace Mesher.GraphicsCore.Buffers
 {
-    public class IndexBuffer : IDisposable, IBindableItem
+    public class IndexBuffer : IIndexBuffer, IDisposable, IBindableItem
     {
         private DataContext m_dataContext;
 
@@ -14,6 +15,21 @@ namespace Mesher.GraphicsCore.Buffers
         public UInt32 Id { get { return m_id[0]; } }
 
         public Int32 Count { get { return m_indicies.Length; } }
+        public void Add(Int32 id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveAt(Int32 id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Int32 this[Int32 id]
+        {
+            get { throw new NotImplementedException(); }
+            set { throw new NotImplementedException(); }
+        }
 
         internal IndexBuffer(Int32[] indicies, DataContext dataContext)
         {

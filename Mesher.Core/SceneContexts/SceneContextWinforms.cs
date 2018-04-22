@@ -5,25 +5,31 @@ using Mesher.Core.Collections;
 using Mesher.Core.Objects.Camera;
 using Mesher.Core.Objects.Scene;
 using Mesher.Core.Renderers;
-using Mesher.Core.SceneForm;
+using Mesher.Core.SceneContexts.Components;
 using Mesher.GraphicsCore;
+using Mesher.GraphicsCore.Camera;
+using Mesher.GraphicsCore.RenderContexts;
 using Mesher.Mathematics;
 
 namespace Mesher.Core.SceneContexts
 {
     public partial class SceneContextWinforms : UserControl, ISceneContext
     {
-        private readonly RenderContext m_renderContext;
+        private readonly WindowsRenderContext m_renderContext;
 
         private SceneContextGraphics m_sceneContextGraphics;
 
         private MouseButtons m_previousMouseButton;
 
-        public Camera Camera { get; set; }
+        public Camera Camera
+        {
+            get { return RenderContext.Camera; }
+            set { RenderContext.Camera = value; }
+        }
         public Scene Scene { get; set; }
         public SceneRendererBase SceneRenderer { get; set; }
         public CameraControler CameraControler { get; set; }
-        public RenderContext RenderContext
+        public WindowsRenderContext RenderContext
         {
             get { return m_renderContext; }
         }
@@ -62,13 +68,14 @@ namespace Mesher.Core.SceneContexts
 
         public void BeginRender()
         {
-            m_renderContext.Begin();
-            m_renderContext.Clear();
+            m_renderContext.BeginRender();
+            m_renderContext.ClearColorBuffer(Color.DimGray);
+            m_renderContext.ClearDepthBuffer();
         }
 
         public void EndRender()
         {
-            m_renderContext.End();
+            m_renderContext.EndRender();
             m_renderContext.SwapBuffers();
         }
 
@@ -88,7 +95,7 @@ namespace Mesher.Core.SceneContexts
 
         protected override void OnResize(EventArgs e)
         {
-            m_renderContext.ResizeWindow(Width, Height);
+            m_renderContext.SetSize(Width, Height);
 
             if (Camera != null)
                 ((OrthographicCamera)Camera).UpdateSize(Width, Height);

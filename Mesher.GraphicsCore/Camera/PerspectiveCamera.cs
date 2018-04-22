@@ -1,9 +1,9 @@
 ﻿using System;
 using Mesher.Mathematics;
 
-namespace Mesher.Core.Objects.Camera
+namespace Mesher.GraphicsCore.Camera
 {
- /*   public class PerspectiveCamera : Camera
+    public class PerspectiveCamera : Camera
     {
         private const Single ZNear = 0.01f;
         private const Single ZFar = 1000000;
@@ -18,5 +18,5 @@ namespace Mesher.Core.Objects.Camera
         {
             Position = LookAtPoint + (Position - LookAtPoint) / zoom;
         }
-    }*/
+    }
 }

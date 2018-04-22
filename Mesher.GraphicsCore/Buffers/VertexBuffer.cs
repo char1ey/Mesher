@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Mesher.GraphicsCore.Data;
 
 namespace Mesher.GraphicsCore.Buffers
 {
-    public class VertexBuffer<T> : VertexBufferBase, IDisposable
+    public class VertexBuffer<T> : VertexBufferBase, IDataBuffer<T>, IDisposable where T : struct
     {
         private UInt32[] m_Id;
 
@@ -50,6 +51,11 @@ namespace Mesher.GraphicsCore.Buffers
             Gl.GenBuffers(1, m_Id);
             Gl.BindBuffer(Gl.GL_ARRAY_BUFFER, Id);
             Gl.BufferData(Gl.GL_ARRAY_BUFFER, m_StructSize, IntPtr.Zero, Gl.GL_DYNAMIC_DRAW);
+        }
+
+        public void RemoveAt(Int32 id)
+        {
+            throw new NotImplementedException();
         }
 
         public T this[Int32 index]

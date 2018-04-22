@@ -59,5 +59,25 @@ namespace Mesher.GraphicsCore.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] DefaultFragmentShaderProgram {
+            get {
+                object obj = ResourceManager.GetObject("DefaultFragmentShaderProgram", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] DefaultVertexShaderProgram {
+            get {
+                object obj = ResourceManager.GetObject("DefaultVertexShaderProgram", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

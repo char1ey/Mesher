@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Mesher.GraphicsCore.Buffers;
+using Mesher.GraphicsCore.Data;
 using Mesher.GraphicsCore.ShaderProgram.Exceptions;
 using Mesher.Mathematics;
 
@@ -133,6 +134,14 @@ namespace Mesher.GraphicsCore.ShaderProgram
                 SetBuffer((UInt32)variableLocation, vertexBuffer, componentsCount);
         }
 
+        public void SetBuffer<T>(String name, IDataBuffer<T> vertexBuffer, Int32 componentsCount) where T : struct
+        {
+            var variableLocation = Gl.GetAttribLocation(m_shaderProgramId, name);
+
+            if (variableLocation != -1)
+                SetBuffer((UInt32)variableLocation, (VertexBuffer<T>)vertexBuffer, componentsCount);
+        }
+
         public void SetBuffer(UInt32 variableLocation, VertexBufferBase vertexBuffer, Int32 componentsCount)
         {
             vertexBuffer.Bind();
@@ -184,11 +193,21 @@ namespace Mesher.GraphicsCore.ShaderProgram
             m_items.Add(indexBuffer);
         }
 
-        public void SetValue(String name, Texture.Texture value)
+        public void SetBuffer(IIndexBuffer indexBuffer)
+        {
+            SetBuffer((IndexBuffer)indexBuffer);
+        }
+
+        public void SetValue(String name, Texture.GlTexture value)
         {
             value.Bind();
             Gl.Uniform1(Gl.GetUniformLocation(m_shaderProgramId, name), value.Bind());
             m_items.Add(value);
+        }
+
+        public void SetValue(String name, Texture.Texture value)
+        {
+            SetValue(name, (Texture.GlTexture)value);
         }
 
         public void SetValue(String name, Mat4 matrix)

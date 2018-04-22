@@ -3,9 +3,9 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace Mesher.GraphicsCore
+namespace Mesher.GraphicsCore.RenderContexts
 {
-    public sealed class RenderContext : NativeWindow, IDisposable
+    public sealed class WindowsRenderContext : NativeWindow, IRenderContext, IDisposable
     {
         private IntPtr m_hdc;
 
@@ -18,12 +18,13 @@ namespace Mesher.GraphicsCore
 
         public Int32 Width { get; private set; }
         public Int32 Height { get; private set; }
+        public Camera.Camera Camera { get; set; }
 
         public Color ClearColor { get; set; }
 
         public DataContext DataContext { get; internal set; }
 
-        internal RenderContext(IntPtr handle)
+        internal WindowsRenderContext(IntPtr handle)
         {
             var createParams = new CreateParams
             {
@@ -55,7 +56,7 @@ namespace Mesher.GraphicsCore
             m_beginModeDepth = 0;
         }
 
-        public void ResizeWindow(Int32 width, Int32 height)
+        public void SetSize(Int32 width, Int32 height)
         {
             Width = width;
             Height = height;
@@ -65,7 +66,7 @@ namespace Mesher.GraphicsCore
                                                                        | Win32.SetWindowPosFlags.SWP_NOACTIVATE);
         }
 
-        public void Begin()
+        public void BeginRender()
         {
             m_beginModeDepth++;
             if (m_beginModeDepth != 1)
@@ -78,7 +79,7 @@ namespace Mesher.GraphicsCore
                 Win32.wglMakeCurrent(RenderWindowHandle, DataContext.GlrcHandle);           
         }
 
-        public void End()
+        public void EndRender()
         {
             m_beginModeDepth--;
 
@@ -89,14 +90,23 @@ namespace Mesher.GraphicsCore
                 Win32.wglMakeCurrent(m_previousHdc, m_previousHglrc);
         }
 
-        public void Clear()
+        public void ClearColorBuffer(Color color)
         {
-            Begin();
-            Gl.ClearColor(ClearColor);
-            Gl.Clear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
+            BeginRender();
+            Gl.ClearColor(color);
             Gl.Enable(Gl.GL_DEPTH_TEST);
-            End();
+            Gl.Clear(Gl.GL_COLOR_BUFFER_BIT);
+            EndRender();
         }
+
+        public void ClearDepthBuffer()
+        {
+            BeginRender();
+            Gl.Enable(Gl.GL_DEPTH_TEST);
+            Gl.Clear(Gl.GL_DEPTH_BUFFER_BIT);
+            EndRender();
+        }
+
         public void SwapBuffers()
         {
             Win32.SwapBuffers(m_hdc);

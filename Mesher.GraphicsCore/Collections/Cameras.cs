@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Mesher.Core.Objects.Camera;
+using Mesher.GraphicsCore.Camera;
 
 namespace Mesher.Core.Collections
 {

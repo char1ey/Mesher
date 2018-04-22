@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using Mesher.Core.Objects.Scene;
 using Mesher.Core.Plugins;
 using Mesher.Core.Renderers;
-using Mesher.Core.SceneForm;
+using Mesher.Core.SceneContexts.Components;
 using DataLoader = Mesher.Core.Data.DataLoader;
 
 namespace Mesher.Core

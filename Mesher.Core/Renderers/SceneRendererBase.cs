@@ -1,6 +1,7 @@
 ﻿using System;
 using Mesher.Core.Objects.Camera;
 using Mesher.GraphicsCore;
+using Mesher.GraphicsCore.Camera;
 using Mesher.GraphicsCore.ShaderProgram;
 using Scene = Mesher.Core.Objects.Scene.Scene;
 

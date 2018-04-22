@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using Mesher.Mathematics;
 
-namespace Mesher.Core.Objects.Camera
+namespace Mesher.GraphicsCore.Camera
 {
-    /*public abstract class Camera
+    public abstract class Camera
     {
 	    private const Double EPS = 1e-9;
 
@@ -97,5 +97,5 @@ namespace Mesher.Core.Objects.Camera
         }
 
         public abstract void Zoom(Single zoom);
-    }*/
+    }
 }

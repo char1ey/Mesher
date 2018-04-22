@@ -1,8 +1,8 @@
 ﻿using System;
 using Mesher.Mathematics;
 
-namespace Mesher.Core.Objects.Camera
-{/*
+namespace Mesher.GraphicsCore.Camera
+{
     public class OrthographicCamera : Camera
     {
         private const Single ZNear = -1000000;
@@ -24,5 +24,5 @@ namespace Mesher.Core.Objects.Camera
         {
             ProjectionMatrix *= Mat4.Scale(zoom);
         }
-    }*/
+    }
 }

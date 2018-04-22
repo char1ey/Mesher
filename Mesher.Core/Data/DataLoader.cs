@@ -7,6 +7,7 @@ using Mesher.Core.Objects.Material;
 using Mesher.Core.Objects.Mesh;
 using Mesher.Core.Objects.Scene;
 using Mesher.GraphicsCore;
+using Mesher.GraphicsCore.Primitives;
 using Mesher.GraphicsCore.Texture;
 using Mesher.Mathematics;
 
@@ -141,7 +142,7 @@ namespace Mesher.Core.Data
             return material;
         }
 
-        private static Texture GetTexture(Assimp.TextureSlot aiTexture, String filePath, DataContext dataContext)
+        private static GlTexture GetTexture(Assimp.TextureSlot aiTexture, String filePath, DataContext dataContext)
         {
             if (!File.Exists(filePath + aiTexture.FilePath))
                 return null;

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Drawing;
 using Mesher.Core.Renderers;
-using Mesher.GraphicsCore;
 using Mesher.Mathematics;
 
-namespace Mesher.Core.SceneForm
+namespace Mesher.Core.SceneContexts.Components
 {
     public class Axises : SceneContextComponent
     {

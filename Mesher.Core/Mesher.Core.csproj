@@ -55,7 +55,6 @@
     <Compile Include="CameraControler.cs" />
     <Compile Include="ISceneContext.cs" />
     <Compile Include="Objects\Camera\Camera.cs" />
-    <Compile Include="Collections\Cameras.cs" />
     <Compile Include="Objects\Camera\OrthographicCamera.cs" />
     <Compile Include="Objects\Camera\PerspectiveCamera.cs" />
     <Compile Include="Renderers\SceneContextGraphics.cs" />
