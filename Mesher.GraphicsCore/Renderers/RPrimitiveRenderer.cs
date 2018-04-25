@@ -5,6 +5,6 @@ namespace Mesher.GraphicsCore.Renderers
 {
     public abstract class RPrimitiveRenderer<T> where T : RPrimitive
     {
-        public abstract void Render(T rItem, IRenderContext renderContext);
+        public abstract void Render(T rTriangles, IRenderContext renderContext);
     }
 }

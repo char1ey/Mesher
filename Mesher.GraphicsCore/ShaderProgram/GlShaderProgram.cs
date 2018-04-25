@@ -9,7 +9,7 @@ using Mesher.Mathematics;
 
 namespace Mesher.GraphicsCore.ShaderProgram
 {
-    public class ShaderProgram : IDisposable, IBindableItem
+    public class GlShaderProgram : IShaderProgram, IDisposable, IBindableItem
     {
         private const Int32 LOG_INFO_MAX_SIZE = 1000000;
 
@@ -29,7 +29,7 @@ namespace Mesher.GraphicsCore.ShaderProgram
 
         internal UInt32 ShaderProgramId { get { return m_shaderProgramId; } }
 
-        internal ShaderProgram(DataContext dataContext, String vertexShaderSource, String fragmentShaderSource)
+        internal GlShaderProgram(DataContext dataContext, String vertexShaderSource, String fragmentShaderSource)
         {
             m_dataContext = dataContext;
 
@@ -41,7 +41,7 @@ namespace Mesher.GraphicsCore.ShaderProgram
             m_items = new List<IBindableItem>();
         }
 
-        internal ShaderProgram(DataContext dataContext, Byte[] vertexShaderSource, Byte[] fragmentShaderSource)
+        internal GlShaderProgram(DataContext dataContext, Byte[] vertexShaderSource, Byte[] fragmentShaderSource)
         :this(dataContext, ToString(vertexShaderSource), ToString(fragmentShaderSource)) { }
 
         private void CreateShaderProgram()
@@ -126,33 +126,22 @@ namespace Mesher.GraphicsCore.ShaderProgram
             Gl.UseProgram(0);
         }
 
-        public void SetBuffer(String name, VertexBufferBase vertexBuffer, Int32 componentsCount)
+        public void SetBuffer<T>(String name, GlDataBuffer<T> vertexBuffer, Int32 componentsCount) where T : struct
         {
             var variableLocation = Gl.GetAttribLocation(m_shaderProgramId, name);
 
             if (variableLocation != -1)
-                SetBuffer((UInt32)variableLocation, vertexBuffer, componentsCount);
-        }
+            {
+                vertexBuffer.Bind();
 
-        public void SetBuffer<T>(String name, IDataBuffer<T> vertexBuffer, Int32 componentsCount) where T : struct
-        {
-            var variableLocation = Gl.GetAttribLocation(m_shaderProgramId, name);
+                Gl.EnableVertexAttribArray((UInt32)variableLocation);
 
-            if (variableLocation != -1)
-                SetBuffer((UInt32)variableLocation, (VertexBuffer<T>)vertexBuffer, componentsCount);
-        }
+                Gl.VertexAttribPointer((UInt32)variableLocation, componentsCount, Gl.GL_FLOAT, false, 0, IntPtr.Zero);
 
-        public void SetBuffer(UInt32 variableLocation, VertexBufferBase vertexBuffer, Int32 componentsCount)
-        {
-            vertexBuffer.Bind();
+                m_verticesCount = vertexBuffer.Count;
 
-            Gl.EnableVertexAttribArray(variableLocation);
-
-            Gl.VertexAttribPointer(variableLocation, componentsCount, Gl.GL_FLOAT, false, 0, IntPtr.Zero);
-
-            m_verticesCount = vertexBuffer.Count;
-
-            m_items.Add(vertexBuffer);
+                m_items.Add(vertexBuffer);
+            }
         }
 
         public void SetBuffer(String name, Single[] data, Int32 componentsCount)

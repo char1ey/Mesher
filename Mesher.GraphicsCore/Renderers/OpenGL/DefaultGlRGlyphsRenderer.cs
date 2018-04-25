@@ -6,7 +6,7 @@ namespace Mesher.GraphicsCore.Renderers.OpenGL
 {
     public class DefaultGlRGlyphsRenderer : RGlyphRenderer
     {
-        public override void Render(RGlyphs rItem, IRenderContext renderContext)
+        public override void Render(RGlyphs rTriangles, IRenderContext renderContext)
         {
             throw new NotImplementedException();
         }

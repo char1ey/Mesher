@@ -6,7 +6,7 @@ namespace Mesher.GraphicsCore.Renderers.OpenGL
 {
     public class DefaultGlREdgesRenderer : REdgesRenderer
     {
-        public override void Render(REdges rItem, IRenderContext renderContext)
+        public override void Render(REdges rTriangles, IRenderContext renderContext)
         {
             throw new NotImplementedException();
         }

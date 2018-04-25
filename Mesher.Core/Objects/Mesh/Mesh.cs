@@ -8,15 +8,15 @@ namespace Mesher.Core.Objects.Mesh
     {
         public Int32 Id { get; internal set; }
         
-        public VertexBuffer<Vec3> Vertexes { get; set; }
+        public GlDataBuffer<Vec3> Vertexes { get; set; }
         
-        public VertexBuffer<Vec3> Normals { get; set; }
+        public GlDataBuffer<Vec3> Normals { get; set; }
         
-        public VertexBuffer<Vec2> TextureVertexes { get; set; }
+        public GlDataBuffer<Vec2> TextureVertexes { get; set; }
         
-        public VertexBuffer<Vec3> Tangents { get; set; }
+        public GlDataBuffer<Vec3> Tangents { get; set; }
         
-        public VertexBuffer<Vec3> BiTangents { get; set; }
+        public GlDataBuffer<Vec3> BiTangents { get; set; }
 
         public Boolean HasMaterial { get; set; }
         

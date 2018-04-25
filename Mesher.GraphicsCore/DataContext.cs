@@ -18,7 +18,7 @@ namespace Mesher.GraphicsCore
 
         private List<Texture.GlTexture> m_textures;
 
-        private List<ShaderProgram.ShaderProgram> m_shaderPrograms;
+        private List<ShaderProgram.GlShaderProgram> m_shaderPrograms;
 
         public IntPtr GlrcHandle
         {
@@ -30,7 +30,7 @@ namespace Mesher.GraphicsCore
             m_textures = new List<Texture.GlTexture>();
             m_buffers = new List<IDisposable>();
             m_renderWindows = new List<WindowsRenderContext>();     
-            m_shaderPrograms = new List<ShaderProgram.ShaderProgram>();
+            m_shaderPrograms = new List<ShaderProgram.GlShaderProgram>();
             m_defaultRenderContext = new WindowsRenderContext(defaultRenderWindowHandge);
             m_hglrc = Win32.wglCreateContext(m_defaultRenderContext.RenderWindowHandle);
         }
@@ -67,10 +67,10 @@ namespace Mesher.GraphicsCore
             return buffer;
         }
 
-        public VertexBuffer<T> CreateVertexBuffer<T>(T[] vertieces) where T : struct
+        public GlDataBuffer<T> CreateVertexBuffer<T>(T[] vertieces) where T : struct
         {
             m_defaultRenderContext.BeginRender();
-            var buffer = new VertexBuffer<T>(vertieces, this);
+            var buffer = new GlDataBuffer<T>(vertieces, this);
             m_defaultRenderContext.EndRender();
             m_buffers.Add(buffer);
             return buffer;
@@ -104,20 +104,20 @@ namespace Mesher.GraphicsCore
             return texture;
         }
 
-        public ShaderProgram.ShaderProgram CreateShaderProgram(Byte[] vertexShaderSource, Byte[] fragmentShaderSource)
+        public ShaderProgram.GlShaderProgram CreateShaderProgram(Byte[] vertexShaderSource, Byte[] fragmentShaderSource)
         {
             m_defaultRenderContext.BeginRender();
-            var shaderProgram = new ShaderProgram.ShaderProgram(this, vertexShaderSource, fragmentShaderSource);
+            var shaderProgram = new ShaderProgram.GlShaderProgram(this, vertexShaderSource, fragmentShaderSource);
             m_defaultRenderContext.EndRender();
 
             m_shaderPrograms.Add(shaderProgram);
             return shaderProgram;
         }
 
-        public ShaderProgram.ShaderProgram CreateShaderProgram(String vertexShaderSource, String fragmentShaderSource)
+        public ShaderProgram.GlShaderProgram CreateShaderProgram(String vertexShaderSource, String fragmentShaderSource)
         {
             m_defaultRenderContext.BeginRender();
-            var shaderProgram = new ShaderProgram.ShaderProgram(this, vertexShaderSource, fragmentShaderSource);
+            var shaderProgram = new ShaderProgram.GlShaderProgram(this, vertexShaderSource, fragmentShaderSource);
             m_defaultRenderContext.EndRender();
 
             m_shaderPrograms.Add(shaderProgram);

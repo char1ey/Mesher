@@ -13,7 +13,7 @@ namespace Mesher.Core.Renderers
     public class SceneContextGraphics
     {
         private ISceneContext m_sceneContext;
-        private ShaderProgram m_shaderProgram;
+        private GlShaderProgram m_shaderProgram;
 
         public SceneContextGraphics(ISceneContext sceneContext)
         {

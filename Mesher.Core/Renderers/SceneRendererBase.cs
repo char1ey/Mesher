@@ -9,7 +9,7 @@ namespace Mesher.Core.Renderers
 {
     public abstract class SceneRendererBase
     {
-        public ShaderProgram ShaderProgram { get; }
+        public GlShaderProgram ShaderProgram { get; }
 
         public SceneRendererBase(DataContext dataContext, String vertexShaderSource, String fragmentShaderSource)
         {
