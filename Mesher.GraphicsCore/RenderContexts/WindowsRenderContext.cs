@@ -61,7 +61,9 @@ namespace Mesher.GraphicsCore.RenderContexts
         {
             Width = width;
             Height = height;
+            BeginRender();
             Win32.glViewport(0, 0, width, height);
+            EndRender();
             Win32.SetWindowPos(Handle, IntPtr.Zero, 0, 0, width, height, Win32.SetWindowPosFlags.SWP_NOMOVE
                                                                        | Win32.SetWindowPosFlags.SWP_NOZORDER
                                                                        | Win32.SetWindowPosFlags.SWP_NOACTIVATE);
@@ -69,26 +71,13 @@ namespace Mesher.GraphicsCore.RenderContexts
 
         public void BeginRender()
         {
-            m_beginModeDepth++;
-            if (m_beginModeDepth != 1)
+            if (DataContext == null)
                 return;
-
-            m_previousHdc = Win32.wglGetCurrentDC();
-            m_previousHglrc = Win32.wglGetCurrentContext();
-
-            if (m_previousHdc != RenderWindowHandle || m_previousHglrc != DataContext.GlrcHandle)
-                Win32.wglMakeCurrent(RenderWindowHandle, DataContext.GlrcHandle);           
+            Win32.wglMakeCurrent(RenderWindowHandle, DataContext.GlrcHandle);
         }
 
         public void EndRender()
         {
-            m_beginModeDepth--;
-
-            if (m_beginModeDepth != 0)
-                return;
-
-            if (m_previousHdc != RenderWindowHandle || m_previousHglrc != DataContext.GlrcHandle)
-                Win32.wglMakeCurrent(m_previousHdc, m_previousHglrc);
         }
 
         public void ClearColorBuffer(Color color)
