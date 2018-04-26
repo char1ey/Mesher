@@ -62,6 +62,7 @@ namespace Mesher.GraphicsCore.RenderContexts
             Width = width;
             Height = height;
             BeginRender();
+            //TODO move viewport to camera
             Win32.glViewport(0, 0, width, height);
             EndRender();
             Win32.SetWindowPos(Handle, IntPtr.Zero, 0, 0, width, height, Win32.SetWindowPosFlags.SWP_NOMOVE
