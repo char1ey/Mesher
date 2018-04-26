@@ -1,10 +1,9 @@
 ﻿using System;
 using Mesher.Core.Collections;
 using Mesher.GraphicsCore;
+using Mesher.GraphicsCore.Material;
 using Mesher.GraphicsCore.ShaderProgram;
 using Mesher.Mathematics;
-using Camera = Mesher.Core.Objects.Camera;
-using Material = Mesher.Core.Objects.Material.Material;
 using Mesh = Mesher.Core.Objects.Mesh.Mesh;
 using Scene = Mesher.Core.Objects.Scene.Scene;
 

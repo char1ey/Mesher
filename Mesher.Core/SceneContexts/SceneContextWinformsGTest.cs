@@ -12,7 +12,7 @@ using Mesher.Mathematics;
 
 namespace Mesher.Core.SceneContexts
 {
-    public partial class SceneContextWinforms : UserControl, ISceneContext
+    public partial class SceneContextWinformsGTest : UserControl, ISceneContext
     {
         private readonly WindowsRenderContext m_renderContext;
 
@@ -56,7 +56,7 @@ namespace Mesher.Core.SceneContexts
             SceneContextComponents.RemoveAt(id);
         }
 
-        public SceneContextWinforms(DataContext dataContext)
+        public SceneContextWinformsGTest(DataContext dataContext)
         {
             m_renderContext = dataContext.CreateRenderWindow(Handle);
             m_renderContext.ClearColor = Color.DimGray;

@@ -53,18 +53,7 @@ namespace Mesher.GraphicsCore.Buffers
             Gl.BufferData(Gl.GL_ARRAY_BUFFER, m_StructSize, IntPtr.Zero, Gl.GL_DYNAMIC_DRAW);
         }
 
-        public void RemoveAt(Int32 id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public T this[Int32 index]
-        {
-            get { return m_Data[index]; }
-            set { }
-        }
-
-        public void Add(T[] data)
+        public void AddRange(T[] data)
         {
             Bind();
 
@@ -81,6 +70,17 @@ namespace Mesher.GraphicsCore.Buffers
             else SetSubData(data, Count - 1);
 
             Unbind();
+        }
+
+        public void RemoveAt(Int32 id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public T this[Int32 index]
+        {
+            get { return m_Data[index]; }
+            set { }
         }
 
         public void Add(T data)

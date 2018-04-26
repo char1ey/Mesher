@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Mesher.Core.Objects.Light;
+using Mesher.GraphicsCore.Light;
 
 namespace Mesher.Core.Collections
 {

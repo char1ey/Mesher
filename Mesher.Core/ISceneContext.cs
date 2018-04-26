@@ -1,5 +1,4 @@
-﻿using Mesher.Core.Objects.Camera;
-using Mesher.Core.Objects.Scene;
+﻿using Mesher.Core.Objects.Scene;
 using Mesher.Core.Renderers;
 using Mesher.Core.SceneContexts.Components;
 using Mesher.GraphicsCore;

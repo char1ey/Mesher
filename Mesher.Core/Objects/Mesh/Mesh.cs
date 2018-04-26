@@ -1,5 +1,7 @@
 ﻿using System;
 using Mesher.GraphicsCore.Buffers;
+using Mesher.GraphicsCore.Data.OpenGL;
+using Mesher.GraphicsCore.Material;
 using Mesher.Mathematics;
 
 namespace Mesher.Core.Objects.Mesh
@@ -20,9 +22,9 @@ namespace Mesher.Core.Objects.Mesh
 
         public Boolean HasMaterial { get; set; }
         
-        public Material.Material Material { get; set; }
+        public Material Material { get; set; }
         
-        public IndexBuffer Indicies { get; set; }
+        public GlIndexBuffer Indicies { get; set; }
 
         public Boolean IndexedRendering { get; set; }
         

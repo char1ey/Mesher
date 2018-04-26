@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using Mesher.GraphicsCore.Texture;
 
 namespace Mesher.GraphicsCore.Data.OpenGL
@@ -21,6 +22,11 @@ namespace Mesher.GraphicsCore.Data.OpenGL
         }
 
         public Texture.Texture LoadTextureFromFile(String fileName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Texture.Texture CreateTexture(Bitmap bitmap)
         {
             throw new NotImplementedException();
         }

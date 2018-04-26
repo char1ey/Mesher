@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using Mesher.GraphicsCore.Buffers;
+using Mesher.GraphicsCore.Data.OpenGL;
 using Mesher.GraphicsCore.RenderContexts;
 
 namespace Mesher.GraphicsCore
@@ -58,10 +59,10 @@ namespace Mesher.GraphicsCore
             return renderWindow;
         }
 
-        public IndexBuffer CreateIndexBuffer(Int32[] indicies)
+        public GlIndexBuffer CreateIndexBuffer(Int32[] indicies)
         {
             m_defaultRenderContext.BeginRender();
-            var buffer = new IndexBuffer(indicies, this);
+            var buffer = new GlIndexBuffer(indicies, this);
             m_defaultRenderContext.EndRender();
             m_buffers.Add(buffer);
             return buffer;

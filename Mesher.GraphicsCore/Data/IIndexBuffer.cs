@@ -6,6 +6,7 @@ namespace Mesher.GraphicsCore.Data
     {
         Int32 Count { get; }
 
+        void AddRange(Int32[] ids);
         void Add(Int32 id);
         void RemoveAt(Int32 id);
 

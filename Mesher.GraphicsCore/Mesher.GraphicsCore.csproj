@@ -60,7 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Buffers\IBindableItem.cs" />
-    <Compile Include="Buffers\IndexBuffer.cs" />
+    <Compile Include="Data\OpenGL\GlIndexBuffer.cs" />
     <Compile Include="Data\OpenGL\GlDataBuffer.cs" />
     <Compile Include="Buffers\VertexBufferBase.cs" />
     <Compile Include="Camera\Camera.cs" />
@@ -68,7 +68,6 @@
     <Compile Include="Camera\PerspectiveCamera.cs" />
     <Compile Include="Collections\Cameras.cs" />
     <Compile Include="Data\OpenGL\GlDataContext.cs" />
-    <Compile Include="Data\OpenGL\GlIndexBuffer.cs" />
     <Compile Include="Light\Light.cs" />
     <Compile Include="Light\LightType.cs" />
     <Compile Include="Material\Material.cs" />

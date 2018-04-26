@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Mesher.GraphicsCore.Buffers;
 using Mesher.GraphicsCore.Data;
+using Mesher.GraphicsCore.Data.OpenGL;
 using Mesher.GraphicsCore.ShaderProgram.Exceptions;
 using Mesher.Mathematics;
 
@@ -196,7 +197,7 @@ namespace Mesher.GraphicsCore.ShaderProgram
             m_verticesCount = count;
         }
 
-        public void SetBuffer(IndexBuffer indexBuffer)
+        public void SetBuffer(GlIndexBuffer indexBuffer)
         {
             indexBuffer.Bind();
 
@@ -207,7 +208,7 @@ namespace Mesher.GraphicsCore.ShaderProgram
 
         public void SetBuffer(IIndexBuffer indexBuffer)
         {
-            SetBuffer((IndexBuffer)indexBuffer);
+            SetBuffer((GlIndexBuffer)indexBuffer);
         }
 
         public void SetValue(String name, Texture.GlTexture value)

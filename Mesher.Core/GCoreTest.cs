@@ -1,32 +1,35 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using Mesher.Core.Data;
 using Mesher.Core.Objects.Scene;
 using Mesher.Core.Plugins;
 using Mesher.Core.Renderers;
 using Mesher.Core.SceneContexts.Components;
 using Mesher.GraphicsCore.Data;
 using Mesher.GraphicsCore.Primitives;
-using DataLoader = Mesher.Core.Data.DataLoader;
 
 namespace Mesher.Core
 {
-    public partial class MainForm : Form
+    public partial class GCoreTest : Form
     {
-        private SceneRendererBase m_sceneRenderer;
-
         public Scene Scene;
 
         private RScene m_rScene;
-        private IDataContext m_dataContext1;
 
         //public SceneForm.SceneForm SceneForm;
-        
-        public MainForm()
+
+        public GCoreTest()
         {
             InitializeComponent();
-            
+
             sceneContext1.MouseWheel += SceneContext1_MouseWheel;
 
             var plugins = PluginSystem.GetPlugins(Path.Combine(Environment.CurrentDirectory));
@@ -35,15 +38,12 @@ namespace Mesher.Core
             {
                 var item = toolStripMenuItemPlugins.DropDownItems.Add(plugin.Name);
                 item.Tag = plugin;
-                item.Click += Item_Click;
             }
 
-            m_sceneRenderer = new SceneRenderer(m_dataContext, GetShaderSource(Properties.Resources.DefaultVertexShaderProgramSource), 
-                                                              GetShaderSource(Properties.Resources.DefaultFragmentShaderProgramSource));
-
+  
             //SceneForm = new SceneForm.SceneForm(sceneContext1, m_sceneRenderer);
             sceneContext1.Scene = Scene;
-            sceneContext1.SceneRenderer = m_sceneRenderer;
+            //sceneContext1.SceneRenderer = m_sceneRenderer;
             sceneContext1.Add(new Axises(sceneContext1));
             sceneContext1.CameraControler = new ArcBallCameraControler(sceneContext1);
         }
@@ -51,13 +51,6 @@ namespace Mesher.Core
         private String GetShaderSource(Byte[] bytes)
         {
             return new String(bytes.Select(t => (Char)t).ToArray());
-        }
-
-        private void Item_Click(object sender, EventArgs e)
-        {
-            var plugin = (IPlugin) ((ToolStripItem) sender).Tag;
-
-            plugin.Execute(m_dataContext, Scene, m_sceneRenderer);
         }
 
         private void SceneContext1_MouseWheel(Object sender, MouseEventArgs e)
