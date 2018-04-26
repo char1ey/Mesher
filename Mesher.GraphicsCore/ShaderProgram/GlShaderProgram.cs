@@ -13,7 +13,7 @@ namespace Mesher.GraphicsCore.ShaderProgram
     {
         private const Int32 LOG_INFO_MAX_SIZE = 1000000;
 
-        private UInt32 m_shaderProgramId;
+        private UInt32 m_id;
 
         private String m_vertexShaderSource;
         private String m_fragmentShaderSource;
@@ -27,7 +27,7 @@ namespace Mesher.GraphicsCore.ShaderProgram
 
         internal DataContext DataContext { get { return m_dataContext; } }
 
-        internal UInt32 ShaderProgramId { get { return m_shaderProgramId; } }
+        internal UInt32 Id { get { return m_id; } }
 
         internal GlShaderProgram(DataContext dataContext, String vertexShaderSource, String fragmentShaderSource)
         {
@@ -42,17 +42,17 @@ namespace Mesher.GraphicsCore.ShaderProgram
         }
 
         internal GlShaderProgram(DataContext dataContext, Byte[] vertexShaderSource, Byte[] fragmentShaderSource)
-        :this(dataContext, ToString(vertexShaderSource), ToString(fragmentShaderSource)) { }
+        : this(dataContext, ToString(vertexShaderSource), ToString(fragmentShaderSource)) { }
 
         private void CreateShaderProgram()
         {
-            m_shaderProgramId = Gl.CreateProgram();
+            m_id = Gl.CreateProgram();
 
             var vertexShaderId = CreateShader(Gl.GL_VERTEX_SHADER, m_vertexShaderSource);
-            Gl.AttachShader(m_shaderProgramId, vertexShaderId);
-            
+            Gl.AttachShader(m_id, vertexShaderId);
+
             var fragmentShaderId = CreateShader(Gl.GL_FRAGMENT_SHADER, m_fragmentShaderSource);
-            Gl.AttachShader(m_shaderProgramId, fragmentShaderId);
+            Gl.AttachShader(m_id, fragmentShaderId);
 
             LinkShaderProgram();
 
@@ -64,16 +64,16 @@ namespace Mesher.GraphicsCore.ShaderProgram
 
         private void ValidateShaderProgram()
         {
-            Gl.ValidateProgram(m_shaderProgramId);
+            Gl.ValidateProgram(m_id);
 
             var success = new Int32[1];
 
-            Gl.GetProgram(m_shaderProgramId, Gl.GL_VALIDATE_STATUS, success);
+            Gl.GetProgram(m_id, Gl.GL_VALIDATE_STATUS, success);
 
             if (success[0] == 0)
             {
                 var infoLog = new StringBuilder(LOG_INFO_MAX_SIZE);
-                Gl.GetProgramInfoLog(m_shaderProgramId, LOG_INFO_MAX_SIZE, IntPtr.Zero, infoLog);
+                Gl.GetProgramInfoLog(m_id, LOG_INFO_MAX_SIZE, IntPtr.Zero, infoLog);
 
                 throw new ValidateShaderProgramException(infoLog.ToString());
             }
@@ -81,16 +81,16 @@ namespace Mesher.GraphicsCore.ShaderProgram
 
         private void LinkShaderProgram()
         {
-            Gl.LinkProgram(m_shaderProgramId);
+            Gl.LinkProgram(m_id);
 
             var success = new Int32[1];
 
-            Gl.GetProgram(m_shaderProgramId, Gl.GL_LINK_STATUS, success);
+            Gl.GetProgram(m_id, Gl.GL_LINK_STATUS, success);
 
             if (success[0] == 0)
             {
                 var infoLog = new StringBuilder(LOG_INFO_MAX_SIZE);
-                Gl.GetProgramInfoLog(m_shaderProgramId, LOG_INFO_MAX_SIZE, IntPtr.Zero, infoLog);
+                Gl.GetProgramInfoLog(m_id, LOG_INFO_MAX_SIZE, IntPtr.Zero, infoLog);
 
                 throw new LinkShaderProgramException(infoLog.ToString());
             }
@@ -118,7 +118,7 @@ namespace Mesher.GraphicsCore.ShaderProgram
 
         public void Bind()
         {
-            Gl.UseProgram(m_shaderProgramId);
+            Gl.UseProgram(m_id);
         }
 
         public void Unbind()
@@ -126,9 +126,19 @@ namespace Mesher.GraphicsCore.ShaderProgram
             Gl.UseProgram(0);
         }
 
+        public Int32 GetUniformLocation(String name)
+        {
+            return Gl.GetUniformLocation(m_id, name);
+        }
+
+        public Int32 GetAttributeLocation(String name)
+        {
+            return Gl.GetAttribLocation(m_id, name);
+        }
+
         public void SetBuffer<T>(String name, GlDataBuffer<T> vertexBuffer, Int32 componentsCount) where T : struct
         {
-            var variableLocation = Gl.GetAttribLocation(m_shaderProgramId, name);
+            var variableLocation = Gl.GetAttribLocation(m_id, name);
 
             if (variableLocation != -1)
             {
@@ -144,9 +154,22 @@ namespace Mesher.GraphicsCore.ShaderProgram
             }
         }
 
+        public void SetBuffer<T>(Int32 id, GlDataBuffer<T> vertexBuffer, Int32 componentsCount) where T : struct
+        {
+            vertexBuffer.Bind();
+
+            Gl.EnableVertexAttribArray((UInt32)id);
+
+            Gl.VertexAttribPointer((UInt32)id, componentsCount, Gl.GL_FLOAT, false, 0, IntPtr.Zero);
+
+            m_verticesCount = vertexBuffer.Count;
+
+            m_items.Add(vertexBuffer);
+        }
+
         public void SetBuffer(String name, Single[] data, Int32 componentsCount)
         {
-            if(data.Length % componentsCount != 0)
+            if (data.Length % componentsCount != 0)
                 throw new ArgumentException();
 
             unsafe
@@ -158,7 +181,7 @@ namespace Mesher.GraphicsCore.ShaderProgram
 
         public void SetBuffer(String name, IntPtr data, Int32 count, Int32 componentsCount)
         {
-            var variableLocation = Gl.GetAttribLocation(m_shaderProgramId, name);
+            var variableLocation = Gl.GetAttribLocation(m_id, name);
 
             if (variableLocation != -1)
                 SetBuffer((UInt32)variableLocation, data, count, componentsCount);
@@ -190,7 +213,14 @@ namespace Mesher.GraphicsCore.ShaderProgram
         public void SetValue(String name, Texture.GlTexture value)
         {
             value.Bind();
-            Gl.Uniform1(Gl.GetUniformLocation(m_shaderProgramId, name), value.Bind());
+            Gl.Uniform1(Gl.GetUniformLocation(m_id, name), value.Bind());
+            m_items.Add(value);
+        }
+
+        public void SetValue(Int32 id, Texture.GlTexture value)
+        {
+            value.Bind();
+            Gl.Uniform1(id, value.Bind());
             m_items.Add(value);
         }
 
@@ -201,47 +231,88 @@ namespace Mesher.GraphicsCore.ShaderProgram
 
         public void SetValue(String name, Mat4 matrix)
         {
-            Gl.UniformMatrix4(Gl.GetUniformLocation(m_shaderProgramId, name), 1, false, matrix.ToArray());
+            Gl.UniformMatrix4(Gl.GetUniformLocation(m_id, name), 1, false, matrix.ToArray());
         }
+
+        public void SetValue(Int32 id, Mat4 matrix)
+        {
+            Gl.UniformMatrix4(id, 1, false, matrix.ToArray());
+        }
+
 
         public void SetValue(String name, Mat3 matrix)
         {
-            Gl.UniformMatrix3(Gl.GetUniformLocation(m_shaderProgramId, name), 1, false, matrix.ToArray());
+            Gl.UniformMatrix3(Gl.GetUniformLocation(m_id, name), 1, false, matrix.ToArray());
         }
 
         public void SetValue(String name, Vec3 v)
         {
-            Gl.Uniform3(Gl.GetUniformLocation(m_shaderProgramId, name), v.X, v.Y, v.Z);
+            Gl.Uniform3(Gl.GetUniformLocation(m_id, name), v.X, v.Y, v.Z);
+        }
+
+        public void SetValue(Int32 id, Vec3 v)
+        {
+            Gl.Uniform3(id, v.X, v.Y, v.Z);
         }
 
         public void SetValue(String name, Vec4 v)
         {
-            Gl.Uniform4(Gl.GetUniformLocation(m_shaderProgramId, name), v.X, v.Y, v.Z, v.W);
+            Gl.Uniform4(Gl.GetUniformLocation(m_id, name), v.X, v.Y, v.Z, v.W);
+        }
+
+        public void SetValue(Int32 id, Vec4 v)
+        {
+            Gl.Uniform4(id, v.X, v.Y, v.Z, v.W);
         }
 
         public void SetValue(String name, Color3 v)
         {
-            Gl.Uniform3(Gl.GetUniformLocation(m_shaderProgramId, name), v.R, v.G, v.B);
+            Gl.Uniform3(Gl.GetUniformLocation(m_id, name), v.R, v.G, v.B);
+        }
+
+        public void SetValue(Int32 id, Color3 v)
+        {
+            Gl.Uniform3(id, v.R, v.G, v.B);
         }
 
         public void SetValue(String name, Color4 v)
         {
-            Gl.Uniform4(Gl.GetUniformLocation(m_shaderProgramId, name), v.R, v.G, v.B, v.A);
+            Gl.Uniform4(Gl.GetUniformLocation(m_id, name), v.R, v.G, v.B, v.A);
+        }
+
+        public void SetValue(Int32 id, Color4 v)
+        {
+            Gl.Uniform4(id, v.R, v.G, v.B, v.A);
         }
 
         public void SetValue(String name, Single v)
         {
-            Gl.Uniform1(Gl.GetUniformLocation(m_shaderProgramId, name), v);
+            Gl.Uniform1(Gl.GetUniformLocation(m_id, name), v);
+        }
+
+        public void SetValue(Int32 id, Single v)
+        {
+            Gl.Uniform1(id, v);
         }
 
         public void SetValue(String name, Int32 v)
         {
-            Gl.Uniform1(Gl.GetUniformLocation(m_shaderProgramId, name), v);
+            Gl.Uniform1(Gl.GetUniformLocation(m_id, name), v);
+        }
+
+        public void SetValue(Int32 id, Int32 v)
+        {
+            Gl.Uniform1(id, v);
         }
 
         public void SetValue(String name, Boolean v)
         {
-            Gl.Uniform1(Gl.GetUniformLocation(m_shaderProgramId, name), v ? 1 : 0);
+            Gl.Uniform1(Gl.GetUniformLocation(m_id, name), v ? 1 : 0);
+        }
+
+        public void SetValue(Int32 id, Boolean v)
+        {
+            Gl.Uniform1(id, v ? 1 : 0);
         }
 
         public void RenderTriangles(Boolean indexed)
@@ -250,10 +321,10 @@ namespace Mesher.GraphicsCore.ShaderProgram
                 Gl.DrawElements(Gl.GL_TRIANGLES, m_indiciesCount, Gl.GL_UNSIGNED_INT, IntPtr.Zero);
             else Gl.DrawArrays(Gl.GL_TRIANGLES, 0, m_verticesCount);
 
-            foreach(var item in m_items)
+            foreach (var item in m_items)
                 item.Unbind();
 
-            m_items.Clear();    
+            m_items.Clear();
         }
 
         public void RenderLines(Single lineWidth, Boolean indexed)
@@ -272,7 +343,7 @@ namespace Mesher.GraphicsCore.ShaderProgram
 
         public void Dispose()
         {
-            Gl.DeleteProgram(ShaderProgramId);
+            Gl.DeleteProgram(Id);
         }
 
         void IBindableItem.Bind()
@@ -282,7 +353,7 @@ namespace Mesher.GraphicsCore.ShaderProgram
 
         void IBindableItem.Unbind()
         {
-            Unbind();  
+            Unbind();
         }
 
         private static String ToString(Byte[] bytes)
