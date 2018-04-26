@@ -67,7 +67,6 @@
     <Compile Include="Camera\OrthographicCamera.cs" />
     <Compile Include="Camera\PerspectiveCamera.cs" />
     <Compile Include="Collections\Cameras.cs" />
-    <Compile Include="Data\OpenGL\GlDataContext.cs" />
     <Compile Include="Light\Light.cs" />
     <Compile Include="Light\LightType.cs" />
     <Compile Include="Material\Material.cs" />
@@ -100,7 +99,7 @@
     </Compile>
     <Compile Include="RenderContexts\WindowsRenderContext.cs" />
     <Compile Include="OpenGL.cs" />
-    <Compile Include="DataContext.cs" />
+    <Compile Include="Data\OpenGL\GlDataContext.cs" />
     <Compile Include="ShaderProgram\RenderMode.cs" />
     <Compile Include="ShaderProgram\GlShaderProgram.cs" />
     <Compile Include="ShaderProgram\Exceptions\LinkShaderProgramException.cs" />

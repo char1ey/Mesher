@@ -1,5 +1,6 @@
 ﻿using Mesher.Core.SceneContexts;
 using Mesher.GraphicsCore;
+using Mesher.GraphicsCore.Data.OpenGL;
 
 namespace Mesher.Plugins.EditLight
 {
@@ -32,7 +33,7 @@ namespace Mesher.Plugins.EditLight
         private void InitializeComponent()
         {
             this.SuspendLayout();
-            this.sceneContext1 = new SceneContextWinforms(this.m_dataContext);
+            this.sceneContext1 = new SceneContextWinforms();
             // 
             // sceneContext1
             // 
@@ -62,7 +63,7 @@ namespace Mesher.Plugins.EditLight
         #endregion
 
         private SceneContextWinforms sceneContext1;
-        private DataContext m_dataContext;
+        private GlDataContext m_dataContext;
     }
 }
 

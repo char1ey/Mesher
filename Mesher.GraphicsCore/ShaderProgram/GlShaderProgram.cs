@@ -24,13 +24,13 @@ namespace Mesher.GraphicsCore.ShaderProgram
         private Int32 m_indiciesCount;
         private Int32 m_verticesCount;
 
-        private DataContext m_dataContext;
+        private GlDataContext m_dataContext;
 
-        internal DataContext DataContext { get { return m_dataContext; } }
+        internal GlDataContext DataContext { get { return m_dataContext; } }
 
         internal UInt32 Id { get { return m_id; } }
 
-        internal GlShaderProgram(DataContext dataContext, String vertexShaderSource, String fragmentShaderSource)
+        internal GlShaderProgram(GlDataContext dataContext, String vertexShaderSource, String fragmentShaderSource)
         {
             m_dataContext = dataContext;
 
@@ -42,7 +42,7 @@ namespace Mesher.GraphicsCore.ShaderProgram
             m_items = new List<IBindableItem>();
         }
 
-        internal GlShaderProgram(DataContext dataContext, Byte[] vertexShaderSource, Byte[] fragmentShaderSource)
+        internal GlShaderProgram(GlDataContext dataContext, Byte[] vertexShaderSource, Byte[] fragmentShaderSource)
         : this(dataContext, ToString(vertexShaderSource), ToString(fragmentShaderSource)) { }
 
         private void CreateShaderProgram()

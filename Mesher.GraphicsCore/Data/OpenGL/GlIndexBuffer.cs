@@ -5,19 +5,24 @@ namespace Mesher.GraphicsCore.Data.OpenGL
 {
     public class GlIndexBuffer : IIndexBuffer, IDisposable, IBindableItem
     {
-        private DataContext m_dataContext;
+        private GlDataContext m_dataContext;
 
         private UInt32[] m_id;
 
         private Int32[] m_indicies;
 
-        internal DataContext DataContext { get { return m_dataContext; } }
+        internal GlDataContext DataContext { get { return m_dataContext; } }
         public UInt32 Id { get { return m_id[0]; } }
 
         public Int32 Count { get { return m_indicies.Length; } }
         public void AddRange(Int32[] ids)
         {
-            throw new NotImplementedException();
+            m_dataContext.Begin();
+            m_indicies = ids;
+            Bind();
+            SetData(m_indicies);
+            Unbind();
+            m_dataContext.End();
         }
 
         public void Add(Int32 id)
@@ -36,7 +41,7 @@ namespace Mesher.GraphicsCore.Data.OpenGL
             set { throw new NotImplementedException(); }
         }
 
-        internal GlIndexBuffer(Int32[] indicies, DataContext dataContext)
+        internal GlIndexBuffer(Int32[] indicies, GlDataContext dataContext)
         {
             m_dataContext = dataContext;
 
@@ -45,6 +50,17 @@ namespace Mesher.GraphicsCore.Data.OpenGL
             GenBuffer();
             Bind();
             SetData(indicies);
+            Unbind();
+        }
+        internal GlIndexBuffer(GlDataContext dataContext)
+        {
+            m_dataContext = dataContext;
+
+            m_indicies = new Int32[1];
+
+            GenBuffer();
+            Bind();
+            SetData(m_indicies);
             Unbind();
         }
 

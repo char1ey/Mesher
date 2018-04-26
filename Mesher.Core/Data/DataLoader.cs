@@ -6,6 +6,7 @@ using Mesher.Core.Objects.Mesh;
 using Mesher.Core.Objects.Scene;
 using Mesher.GraphicsCore;
 using Mesher.GraphicsCore.Data;
+using Mesher.GraphicsCore.Data.OpenGL;
 using Mesher.GraphicsCore.Light;
 using Mesher.GraphicsCore.Material;
 using Mesher.GraphicsCore.Primitives;
@@ -16,7 +17,7 @@ namespace Mesher.Core.Data
 {
     public static class DataLoader
     {
-        public static Scene LoadScene(String filePath, DataContext dataContext)
+        public static Scene LoadScene(String filePath, GlDataContext dataContext)
         {
             var path = filePath.Substring(0, filePath.LastIndexOf("\\") + 1);
 
@@ -207,7 +208,7 @@ namespace Mesher.Core.Data
             return material;
         }
 
-        private static Material GetMaterial(Assimp.Material aiMaterial, String filePath, DataContext dataContext)
+        private static Material GetMaterial(Assimp.Material aiMaterial, String filePath, GlDataContext dataContext)
         {      
             var material = new Material();                       
 
@@ -275,7 +276,7 @@ namespace Mesher.Core.Data
             return dataContext.CreateTexture((Bitmap)Image.FromFile(filePath + aiTexture.FilePath));
         }
 
-        private static GlTexture GetTexture(Assimp.TextureSlot aiTexture, String filePath, DataContext dataContext)
+        private static GlTexture GetTexture(Assimp.TextureSlot aiTexture, String filePath, GlDataContext dataContext)
         {
             if (!File.Exists(filePath + aiTexture.FilePath))
                 return null;

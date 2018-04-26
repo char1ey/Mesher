@@ -1,6 +1,7 @@
 ﻿using System;
 using Mesher.Core.Collections;
 using Mesher.GraphicsCore;
+using Mesher.GraphicsCore.Data.OpenGL;
 using Mesher.GraphicsCore.Material;
 using Mesher.GraphicsCore.ShaderProgram;
 using Mesher.Mathematics;
@@ -11,7 +12,7 @@ namespace Mesher.Core.Renderers
 {
     public class SceneRenderer : SceneRendererBase
     {
-        public SceneRenderer(DataContext dataContext, String vertexShaderSource, String fragmentShaderSource) 
+        public SceneRenderer(GlDataContext dataContext, String vertexShaderSource, String fragmentShaderSource) 
             : base(dataContext, vertexShaderSource, fragmentShaderSource)
         {
         }

@@ -7,6 +7,7 @@ using Mesher.Core.Renderers;
 using Mesher.Core.SceneContexts.Components;
 using Mesher.GraphicsCore;
 using Mesher.GraphicsCore.Camera;
+using Mesher.GraphicsCore.Data.OpenGL;
 using Mesher.GraphicsCore.RenderContexts;
 using Mesher.Mathematics;
 
@@ -14,7 +15,7 @@ namespace Mesher.Core.SceneContexts
 {
     public partial class SceneContextWinforms : UserControl, ISceneContext
     {
-        private readonly WindowsRenderContext m_renderContext;
+        private readonly IRenderContext m_renderContext;
 
         private SceneContextGraphics m_sceneContextGraphics;
 
@@ -28,14 +29,9 @@ namespace Mesher.Core.SceneContexts
         public Scene Scene { get; set; }
         public SceneRendererBase SceneRenderer { get; set; }
         public CameraControler CameraControler { get; set; }
-        public WindowsRenderContext RenderContext
+        public IRenderContext RenderContext
         {
             get { return m_renderContext; }
-        }
-
-        public DataContext DataContext
-        {
-            get { return m_renderContext?.DataContext; }
         }
 
         public SceneFormComponents SceneContextComponents { get; private set; }
@@ -56,9 +52,9 @@ namespace Mesher.Core.SceneContexts
             SceneContextComponents.RemoveAt(id);
         }
 
-        public SceneContextWinforms(DataContext dataContext)
+        public SceneContextWinforms()
         {
-            m_renderContext = dataContext.CreateRenderWindow(Handle);
+            m_renderContext = new WindowsRenderContext(Handle);
             m_renderContext.ClearColor = Color.DimGray;
             InitializeComponent();
             SceneContextComponents = new SceneFormComponents();

@@ -53,18 +53,18 @@
     <Compile Include="ArcBallCameraControler.cs" />
     <Compile Include="Collections\SceneFormComponents.cs" />
     <Compile Include="CameraControler.cs" />
-    <Compile Include="GCoreTest.cs">
+    <Compile Include="Test\GCoreTest.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GCoreTest.Designer.cs">
+    <Compile Include="Test\GCoreTest.Designer.cs">
       <DependentUpon>GCoreTest.cs</DependentUpon>
     </Compile>
     <Compile Include="ISceneContext.cs" />
     <Compile Include="Renderers\SceneContextGraphics.cs" />
-    <Compile Include="SceneContexts\SceneContextWinformsGTest.cs">
+    <Compile Include="Test\SceneContextWinformsGTest.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SceneContexts\SceneContextWinformsGTest.Designer.cs">
+    <Compile Include="Test\SceneContextWinformsGTest.Designer.cs">
       <DependentUpon>SceneContextWinformsGTest.cs</DependentUpon>
     </Compile>
     <Compile Include="SceneContexts\SceneContextWinforms.cs">
@@ -97,7 +97,7 @@
     <Compile Include="Renderers\SceneRenderer.cs" />
     <Compile Include="SceneContexts\Components\Axises.cs" />
     <Compile Include="SceneContexts\Components\SceneContextComponent.cs" />
-    <EmbeddedResource Include="SceneContexts\SceneContextWinformsGTest.resx">
+    <EmbeddedResource Include="Test\SceneContextWinformsGTest.resx">
       <DependentUpon>SceneContextWinformsGTest.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SceneContexts\SceneContextWinforms.resx">

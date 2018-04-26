@@ -14,16 +14,19 @@ using Mesher.Core.Plugins;
 using Mesher.Core.Renderers;
 using Mesher.Core.SceneContexts.Components;
 using Mesher.GraphicsCore.Data;
+using Mesher.GraphicsCore.Data.OpenGL;
 using Mesher.GraphicsCore.Primitives;
+using Mesher.GraphicsCore.RenderContexts;
+using Mesher.GraphicsCore.Renderers;
+using Mesher.GraphicsCore.Renderers.OpenGL;
 
 namespace Mesher.Core
 {
     public partial class GCoreTest : Form
     {
-        public Scene Scene;
-
         private RScene m_rScene;
 
+        private RSceneRenderer m_sceneRenderer;
         //public SceneForm.SceneForm SceneForm;
 
         public GCoreTest()
@@ -31,20 +34,14 @@ namespace Mesher.Core
             InitializeComponent();
 
             sceneContext1.MouseWheel += SceneContext1_MouseWheel;
-
-            var plugins = PluginSystem.GetPlugins(Path.Combine(Environment.CurrentDirectory));
-
-            foreach (var plugin in plugins)
-            {
-                var item = toolStripMenuItemPlugins.DropDownItems.Add(plugin.Name);
-                item.Tag = plugin;
-            }
-
-  
+            m_dataContext = new GlDataContext((WindowsRenderContext) sceneContext1.RenderContext);
+            ((WindowsRenderContext) sceneContext1.RenderContext).DataContext = m_dataContext;
+            m_rScene = new RScene(m_dataContext);
             //SceneForm = new SceneForm.SceneForm(sceneContext1, m_sceneRenderer);
-            sceneContext1.Scene = Scene;
-            //sceneContext1.SceneRenderer = m_sceneRenderer;
-            sceneContext1.Add(new Axises(sceneContext1));
+            sceneContext1.Scene = m_rScene;
+            m_sceneRenderer = new DefaultGlRSceneRenderer();
+            sceneContext1.SceneRenderer = m_sceneRenderer;
+            //sceneContext1.Add(new Axises(sceneContext1));
             sceneContext1.CameraControler = new ArcBallCameraControler(sceneContext1);
         }
 
@@ -60,15 +57,15 @@ namespace Mesher.Core
 
         private void Render()
         {
-            if (Scene == null)
+            if (m_rScene == null)
                 return;
-            sceneContext1.Scene = Scene;
+            sceneContext1.Scene = m_rScene;
             sceneContext1.Render();
-            /*sceneContext1.BeginRender();
+            sceneContext1.BeginRender();
 
-            sceneContext1.RenderTriangles(Scene, m_sceneRenderer);
+            sceneContext1.Render();
 
-            sceneContext1.EndRender();*/
+            sceneContext1.EndRender();
         }
 
         private void sceneContext1_MouseMove(Object sender, MouseEventArgs e)
@@ -96,7 +93,7 @@ namespace Mesher.Core
 
                 if (File.Exists(openFileDialog.FileName))
                 {
-                    Scene = DataLoader.LoadScene(openFileDialog.FileName, m_dataContext);
+                    m_rScene = DataLoader.LoadScene(openFileDialog.FileName, (IDataContext)m_dataContext);
                 }
             }
 

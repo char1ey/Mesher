@@ -19,6 +19,7 @@ namespace Mesher.GraphicsCore.Primitives
         public RScene(IDataContext dataContext)
         {
             m_dataContext = dataContext;
+            m_primitives = new List<RPrimitive>();
             Lights = new Lights();
         }
 

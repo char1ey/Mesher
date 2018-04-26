@@ -8,6 +8,7 @@ using Mesher.Core.Renderers;
 using Mesher.Core.SceneContexts.Components;
 using Mesher.GraphicsCore.Data;
 using Mesher.GraphicsCore.Primitives;
+using Mesher.GraphicsCore.RenderContexts;
 using DataLoader = Mesher.Core.Data.DataLoader;
 
 namespace Mesher.Core
@@ -44,7 +45,7 @@ namespace Mesher.Core
             //SceneForm = new SceneForm.SceneForm(sceneContext1, m_sceneRenderer);
             sceneContext1.Scene = Scene;
             sceneContext1.SceneRenderer = m_sceneRenderer;
-            sceneContext1.Add(new Axises(sceneContext1));
+            //sceneContext1.Add(new Axises(sceneContext1));
             sceneContext1.CameraControler = new ArcBallCameraControler(sceneContext1);
         }
 

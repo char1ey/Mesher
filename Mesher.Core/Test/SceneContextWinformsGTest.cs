@@ -7,14 +7,17 @@ using Mesher.Core.Renderers;
 using Mesher.Core.SceneContexts.Components;
 using Mesher.GraphicsCore;
 using Mesher.GraphicsCore.Camera;
+using Mesher.GraphicsCore.Data.OpenGL;
+using Mesher.GraphicsCore.Primitives;
 using Mesher.GraphicsCore.RenderContexts;
+using Mesher.GraphicsCore.Renderers;
 using Mesher.Mathematics;
 
 namespace Mesher.Core.SceneContexts
 {
     public partial class SceneContextWinformsGTest : UserControl, ISceneContext
     {
-        private readonly WindowsRenderContext m_renderContext;
+        private readonly IRenderContext m_renderContext;
 
         private SceneContextGraphics m_sceneContextGraphics;
 
@@ -25,21 +28,17 @@ namespace Mesher.Core.SceneContexts
             get { return RenderContext.Camera; }
             set { RenderContext.Camera = value; }
         }
-        public Scene Scene { get; set; }
-        public SceneRendererBase SceneRenderer { get; set; }
+        public RScene Scene { get; set; }
+        public RSceneRenderer SceneRenderer { get; set; }
         public CameraControler CameraControler { get; set; }
-        public WindowsRenderContext RenderContext
+        public IRenderContext RenderContext
         {
             get { return m_renderContext; }
         }
 
-        public DataContext DataContext
-        {
-            get { return m_renderContext?.DataContext; }
-        }
-
         public SceneFormComponents SceneContextComponents { get; private set; }
-
+        Scene ISceneContext.Scene { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        SceneRendererBase ISceneContext.SceneRenderer { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public void Add(SceneContextComponent component)
         {
@@ -56,13 +55,13 @@ namespace Mesher.Core.SceneContexts
             SceneContextComponents.RemoveAt(id);
         }
 
-        public SceneContextWinformsGTest(DataContext dataContext)
+        public SceneContextWinformsGTest()
         {
-            m_renderContext = dataContext.CreateRenderWindow(Handle);
+            m_renderContext = new WindowsRenderContext(Handle);
             m_renderContext.ClearColor = Color.DimGray;
             InitializeComponent();
             SceneContextComponents = new SceneFormComponents();
-            m_sceneContextGraphics = new SceneContextGraphics(this);
+            //m_sceneContextGraphics = new SceneContextGraphics(this);
         }
 
         public void BeginRender()
@@ -84,11 +83,11 @@ namespace Mesher.Core.SceneContexts
                 Camera = new OrthographicCamera(m_renderContext.Width, m_renderContext.Height, new Vec3(0, 0, 1), new Vec3(0, 1, 0), new Vec3(0, 0, 0));
 
             BeginRender();
-            SceneRenderer.Render(Scene, Camera);
+            SceneRenderer.Render(Scene, m_renderContext);
      
-            Gl.Clear(Gl.GL_DEPTH_BUFFER_BIT);
+          /*  Gl.Clear(Gl.GL_DEPTH_BUFFER_BIT);
             foreach (var component in SceneContextComponents)
-                component.Draw(m_sceneContextGraphics);
+                component.Draw(m_sceneContextGraphics);*/
             EndRender();
         }
 

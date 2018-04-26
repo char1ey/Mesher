@@ -9,9 +9,13 @@ namespace Mesher.GraphicsCore.RenderContexts
         Int32 Height { get; }
         Camera.Camera Camera { get; set; }
 
+        Color ClearColor { get; set; }
+
         void ClearColorBuffer(Color color);
         void ClearDepthBuffer();
         void SetSize(Int32 width, Int32 height);
+
+        void SwapBuffers();
         void BeginRender();
         void EndRender();
     }

@@ -21,6 +21,10 @@ namespace Mesher.GraphicsCore.Primitives
 
         public RTriangles(IDataContext dataContext, RScene scene) : base(dataContext, scene)
         {
+            TexCoords = dataContext.CreateDataBuffer<Vec2>();
+            Normals = dataContext.CreateDataBuffer<Vec3>();
+            Tangents = dataContext.CreateDataBuffer<Vec3>();
+            BiTangents = dataContext.CreateDataBuffer<Vec3>();
         }
 
         public override void Render(RSceneRenderer sceneRenderer, IRenderContext renderContext)

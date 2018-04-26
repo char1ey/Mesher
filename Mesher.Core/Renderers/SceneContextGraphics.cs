@@ -18,7 +18,7 @@ namespace Mesher.Core.Renderers
         public SceneContextGraphics(ISceneContext sceneContext)
         {
             m_sceneContext = sceneContext;
-            m_shaderProgram = sceneContext.DataContext.CreateShaderProgram(Properties.Resources.ComponentsVertexShader, Properties.Resources.ComponentsFragmentShader);
+           // m_shaderProgram = sceneContext.DataContext.CreateShaderProgram(Properties.Resources.ComponentsVertexShader, Properties.Resources.ComponentsFragmentShader);
         }
 
         public void DrawLine(Vec3 p0, Vec3 p1, Single lineWidth, Color color)

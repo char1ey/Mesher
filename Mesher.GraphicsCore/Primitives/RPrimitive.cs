@@ -25,6 +25,8 @@ namespace Mesher.GraphicsCore.Primitives
         {
             DataContext = dataContext;
             RScene = scene;
+            Positions = dataContext.CreateDataBuffer<Vec3>();
+            Indexes = dataContext.CreateIndexBuffer();
         }
 
         public abstract void Render(RSceneRenderer sceneRenderer, IRenderContext renderContext);

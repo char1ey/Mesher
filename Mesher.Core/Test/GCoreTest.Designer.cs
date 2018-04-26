@@ -1,5 +1,6 @@
 ﻿using Mesher.Core.SceneContexts;
 using Mesher.GraphicsCore;
+using Mesher.GraphicsCore.Data.OpenGL;
 
 namespace Mesher.Core
 {
@@ -31,7 +32,6 @@ namespace Mesher.Core
         /// </summary>
         private void InitializeComponent()
         {
-            this.m_dataContext = new DataContext(Handle);
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItemFile = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -40,7 +40,7 @@ namespace Mesher.Core
             this.toolStripMenuItemPlugins = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
-            this.sceneContext1 = new SceneContextWinforms(this.m_dataContext);
+            this.sceneContext1 = new SceneContextWinformsGTest();
             // 
             // menuStrip
             // 
@@ -118,13 +118,13 @@ namespace Mesher.Core
 
         #endregion
 
-        private SceneContextWinforms sceneContext1;
+        private SceneContextWinformsGTest sceneContext1;
         private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItemFile;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private DataContext m_dataContext;
+        private GlDataContext m_dataContext;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPlugins;
     }
 }

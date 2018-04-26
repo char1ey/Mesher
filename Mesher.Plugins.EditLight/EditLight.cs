@@ -3,6 +3,7 @@ using Mesher.Core.Plugins;
 using Mesher.Core.Objects.Scene;
 using Mesher.Core.Renderers;
 using Mesher.GraphicsCore;
+using Mesher.GraphicsCore.Data.OpenGL;
 
 namespace Mesher.Plugins.EditLight
 {
@@ -17,7 +18,7 @@ namespace Mesher.Plugins.EditLight
             Name = @"Edit light";
         }
 
-        public void Execute(DataContext context, Scene scene, SceneRendererBase sceneRenderer)
+        public void Execute(GlDataContext context, Scene scene, SceneRendererBase sceneRenderer)
         {
             m_form = new MainForm(context, scene, sceneRenderer);
             m_form.Show();

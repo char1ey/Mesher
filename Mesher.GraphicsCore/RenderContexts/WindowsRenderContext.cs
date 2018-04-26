@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using Mesher.GraphicsCore.Data.OpenGL;
 
 namespace Mesher.GraphicsCore.RenderContexts
 {
@@ -22,9 +23,9 @@ namespace Mesher.GraphicsCore.RenderContexts
 
         public Color ClearColor { get; set; }
 
-        public DataContext DataContext { get; internal set; }
+        public GlDataContext DataContext { get; set; }
 
-        internal WindowsRenderContext(IntPtr handle)
+        public WindowsRenderContext(IntPtr handle)
         {
             var createParams = new CreateParams
             {
