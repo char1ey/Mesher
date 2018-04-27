@@ -6,16 +6,15 @@ using Mesher.GraphicsCore.Data.OpenGL;
 
 namespace Mesher.GraphicsCore.RenderContexts
 {
-    public sealed class WindowsRenderContext : NativeWindow, IRenderContext, IDisposable
+    public sealed class GlWindowsRenderContext : IRenderContext, IDisposable
     {
         private IntPtr m_hdc;
+        private IntPtr m_handle;
 
         private IntPtr m_previousHdc;
         private IntPtr m_previousHglrc;
 
         internal IntPtr RenderWindowHandle { get { return m_hdc; } }
-
-        private Int32 m_beginModeDepth;
 
         public Int32 Width { get; private set; }
         public Int32 Height { get; private set; }
@@ -25,17 +24,11 @@ namespace Mesher.GraphicsCore.RenderContexts
 
         public GlDataContext DataContext { get; set; }
 
-        public WindowsRenderContext(IntPtr handle)
+        public GlWindowsRenderContext(IntPtr handle)
         {
-            var createParams = new CreateParams
-            {
-                Parent = handle,
-                Style = (Int32)(Win32.WindowStyles.WS_CHILD | Win32.WindowStyles.WS_VISIBLE | Win32.WindowStyles.WS_DISABLED)
-            };
+            m_handle = handle;
 
-            CreateHandle(createParams);
-
-            m_hdc = Win32.GetDC(Handle);
+            m_hdc = Win32.GetDC(handle);
 
             if (m_hdc == null) return;
 
@@ -53,8 +46,6 @@ namespace Mesher.GraphicsCore.RenderContexts
 
             var pixelFrormat = Win32.ChoosePixelFormat(m_hdc, pfd);
             Win32.SetPixelFormat(m_hdc, pixelFrormat, pfd);
-
-            m_beginModeDepth = 0;
         }
 
         public void SetSize(Int32 width, Int32 height)
@@ -64,10 +55,8 @@ namespace Mesher.GraphicsCore.RenderContexts
             BeginRender();
             //TODO move viewport to camera
             Win32.glViewport(0, 0, width, height);
+            
             EndRender();
-            Win32.SetWindowPos(Handle, IntPtr.Zero, 0, 0, width, height, Win32.SetWindowPosFlags.SWP_NOMOVE
-                                                                       | Win32.SetWindowPosFlags.SWP_NOZORDER
-                                                                       | Win32.SetWindowPosFlags.SWP_NOACTIVATE);
         }
 
         public void BeginRender()
@@ -105,7 +94,7 @@ namespace Mesher.GraphicsCore.RenderContexts
 
         public void Dispose()
         {
-            Win32.ReleaseDC(Handle, m_hdc);
+            Win32.ReleaseDC(m_handle, m_hdc);
         }
     }
 }

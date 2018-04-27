@@ -17,12 +17,12 @@ namespace Mesher.GraphicsCore.Data.OpenGL
         public Int32 Count { get { return m_indicies.Length; } }
         public void AddRange(Int32[] ids)
         {
-            m_dataContext.Begin();
+            m_dataContext.BeginChangeData();
             m_indicies = ids;
             Bind();
             SetData(m_indicies);
             Unbind();
-            m_dataContext.End();
+            m_dataContext.EndChangeData();
         }
 
         public void Add(Int32 id)
@@ -66,17 +66,17 @@ namespace Mesher.GraphicsCore.Data.OpenGL
 
         private void SetData(Int32[] indicies)
         {
-            m_dataContext.Begin();
+            m_dataContext.BeginChangeData();
             Gl.BufferData(Gl.GL_ELEMENT_ARRAY_BUFFER, indicies, Gl.GL_STATIC_DRAW);
-            m_dataContext.End();
+            m_dataContext.EndChangeData();
         }
 
         private void GenBuffer()
         {
-            m_dataContext.Begin();
+            m_dataContext.BeginChangeData();
             m_id = new UInt32[1];
             Gl.GenBuffers(1, m_id);
-            m_dataContext.End();
+            m_dataContext.EndChangeData();
         }
 
         void IBindableItem.Bind()
@@ -91,23 +91,23 @@ namespace Mesher.GraphicsCore.Data.OpenGL
 
         public void Unbind()
         {
-            m_dataContext.Begin();
+            m_dataContext.BeginChangeData();
             Gl.BindBuffer(Gl.GL_ELEMENT_ARRAY_BUFFER, 0);
-            m_dataContext.End();
+            m_dataContext.EndChangeData();
         }
 
         public void Bind()
         {
-            m_dataContext.Begin();
+            m_dataContext.BeginChangeData();
             Gl.BindBuffer(Gl.GL_ELEMENT_ARRAY_BUFFER, Id);
-            m_dataContext.End();
+            m_dataContext.EndChangeData();
         }
 
         public void Dispose()
         {
-            m_dataContext.Begin();
+            m_dataContext.BeginChangeData();
             Gl.DeleteBuffers(1, m_id);
-            m_dataContext.End();
+            m_dataContext.EndChangeData();
         }
     }
 }

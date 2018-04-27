@@ -1,4 +1,5 @@
-﻿using Mesher.Core.Objects.Scene;
+﻿using System;
+using Mesher.Core.Objects.Scene;
 using Mesher.Core.Renderers;
 using Mesher.Core.SceneContexts.Components;
 using Mesher.GraphicsCore;
@@ -21,7 +22,9 @@ namespace Mesher.Core
 
         CameraControler CameraControler { get; set; }
 
-        IRenderContext RenderContext { get; }
+        IRenderContext RenderContext { get; set; }
+
+        IntPtr Handle { get; }
 
         void Add(SceneContextComponent component);
         void Remove(SceneContextComponent component);

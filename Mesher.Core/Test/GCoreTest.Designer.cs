@@ -124,7 +124,6 @@ namespace Mesher.Core
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private GlDataContext m_dataContext;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPlugins;
     }
 }

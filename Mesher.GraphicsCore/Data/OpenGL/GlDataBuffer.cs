@@ -56,7 +56,7 @@ namespace Mesher.GraphicsCore.Buffers
 
         public void AddRange(T[] data)
         {
-            DataContext.Begin();
+            DataContext.BeginChangeData();
 
             Bind();
 
@@ -74,7 +74,7 @@ namespace Mesher.GraphicsCore.Buffers
 
             Unbind();
 
-            DataContext.End();
+            DataContext.EndChangeData();
         }
 
         public void RemoveAt(Int32 id)
@@ -90,7 +90,7 @@ namespace Mesher.GraphicsCore.Buffers
 
         public void Add(T data)
         {
-            m_dataContext.Begin();
+            m_dataContext.BeginChangeData();
 
             Bind();
 
@@ -108,7 +108,7 @@ namespace Mesher.GraphicsCore.Buffers
 
             Unbind();
 
-            m_dataContext.End();
+            m_dataContext.EndChangeData();
         }
 
         public void Clear()

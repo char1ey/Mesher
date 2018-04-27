@@ -13,6 +13,7 @@ using Mesher.Core.Objects.Scene;
 using Mesher.Core.Plugins;
 using Mesher.Core.Renderers;
 using Mesher.Core.SceneContexts.Components;
+using Mesher.GraphicsCore;
 using Mesher.GraphicsCore.Data;
 using Mesher.GraphicsCore.Data.OpenGL;
 using Mesher.GraphicsCore.Primitives;
@@ -27,18 +28,20 @@ namespace Mesher.Core
         private RScene m_rScene;
 
         private RSceneRenderer m_sceneRenderer;
+
+        private GlWindowsGraphics m_graphics;
         //public SceneForm.SceneForm SceneForm;
 
         public GCoreTest()
         {
             InitializeComponent();
 
+            m_graphics = new GlWindowsGraphics((GlWindowsRenderContext) sceneContext1.RenderContext);
+
             sceneContext1.MouseWheel += SceneContext1_MouseWheel;
-            m_dataContext = new GlDataContext((WindowsRenderContext) sceneContext1.RenderContext);
-            ((WindowsRenderContext) sceneContext1.RenderContext).DataContext = m_dataContext;
-            m_rScene = new RScene(m_dataContext);
-            //SceneForm = new SceneForm.SceneForm(sceneContext1, m_sceneRenderer);
+            m_rScene = new RScene(m_graphics.DataContext);
             sceneContext1.Scene = m_rScene;
+
             m_sceneRenderer = new DefaultGlRSceneRenderer();
             sceneContext1.SceneRenderer = m_sceneRenderer;
             //sceneContext1.Add(new Axises(sceneContext1));
@@ -93,7 +96,7 @@ namespace Mesher.Core
 
                 if (File.Exists(openFileDialog.FileName))
                 {
-                    m_rScene = DataLoader.LoadScene(openFileDialog.FileName, (IDataContext)m_dataContext);
+                    m_rScene = DataLoader.LoadScene(openFileDialog.FileName, m_graphics.DataContext);
                 }
             }
 

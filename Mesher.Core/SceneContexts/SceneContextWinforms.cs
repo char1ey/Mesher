@@ -32,6 +32,7 @@ namespace Mesher.Core.SceneContexts
         public IRenderContext RenderContext
         {
             get { return m_renderContext; }
+            set { }
         }
 
         public SceneFormComponents SceneContextComponents { get; private set; }
@@ -54,7 +55,7 @@ namespace Mesher.Core.SceneContexts
 
         public SceneContextWinforms()
         {
-            m_renderContext = new WindowsRenderContext(Handle);
+            m_renderContext = new GlWindowsRenderContext(Handle);
             m_renderContext.ClearColor = Color.DimGray;
             InitializeComponent();
             SceneContextComponents = new SceneFormComponents();

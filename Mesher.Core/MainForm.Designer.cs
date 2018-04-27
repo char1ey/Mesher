@@ -43,8 +43,8 @@ namespace Mesher.Core
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             this.sceneContext1 = new SceneContextWinforms();
-            this.m_dataContext = new GlDataContext((WindowsRenderContext)sceneContext1.RenderContext);
-            ((WindowsRenderContext) sceneContext1.RenderContext).DataContext = m_dataContext;
+            this.m_dataContext = new GlDataContext((GlWindowsRenderContext)sceneContext1.RenderContext);
+            ((GlWindowsRenderContext) sceneContext1.RenderContext).DataContext = m_dataContext;
             // 
             // menuStrip
             // 

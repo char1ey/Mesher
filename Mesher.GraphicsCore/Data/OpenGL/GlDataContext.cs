@@ -11,9 +11,9 @@ namespace Mesher.GraphicsCore.Data.OpenGL
     {
         private IntPtr m_hglrc;
 
-        private WindowsRenderContext m_defaultRenderContext;
+        private GlWindowsRenderContext m_defaultRenderContext;
 
-        private List<WindowsRenderContext> m_renderWindows;
+        private List<GlWindowsRenderContext> m_renderWindows;
 
         private List<IDisposable> m_buffers;
 
@@ -26,37 +26,14 @@ namespace Mesher.GraphicsCore.Data.OpenGL
             get { return m_hglrc; }
         }
 
-        public GlDataContext(WindowsRenderContext defaultRenderWindow)
+        public GlDataContext(GlWindowsRenderContext defaultRenderWindow)
         {
             m_textures = new List<Texture.GlTexture>();
             m_buffers = new List<IDisposable>();
-            m_renderWindows = new List<WindowsRenderContext>();     
+            m_renderWindows = new List<GlWindowsRenderContext>();     
             m_shaderPrograms = new List<ShaderProgram.GlShaderProgram>();
             m_defaultRenderContext = defaultRenderWindow;
             m_hglrc = Win32.wglCreateContext(m_defaultRenderContext.RenderWindowHandle);
-        }
-
-        public WindowsRenderContext CreateRenderWindow(IntPtr handle)
-        {
-            var renderWindow = m_renderWindows.Find(t => t.Handle == handle);
-
-            if (renderWindow != null)
-                return renderWindow;
-
-            if(m_renderWindows.Count == 0)
-                m_defaultRenderContext.Dispose();
-
-            renderWindow = new WindowsRenderContext(handle);
-            
-            Win32.wglMakeCurrent(renderWindow.RenderWindowHandle, m_hglrc);
-
-            renderWindow.DataContext = this;
-
-            m_renderWindows.Add(renderWindow);
-
-            m_defaultRenderContext = renderWindow;
-
-            return renderWindow;
         }
 
         public GlIndexBuffer CreateIndexBuffer(Int32[] indicies)
@@ -77,23 +54,14 @@ namespace Mesher.GraphicsCore.Data.OpenGL
             return buffer;
         }
 
-        internal void Begin()
+        internal void BeginChangeData()
         {
             m_defaultRenderContext.BeginRender();
         }
 
-        internal void End()
+        internal void EndChangeData()
         {
             m_defaultRenderContext.EndRender();
-        }
-
-        public Texture.GlTexture CreateTexture(Int32 width, Int32 height)
-        {
-            m_defaultRenderContext.BeginRender();
-            var texture = new Texture.GlTexture(width, height, this);
-            m_defaultRenderContext.EndRender();
-            m_textures.Add(texture);
-            return texture;
         }
 
         public IDataBuffer<T> CreateDataBuffer<T>() where T : struct
@@ -136,16 +104,6 @@ namespace Mesher.GraphicsCore.Data.OpenGL
             m_defaultRenderContext.EndRender();
             m_textures.Add(texture);
             return texture;
-        }
-
-        public ShaderProgram.GlShaderProgram CreateShaderProgram(Byte[] vertexShaderSource, Byte[] fragmentShaderSource)
-        {
-            m_defaultRenderContext.BeginRender();
-            var shaderProgram = new ShaderProgram.GlShaderProgram(this, vertexShaderSource, fragmentShaderSource);
-            m_defaultRenderContext.EndRender();
-
-            m_shaderPrograms.Add(shaderProgram);
-            return shaderProgram;
         }
 
         public ShaderProgram.GlShaderProgram CreateShaderProgram(String vertexShaderSource, String fragmentShaderSource)

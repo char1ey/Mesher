@@ -67,9 +67,11 @@
     <Compile Include="Camera\OrthographicCamera.cs" />
     <Compile Include="Camera\PerspectiveCamera.cs" />
     <Compile Include="Collections\Cameras.cs" />
+    <Compile Include="GlWindowsGraphics.cs" />
     <Compile Include="Light\Light.cs" />
     <Compile Include="Light\LightType.cs" />
     <Compile Include="Material\Material.cs" />
+    <Compile Include="MesherGraphics.cs" />
     <Compile Include="Renderers\OpenGL\DefaultGlRSceneRenderer.cs" />
     <Compile Include="Renderers\OpenGL\DefaultGlREdgesRenderer.cs" />
     <Compile Include="Renderers\OpenGL\DefaultGlRGlyphsRenderer.cs" />
@@ -97,7 +99,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="RenderContexts\WindowsRenderContext.cs" />
+    <Compile Include="RenderContexts\GlWindowsRenderContext.cs" />
     <Compile Include="OpenGL.cs" />
     <Compile Include="Data\OpenGL\GlDataContext.cs" />
     <Compile Include="ShaderProgram\RenderMode.cs" />
