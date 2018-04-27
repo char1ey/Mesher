@@ -10,6 +10,8 @@ namespace Mesher.GraphicsCore
 {
     public abstract class MesherGraphics
     {
+        //TODO encapsulate dataContext
+
         public abstract IDataContext DataContext { get; }
 
         public abstract IRenderContext CreateRenderContext(IntPtr handle);
