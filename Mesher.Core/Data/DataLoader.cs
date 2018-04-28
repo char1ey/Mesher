@@ -83,7 +83,7 @@ namespace Mesher.Core.Data
             return scene;
         }
 
-        public static RScene LoadScene(String filePath, IDataContext dataContext)
+        public static RScene LoadScene(String filePath, MesherGraphics graphics)
         {
             var path = filePath.Substring(0, filePath.LastIndexOf("\\") + 1);
 
@@ -91,7 +91,7 @@ namespace Mesher.Core.Data
 
             var aiScene = importer.ImportFile(filePath, Assimp.PostProcessPreset.TargetRealTimeMaximumQuality);
 
-            var rScene = new RScene(dataContext);
+            var rScene = graphics.CreateRScene();
 
             if (aiScene.HasLights)
                 for (var i = 0; i < aiScene.LightCount; i++)
@@ -141,7 +141,7 @@ namespace Mesher.Core.Data
                     mesh.HasMaterial = aiMesh.MaterialIndex != -1;
 
                     if (mesh.HasMaterial)
-                        mesh.Material = GetMaterial(aiScene.Materials[aiMesh.MaterialIndex], path, dataContext);
+                        mesh.Material = GetMaterial(aiScene.Materials[aiMesh.MaterialIndex], path, graphics.DataContext);
                 }
 
             return rScene;

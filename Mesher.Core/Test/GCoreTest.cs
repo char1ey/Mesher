@@ -38,14 +38,17 @@ namespace Mesher.Core
 
             m_graphics = new GlWindowsGraphics((GlWindowsRenderContext) sceneContext1.RenderContext);
 
-            sceneContext1.MouseWheel += SceneContext1_MouseWheel;
-            m_rScene = new RScene(m_graphics.DataContext);
+            
+            m_rScene = m_graphics.CreateRScene();
             sceneContext1.Scene = m_rScene;
 
-            m_sceneRenderer = new DefaultGlRSceneRenderer();
+            m_sceneRenderer = m_graphics.GetRSceneRenderer();
             sceneContext1.SceneRenderer = m_sceneRenderer;
             //sceneContext1.Add(new Axises(sceneContext1));
             sceneContext1.CameraControler = new ArcBallCameraControler(sceneContext1);
+
+
+            sceneContext1.MouseWheel += SceneContext1_MouseWheel;
         }
 
         private String GetShaderSource(Byte[] bytes)
@@ -96,7 +99,7 @@ namespace Mesher.Core
 
                 if (File.Exists(openFileDialog.FileName))
                 {
-                    m_rScene = DataLoader.LoadScene(openFileDialog.FileName, m_graphics.DataContext);
+                    m_rScene = DataLoader.LoadScene(openFileDialog.FileName, m_graphics);
                 }
             }
 

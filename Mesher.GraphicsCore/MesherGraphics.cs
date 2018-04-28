@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Mesher.GraphicsCore.Data;
+using Mesher.GraphicsCore.Primitives;
 using Mesher.GraphicsCore.RenderContexts;
+using Mesher.GraphicsCore.Renderers;
 
 namespace Mesher.GraphicsCore
 {
@@ -12,8 +14,21 @@ namespace Mesher.GraphicsCore
     {
         //TODO encapsulate dataContext
 
+        private RSceneRenderer m_rSceneRenderer;
+
         public abstract IDataContext DataContext { get; }
 
         public abstract IRenderContext CreateRenderContext(IntPtr handle);
+
+        public abstract RScene CreateRScene();
+
+        public RSceneRenderer GetRSceneRenderer()
+        {
+            if (m_rSceneRenderer == null)
+                m_rSceneRenderer = CreateRSceneRenderer();
+            return m_rSceneRenderer;
+        }
+
+        protected abstract RSceneRenderer CreateRSceneRenderer();
     }
 }

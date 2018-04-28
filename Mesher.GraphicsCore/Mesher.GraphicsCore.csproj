@@ -62,7 +62,6 @@
     <Compile Include="Buffers\IBindableItem.cs" />
     <Compile Include="Data\OpenGL\GlIndexBuffer.cs" />
     <Compile Include="Data\OpenGL\GlDataBuffer.cs" />
-    <Compile Include="Buffers\VertexBufferBase.cs" />
     <Compile Include="Camera\Camera.cs" />
     <Compile Include="Camera\OrthographicCamera.cs" />
     <Compile Include="Camera\PerspectiveCamera.cs" />
