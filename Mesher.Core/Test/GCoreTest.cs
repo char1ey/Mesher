@@ -1,33 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Mesher.Core.Data;
-using Mesher.Core.Objects.Scene;
-using Mesher.Core.Plugins;
-using Mesher.Core.Renderers;
-using Mesher.Core.SceneContexts.Components;
 using Mesher.GraphicsCore;
-using Mesher.GraphicsCore.Data;
-using Mesher.GraphicsCore.Data.OpenGL;
 using Mesher.GraphicsCore.Primitives;
 using Mesher.GraphicsCore.RenderContexts;
-using Mesher.GraphicsCore.Renderers;
-using Mesher.GraphicsCore.Renderers.OpenGL;
 
 namespace Mesher.Core
 {
     public partial class GCoreTest : Form
     {
         private RScene m_rScene;
-
-        private RSceneRenderer m_sceneRenderer;
 
         private GlWindowsGraphics m_graphics;
         //public SceneForm.SceneForm SceneForm;
@@ -38,12 +22,8 @@ namespace Mesher.Core
 
             m_graphics = new GlWindowsGraphics((GlWindowsRenderContext) sceneContext1.RenderContext);
 
-            
-            m_rScene = m_graphics.CreateRScene();
-            sceneContext1.Scene = m_rScene;
-
-            m_sceneRenderer = m_graphics.GetRSceneRenderer();
-            sceneContext1.SceneRenderer = m_sceneRenderer;
+            sceneContext1.Scene = m_graphics.CreateRScene();
+            sceneContext1.SceneRenderer = m_graphics.GetRSceneRenderer();
             //sceneContext1.Add(new Axises(sceneContext1));
             sceneContext1.CameraControler = new ArcBallCameraControler(sceneContext1);
 
