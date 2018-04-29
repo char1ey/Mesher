@@ -99,7 +99,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="RenderContexts\GlWindowsRenderContext.cs" />
-    <Compile Include="OpenGL.cs" />
+    <Compile Include="Imports\OpenGL.cs" />
     <Compile Include="Data\OpenGL\GlDataContext.cs" />
     <Compile Include="ShaderProgram\RenderMode.cs" />
     <Compile Include="ShaderProgram\GlShaderProgram.cs" />
@@ -108,7 +108,7 @@
     <Compile Include="ShaderProgram\Exceptions\ValidateShaderProgramException.cs" />
     <Compile Include="ShaderProgram\ShaderType.cs" />
     <Compile Include="Texture\GlTexture.cs" />
-    <Compile Include="Win32.cs" />
+    <Compile Include="Imports\Win32.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
