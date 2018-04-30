@@ -19,6 +19,9 @@ namespace Mesher.GraphicsCore.Primitives
         public Boolean HasNormals { get; set; }
         public IDataBuffer<Vec3> Normals { get; set; }
 
+        public Boolean HasMaterial { get; set; }
+        public Material.Material Material { get; set; }
+
         public RTriangles(IDataContext dataContext, RScene scene) : base(dataContext, scene)
         {
             TexCoords = dataContext.CreateDataBuffer<Vec2>();

@@ -15,9 +15,6 @@ namespace Mesher.GraphicsCore.Primitives
 
         public IDataBuffer<Vec3> Positions { get; private set; }
 
-        public Boolean HasMaterial { get; set; }
-        public Material.Material Material { get; set; }
-
         public Boolean IndexedRendering { get; set; }
         public IIndexBuffer Indexes { get; private set; }
 
