@@ -60,26 +60,55 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Buffers\IBindableItem.cs" />
-    <Compile Include="Buffers\IndexBuffer.cs" />
-    <Compile Include="Buffers\VertexBuffer.cs" />
-    <Compile Include="Buffers\VertexBufferBase.cs" />
+    <Compile Include="Data\OpenGL\GlIndexBuffer.cs" />
+    <Compile Include="Data\OpenGL\GlDataBuffer.cs" />
+    <Compile Include="Camera\Camera.cs" />
+    <Compile Include="Camera\OrthographicCamera.cs" />
+    <Compile Include="Camera\PerspectiveCamera.cs" />
+    <Compile Include="Collections\Cameras.cs" />
+    <Compile Include="GlWindowsGraphics.cs" />
+    <Compile Include="Light\Light.cs" />
+    <Compile Include="Light\LightType.cs" />
+    <Compile Include="Material\Material.cs" />
+    <Compile Include="MesherGraphics.cs" />
+    <Compile Include="Renderers\OpenGL\DefaultGlRSceneRenderer.cs" />
+    <Compile Include="Renderers\OpenGL\DefaultGlREdgesRenderer.cs" />
+    <Compile Include="Renderers\OpenGL\DefaultGlRGlyphsRenderer.cs" />
+    <Compile Include="Renderers\OpenGL\DefaultGlRTrianglesRenderer.cs" />
+    <Compile Include="Renderers\REdgesRenderer.cs" />
+    <Compile Include="Renderers\RSceneRenderer.cs" />
+    <Compile Include="Renderers\RGlyphRenderer.cs" />
+    <Compile Include="Renderers\RPrimitiveRenderer.cs" />
+    <Compile Include="Renderers\RTrianglesRenderer.cs" />
+    <Compile Include="Data\IDataBuffer.cs" />
+    <Compile Include="Data\IDataContext.cs" />
+    <Compile Include="Data\IIndexBuffer.cs" />
+    <Compile Include="RenderContexts\IRenderContext.cs" />
+    <Compile Include="ShaderProgram\IShaderProgram.cs" />
+    <Compile Include="Collections\Lights.cs" />
+    <Compile Include="Texture\PixelFormat.cs" />
+    <Compile Include="Primitives\REdges.cs" />
+    <Compile Include="Primitives\RGlyphs.cs" />
+    <Compile Include="Primitives\RPrimitive.cs" />
+    <Compile Include="Primitives\RScene.cs" />
+    <Compile Include="Primitives\RTriangles.cs" />
+    <Compile Include="Texture\Texture.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="RenderContext.cs" />
-    <Compile Include="OpenGL.cs" />
-    <Compile Include="DataContext.cs" />
+    <Compile Include="RenderContexts\GlWindowsRenderContext.cs" />
+    <Compile Include="Imports\OpenGL.cs" />
+    <Compile Include="Data\OpenGL\GlDataContext.cs" />
     <Compile Include="ShaderProgram\RenderMode.cs" />
-    <Compile Include="ShaderProgram\ShaderProgram.cs" />
+    <Compile Include="ShaderProgram\GlShaderProgram.cs" />
     <Compile Include="ShaderProgram\Exceptions\LinkShaderProgramException.cs" />
     <Compile Include="ShaderProgram\Exceptions\CompileShaderException.cs" />
     <Compile Include="ShaderProgram\Exceptions\ValidateShaderProgramException.cs" />
-    <Compile Include="ShaderProgram\ShaderProgramType.cs" />
     <Compile Include="ShaderProgram\ShaderType.cs" />
-    <Compile Include="Texture\Texture.cs" />
-    <Compile Include="Win32.cs" />
+    <Compile Include="Texture\GlTexture.cs" />
+    <Compile Include="Imports\Win32.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +123,11 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="Renderers\OpenGL\ShaderSources\DefaultFragmentShaderProgram.glsl" />
+    <None Include="Renderers\OpenGL\ShaderSources\DefaultVertexShaderProgram.glsl" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

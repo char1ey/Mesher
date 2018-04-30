@@ -13,12 +13,12 @@ namespace Mesher.Core.Renderers
     public class SceneContextGraphics
     {
         private ISceneContext m_sceneContext;
-        private ShaderProgram m_shaderProgram;
+        private GlShaderProgram m_shaderProgram;
 
         public SceneContextGraphics(ISceneContext sceneContext)
         {
             m_sceneContext = sceneContext;
-            m_shaderProgram = sceneContext.DataContext.CreateShaderProgram(Properties.Resources.ComponentsVertexShader, Properties.Resources.ComponentsFragmentShader);
+           // m_shaderProgram = sceneContext.DataContext.CreateShaderProgram(Properties.Resources.ComponentsVertexShader, Properties.Resources.ComponentsFragmentShader);
         }
 
         public void DrawLine(Vec3 p0, Vec3 p1, Single lineWidth, Color color)

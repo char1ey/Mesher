@@ -1,6 +1,7 @@
 ﻿using System;
-using Mesher.Core.Objects.Camera;
 using Mesher.GraphicsCore;
+using Mesher.GraphicsCore.Camera;
+using Mesher.GraphicsCore.Data.OpenGL;
 using Mesher.GraphicsCore.ShaderProgram;
 using Scene = Mesher.Core.Objects.Scene.Scene;
 
@@ -8,9 +9,9 @@ namespace Mesher.Core.Renderers
 {
     public abstract class SceneRendererBase
     {
-        public ShaderProgram ShaderProgram { get; }
+        public GlShaderProgram ShaderProgram { get; }
 
-        public SceneRendererBase(DataContext dataContext, String vertexShaderSource, String fragmentShaderSource)
+        public SceneRendererBase(GlDataContext dataContext, String vertexShaderSource, String fragmentShaderSource)
         {
             ShaderProgram = dataContext.CreateShaderProgram(vertexShaderSource, fragmentShaderSource);
         }

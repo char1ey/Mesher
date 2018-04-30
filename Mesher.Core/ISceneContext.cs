@@ -1,8 +1,11 @@
-﻿using Mesher.Core.Objects.Camera;
+﻿using System;
 using Mesher.Core.Objects.Scene;
 using Mesher.Core.Renderers;
-using Mesher.Core.SceneForm;
+using Mesher.Core.SceneContexts.Components;
 using Mesher.GraphicsCore;
+using Mesher.GraphicsCore.Camera;
+using Mesher.GraphicsCore.Data.OpenGL;
+using Mesher.GraphicsCore.RenderContexts;
 
 namespace Mesher.Core
 {
@@ -19,9 +22,9 @@ namespace Mesher.Core
 
         CameraControler CameraControler { get; set; }
 
-        RenderContext RenderContext { get; }
+        IRenderContext RenderContext { get; set; }
 
-        DataContext DataContext { get; }
+        IntPtr Handle { get; }
 
         void Add(SceneContextComponent component);
         void Remove(SceneContextComponent component);

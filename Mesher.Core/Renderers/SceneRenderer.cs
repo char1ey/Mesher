@@ -1,9 +1,10 @@
 ﻿using System;
 using Mesher.Core.Collections;
 using Mesher.GraphicsCore;
+using Mesher.GraphicsCore.Data.OpenGL;
+using Mesher.GraphicsCore.Material;
 using Mesher.GraphicsCore.ShaderProgram;
-using Camera = Mesher.Core.Objects.Camera.Camera;
-using Material = Mesher.Core.Objects.Material.Material;
+using Mesher.Mathematics;
 using Mesh = Mesher.Core.Objects.Mesh.Mesh;
 using Scene = Mesher.Core.Objects.Scene.Scene;
 
@@ -11,12 +12,12 @@ namespace Mesher.Core.Renderers
 {
     public class SceneRenderer : SceneRendererBase
     {
-        public SceneRenderer(DataContext dataContext, String vertexShaderSource, String fragmentShaderSource) 
+        public SceneRenderer(GlDataContext dataContext, String vertexShaderSource, String fragmentShaderSource) 
             : base(dataContext, vertexShaderSource, fragmentShaderSource)
         {
         }
 
-        public override void Render(Scene scene, Camera camera)
+        public override void Render(Scene scene, GraphicsCore.Camera.Camera camera)
         {
             ShaderProgram.Bind();
 
@@ -32,7 +33,7 @@ namespace Mesher.Core.Renderers
             ShaderProgram.Unbind();
         }
 
-        private void InitCamera(Camera camera)
+        private void InitCamera(GraphicsCore.Camera.Camera camera)
         {
             ShaderProgram.SetValue("proj", camera.ProjectionMatrix);
             ShaderProgram.SetValue("modelView", camera.ViewMatrix);
@@ -42,21 +43,21 @@ namespace Mesher.Core.Renderers
         {
             ShaderProgram.SetValue("hasPosition", mesh.HasVertexes);
             if (mesh.HasVertexes)
-                ShaderProgram.SetBuffer("position", mesh.Vertexes, 3);
+                ShaderProgram.SetBuffer<Vec3>("position", mesh.Vertexes, 3);
 
             ShaderProgram.SetValue("hasNormal", mesh.HasNormals);
             if (mesh.HasNormals)
-                ShaderProgram.SetBuffer("normal", mesh.Normals, 3);
+                ShaderProgram.SetBuffer<Vec3>("normal", mesh.Normals, 3);
 
             ShaderProgram.SetValue("hasTexCoord", mesh.HasTextureVertexes);
             if (mesh.HasTextureVertexes)
-                ShaderProgram.SetBuffer("texCoord", mesh.TextureVertexes, 2);
+                ShaderProgram.SetBuffer<Vec2>("texCoord", mesh.TextureVertexes, 2);
 
             ShaderProgram.SetValue("hasTangentBasis", mesh.HasTangentBasis);
             if (mesh.HasTangentBasis)
             {
-                ShaderProgram.SetBuffer("tangent", mesh.Tangents, 3);
-                ShaderProgram.SetBuffer("biTangent", mesh.BiTangents, 3);
+                ShaderProgram.SetBuffer<Vec3>("tangent", mesh.Tangents, 3);
+                ShaderProgram.SetBuffer<Vec3>("biTangent", mesh.BiTangents, 3);
             }
 
             if (mesh.HasMaterial)

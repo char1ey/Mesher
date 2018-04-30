@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Mesher.Core.Test;
 
 namespace Mesher.Core
 {
@@ -13,7 +14,7 @@ namespace Mesher.Core
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            Application.Run(new GCoreTest());
         }
     }
 }

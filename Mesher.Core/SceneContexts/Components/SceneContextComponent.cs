@@ -2,7 +2,7 @@
 using Mesher.Core.Collections;
 using Mesher.Core.Renderers;
 
-namespace Mesher.Core.SceneForm
+namespace Mesher.Core.SceneContexts.Components
 {
     public abstract class SceneContextComponent
     {

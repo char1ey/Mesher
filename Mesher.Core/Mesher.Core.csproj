@@ -53,29 +53,22 @@
     <Compile Include="ArcBallCameraControler.cs" />
     <Compile Include="Collections\SceneFormComponents.cs" />
     <Compile Include="CameraControler.cs" />
-    <Compile Include="ISceneContext.cs" />
-    <Compile Include="Objects\Camera\Camera.cs" />
-    <Compile Include="Collections\Cameras.cs" />
-    <Compile Include="Objects\Camera\OrthographicCamera.cs" />
-    <Compile Include="Objects\Camera\PerspectiveCamera.cs" />
-    <Compile Include="Renderers\SceneContextGraphics.cs" />
-    <Compile Include="SceneContexts\SceneContextWinforms.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="SceneContexts\SceneContextWinforms.Designer.cs">
-      <DependentUpon>SceneContextWinforms.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Data\DataLoader.cs" />
-    <Compile Include="Objects\Light\Light.cs" />
-    <Compile Include="Collections\Lights.cs" />
-    <Compile Include="Objects\Light\LightType.cs" />
-    <Compile Include="MainForm.cs">
+    <Compile Include="Test\GCoreTest.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
+    <Compile Include="Test\GCoreTest.Designer.cs">
+      <DependentUpon>GCoreTest.cs</DependentUpon>
     </Compile>
-    <Compile Include="Objects\Material\Material.cs" />
+    <Compile Include="ISceneContext.cs" />
+    <Compile Include="Renderers\SceneContextGraphics.cs" />
+    <Compile Include="Test\SceneContextWinformsGTest.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Test\SceneContextWinformsGTest.Designer.cs">
+      <DependentUpon>SceneContextWinformsGTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\DataLoader.cs" />
+    <Compile Include="Collections\Lights.cs" />
     <Compile Include="Objects\Mesh\Mesh.cs" />
     <Compile Include="Collections\Meshes.cs" />
     <Compile Include="Objects\Scene\Scene.cs" />
@@ -92,11 +85,8 @@
     <Compile Include="Renderers\SceneRenderer.cs" />
     <Compile Include="SceneContexts\Components\Axises.cs" />
     <Compile Include="SceneContexts\Components\SceneContextComponent.cs" />
-    <EmbeddedResource Include="SceneContexts\SceneContextWinforms.resx">
-      <DependentUpon>SceneContextWinforms.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
+    <EmbeddedResource Include="Test\SceneContextWinformsGTest.resx">
+      <DependentUpon>SceneContextWinformsGTest.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
