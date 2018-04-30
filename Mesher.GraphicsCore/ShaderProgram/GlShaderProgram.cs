@@ -155,13 +155,65 @@ namespace Mesher.GraphicsCore.ShaderProgram
             }
         }
 
-        public void SetBuffer<T>(Int32 id, GlDataBuffer<T> vertexBuffer, Int32 componentsCount) where T : struct
+        public void SetBuffer(Int32 id, GlDataBuffer<Vec2> vertexBuffer)
         {
             vertexBuffer.Bind();
 
             Gl.EnableVertexAttribArray((UInt32)id);
 
-            Gl.VertexAttribPointer((UInt32)id, componentsCount, Gl.GL_FLOAT, false, 0, IntPtr.Zero);
+            Gl.VertexAttribPointer((UInt32)id, 2, Gl.GL_FLOAT, false, 0, IntPtr.Zero);
+
+            m_verticesCount = vertexBuffer.Count;
+
+            m_items.Add(vertexBuffer);
+        }
+
+        public void SetBuffer(Int32 id, GlDataBuffer<Vec3> vertexBuffer)
+        {
+            vertexBuffer.Bind();
+
+            Gl.EnableVertexAttribArray((UInt32)id);
+
+            Gl.VertexAttribPointer((UInt32)id, 3, Gl.GL_FLOAT, false, 0, IntPtr.Zero);
+
+            m_verticesCount = vertexBuffer.Count;
+
+            m_items.Add(vertexBuffer);
+        }
+
+        public void SetBuffer(Int32 id, GlDataBuffer<Vec4> vertexBuffer)
+        {
+            vertexBuffer.Bind();
+
+            Gl.EnableVertexAttribArray((UInt32)id);
+
+            Gl.VertexAttribPointer((UInt32)id, 4, Gl.GL_FLOAT, false, 0, IntPtr.Zero);
+
+            m_verticesCount = vertexBuffer.Count;
+
+            m_items.Add(vertexBuffer);
+        }
+
+        public void SetBuffer(Int32 id, GlDataBuffer<Int32> vertexBuffer)
+        {
+            vertexBuffer.Bind();
+
+            Gl.EnableVertexAttribArray((UInt32)id);
+
+            Gl.VertexAttribPointer((UInt32)id, 1, Gl.GL_INT, false, 0, IntPtr.Zero);
+
+            m_verticesCount = vertexBuffer.Count;
+
+            m_items.Add(vertexBuffer);
+        }
+
+        public void SetBuffer(Int32 id, GlDataBuffer<Boolean> vertexBuffer)
+        {
+            vertexBuffer.Bind();
+
+            Gl.EnableVertexAttribArray((UInt32)id);
+
+            Gl.VertexAttribPointer((UInt32)id, 1, Gl.GL_UNSIGNED_BYTE, false, 0, IntPtr.Zero);
 
             m_verticesCount = vertexBuffer.Count;
 

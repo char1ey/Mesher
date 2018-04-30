@@ -147,21 +147,21 @@ namespace Mesher.GraphicsCore.Renderers.OpenGL
             m_shaderProgram.SetValue(m_cameraProjectionMatrixId, renderContext.Camera.ProjectionMatrix);
             m_shaderProgram.SetValue(m_cameraViewMatrixId, renderContext.Camera.ViewMatrix);
 
-            m_shaderProgram.SetBuffer(m_positionsId, (GlDataBuffer<Vec3>)rTriangles.Positions, 3);
+            m_shaderProgram.SetBuffer(m_positionsId, (GlDataBuffer<Vec3>)rTriangles.Positions);
 
             m_shaderProgram.SetValue(m_hasNormalId, rTriangles.HasNormals);
             if (rTriangles.HasNormals)
-                m_shaderProgram.SetBuffer(m_normalsId, (GlDataBuffer<Vec3>)rTriangles.Normals, 3);
+                m_shaderProgram.SetBuffer(m_normalsId, (GlDataBuffer<Vec3>)rTriangles.Normals);
 
             m_shaderProgram.SetValue(m_hasTexCoordId, rTriangles.HasTextureVertexes);
             if (rTriangles.HasTextureVertexes)
-                m_shaderProgram.SetBuffer(m_texCoordId, (GlDataBuffer<Vec2>)rTriangles.TexCoords, 2);
+                m_shaderProgram.SetBuffer(m_texCoordId, (GlDataBuffer<Vec2>)rTriangles.TexCoords);
 
             m_shaderProgram.SetValue(m_hasTangentBasisId, rTriangles.HasTangentBasis);
             if (rTriangles.HasTangentBasis)
             {
-                m_shaderProgram.SetBuffer(m_tangentsId, (GlDataBuffer<Vec3>)rTriangles.Tangents, 3);
-                m_shaderProgram.SetBuffer(m_biTangentsId, (GlDataBuffer<Vec3>)rTriangles.BiTangents, 3);
+                m_shaderProgram.SetBuffer(m_tangentsId, (GlDataBuffer<Vec3>)rTriangles.Tangents);
+                m_shaderProgram.SetBuffer(m_biTangentsId, (GlDataBuffer<Vec3>)rTriangles.BiTangents);
             }
 
             if (rTriangles.HasMaterial)

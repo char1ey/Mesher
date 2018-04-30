@@ -13,13 +13,13 @@ namespace Mesher.GraphicsCore.Primitives
 
         public Mat4 Matrix { get; set; }
 
-        public IDataBuffer<Vec3> Positions { get; set; }
+        public IDataBuffer<Vec3> Positions { get; private set; }
 
         public Boolean HasMaterial { get; set; }
         public Material.Material Material { get; set; }
 
         public Boolean IndexedRendering { get; set; }
-        public IIndexBuffer Indexes { get; set; }
+        public IIndexBuffer Indexes { get; private set; }
 
         internal RPrimitive(IDataContext dataContext, RScene scene)
         {
