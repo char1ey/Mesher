@@ -33,26 +33,12 @@ namespace Mesher.Plugins.EditLight
         private void InitializeComponent()
         {
             this.SuspendLayout();
-            this.sceneContext1 = new SceneContextWinforms();
-            // 
-            // sceneContext1
-            // 
-            this.sceneContext1.Camera = null;
-            this.sceneContext1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.sceneContext1.Location = new System.Drawing.Point(0, 24);
-            this.sceneContext1.Name = "sceneContext1";
-            this.sceneContext1.Size = new System.Drawing.Size(596, 314);
-            this.sceneContext1.TabIndex = 0;
-            this.sceneContext1.Paint += new System.Windows.Forms.PaintEventHandler(this.sceneContext1_Paint);
-            this.sceneContext1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.sceneContext1_MouseMove);
-            this.sceneContext1.Resize += new System.EventHandler(this.sceneContext1_Resize);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(596, 338);
-            this.Controls.Add(this.sceneContext1);
             this.Name = "MainForm";
             this.Text = "Form1";
             this.ResumeLayout(false);
@@ -62,7 +48,6 @@ namespace Mesher.Plugins.EditLight
 
         #endregion
 
-        private SceneContextWinforms sceneContext1;
         private GlDataContext m_dataContext;
     }
 }

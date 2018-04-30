@@ -7,7 +7,7 @@ using Mesher.GraphicsCore;
 using Mesher.GraphicsCore.Primitives;
 using Mesher.GraphicsCore.RenderContexts;
 
-namespace Mesher.Core
+namespace Mesher.Core.Test
 {
     public partial class GCoreTest : Form
     {

@@ -5,15 +5,13 @@ using Mesher.Core.Collections;
 using Mesher.Core.Objects.Scene;
 using Mesher.Core.Renderers;
 using Mesher.Core.SceneContexts.Components;
-using Mesher.GraphicsCore;
 using Mesher.GraphicsCore.Camera;
-using Mesher.GraphicsCore.Data.OpenGL;
 using Mesher.GraphicsCore.Primitives;
 using Mesher.GraphicsCore.RenderContexts;
 using Mesher.GraphicsCore.Renderers;
 using Mesher.Mathematics;
 
-namespace Mesher.Core.SceneContexts
+namespace Mesher.Core.Test
 {
     public partial class SceneContextWinformsGTest : UserControl, ISceneContext
     {

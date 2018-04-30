@@ -67,20 +67,8 @@
     <Compile Include="Test\SceneContextWinformsGTest.Designer.cs">
       <DependentUpon>SceneContextWinformsGTest.cs</DependentUpon>
     </Compile>
-    <Compile Include="SceneContexts\SceneContextWinforms.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="SceneContexts\SceneContextWinforms.Designer.cs">
-      <DependentUpon>SceneContextWinforms.cs</DependentUpon>
-    </Compile>
     <Compile Include="Data\DataLoader.cs" />
     <Compile Include="Collections\Lights.cs" />
-    <Compile Include="MainForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Objects\Mesh\Mesh.cs" />
     <Compile Include="Collections\Meshes.cs" />
     <Compile Include="Objects\Scene\Scene.cs" />
@@ -99,12 +87,6 @@
     <Compile Include="SceneContexts\Components\SceneContextComponent.cs" />
     <EmbeddedResource Include="Test\SceneContextWinformsGTest.resx">
       <DependentUpon>SceneContextWinformsGTest.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SceneContexts\SceneContextWinforms.resx">
-      <DependentUpon>SceneContextWinforms.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -1,4 +1,4 @@
-﻿namespace Mesher.Core.SceneContexts
+﻿namespace Mesher.Core.Test
 {
     partial class SceneContextWinformsGTest
     {

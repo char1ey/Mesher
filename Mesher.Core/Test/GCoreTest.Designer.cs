@@ -1,8 +1,4 @@
-﻿using Mesher.Core.SceneContexts;
-using Mesher.GraphicsCore;
-using Mesher.GraphicsCore.Data.OpenGL;
-
-namespace Mesher.Core
+﻿namespace Mesher.Core.Test
 {
     partial class GCoreTest
     {
