@@ -8,6 +8,9 @@ namespace Mesher.GraphicsCore.Data
     {
         IDataBuffer<T> CreateDataBuffer<T>() where T : struct;
         IIndexBuffer CreateIndexBuffer();
+
+        IFrameBuffer CreateFrameBuffer();
+
         Texture.Texture CreateTexture(Int32 width, Int32 height, PixelFormat pixelFormat);
 
         Texture.Texture LoadTextureFromFile(String fileName);

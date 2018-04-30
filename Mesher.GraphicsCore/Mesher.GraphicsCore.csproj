@@ -60,6 +60,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Buffers\IBindableItem.cs" />
+    <Compile Include="Data\IFrameBuffer.cs" />
+    <Compile Include="Data\OpenGL\GlFrameBuffer.cs" />
     <Compile Include="Data\OpenGL\GlIndexBuffer.cs" />
     <Compile Include="Data\OpenGL\GlDataBuffer.cs" />
     <Compile Include="Camera\Camera.cs" />

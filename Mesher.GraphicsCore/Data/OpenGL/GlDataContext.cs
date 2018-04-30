@@ -73,6 +73,11 @@ namespace Mesher.GraphicsCore.Data.OpenGL
             return buffer;
         }
 
+        public IFrameBuffer CreateFrameBuffer()
+        {
+            return new GlFrameBuffer();
+        }
+
         public IIndexBuffer CreateIndexBuffer()
         {
             m_defaultRenderContext.BeginRender();

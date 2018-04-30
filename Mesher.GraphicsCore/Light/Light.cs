@@ -5,6 +5,8 @@ namespace Mesher.GraphicsCore.Light
 {
     public class Light
     {
+        //TODO shadowmap
+
         public Int32 Id { get; internal set; }
         public String Name { get; set; }
         public LightType LightType { get; set; }
