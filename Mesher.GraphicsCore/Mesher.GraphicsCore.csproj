@@ -69,9 +69,9 @@
     <Compile Include="Camera\PerspectiveCamera.cs" />
     <Compile Include="Collections\Cameras.cs" />
     <Compile Include="GlWindowsGraphics.cs" />
-    <Compile Include="Light\Light.cs" />
+    <Compile Include="Light\RLight.cs" />
     <Compile Include="Light\LightType.cs" />
-    <Compile Include="Material\Material.cs" />
+    <Compile Include="Material\RMaterial.cs" />
     <Compile Include="MesherGraphics.cs" />
     <Compile Include="Renderers\OpenGL\DefaultGlRSceneRenderer.cs" />
     <Compile Include="Renderers\OpenGL\DefaultGlREdgesRenderer.cs" />
@@ -83,7 +83,7 @@
     <Compile Include="Renderers\RPrimitiveRenderer.cs" />
     <Compile Include="Renderers\RTrianglesRenderer.cs" />
     <Compile Include="Data\IDataBuffer.cs" />
-    <Compile Include="Data\IDataContext.cs" />
+    <Compile Include="Data\IDataFactory.cs" />
     <Compile Include="Data\IIndexBuffer.cs" />
     <Compile Include="RenderContexts\IRenderContext.cs" />
     <Compile Include="ShaderProgram\IShaderProgram.cs" />
@@ -102,14 +102,14 @@
     </Compile>
     <Compile Include="RenderContexts\GlWindowsRenderContext.cs" />
     <Compile Include="Imports\OpenGL.cs" />
-    <Compile Include="Data\OpenGL\GlDataContext.cs" />
+    <Compile Include="Data\OpenGL\GlDataFactory.cs" />
     <Compile Include="ShaderProgram\RenderMode.cs" />
     <Compile Include="ShaderProgram\GlShaderProgram.cs" />
     <Compile Include="ShaderProgram\Exceptions\LinkShaderProgramException.cs" />
     <Compile Include="ShaderProgram\Exceptions\CompileShaderException.cs" />
     <Compile Include="ShaderProgram\Exceptions\ValidateShaderProgramException.cs" />
     <Compile Include="ShaderProgram\ShaderType.cs" />
-    <Compile Include="Texture\GlTexture.cs" />
+    <Compile Include="Texture\OpenGL\GlTexture.cs" />
     <Compile Include="Imports\Win32.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -128,8 +128,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <None Include="Renderers\OpenGL\ShaderSources\DefaultFragmentShaderProgram.glsl" />
-    <None Include="Renderers\OpenGL\ShaderSources\DefaultVertexShaderProgram.glsl" />
+    <None Include="Renderers\OpenGL\ShaderSources\DefaultEdgesFragmentShader.glsl" />
+    <None Include="Renderers\OpenGL\ShaderSources\DefaultEdgesVertexShader.glsl" />
+    <None Include="Renderers\OpenGL\ShaderSources\DefaultTrianglesFragmentShader.glsl" />
+    <None Include="Renderers\OpenGL\ShaderSources\DefaultTrianglesVertexShader.glsl" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

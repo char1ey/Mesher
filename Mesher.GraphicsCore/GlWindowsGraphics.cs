@@ -14,35 +14,35 @@ namespace Mesher.GraphicsCore
 {
     public class GlWindowsGraphics : MesherGraphics
     {
-        private GlDataContext m_dataContext;
+        private GlDataFactory m_dataFactory;
 
-        public override IDataContext DataContext
+        public override IDataFactory DataFactory
         {
-            get { return m_dataContext; }
+            get { return m_dataFactory; }
         }
 
         public GlWindowsGraphics(GlWindowsRenderContext renderContext)
         {
-            var dataContext = new GlDataContext(renderContext);
-            renderContext.DataContext = dataContext;
-            m_dataContext = dataContext;
+            var dataContext = new GlDataFactory(renderContext);
+            renderContext.DataFactory = dataContext;
+            m_dataFactory = dataContext;
         }
 
         public override IRenderContext CreateRenderContext(IntPtr handle)
         {
             var renderContext = new GlWindowsRenderContext(handle);
 
-            if (m_dataContext == null)
-                m_dataContext = new GlDataContext(renderContext);
+            if (m_dataFactory == null)
+                m_dataFactory = new GlDataFactory(renderContext);
 
-            renderContext.DataContext = m_dataContext;
+            renderContext.DataFactory = m_dataFactory;
 
             return renderContext;
         }
 
         public override RScene CreateRScene()
         {
-            return new RScene(m_dataContext);
+            return new RScene(m_dataFactory);
         }
 
         protected override RSceneRenderer CreateRSceneRenderer()

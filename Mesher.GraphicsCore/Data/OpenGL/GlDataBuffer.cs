@@ -15,9 +15,9 @@ namespace Mesher.GraphicsCore.Buffers
 
         private Int32 m_StructSize;
 
-        private GlDataContext m_dataContext;
+        private GlDataFactory m_dataFactory;
 
-        internal GlDataContext DataContext { get { return m_dataContext; } }
+        internal GlDataFactory DataFactory { get { return m_dataFactory; } }
 
         public UInt32 Id
         {
@@ -31,16 +31,16 @@ namespace Mesher.GraphicsCore.Buffers
 
         public Int32 Capacity { get; private set; }
 
-        public GlDataBuffer(T[] data, GlDataContext dataContext) : this(dataContext)
+        public GlDataBuffer(T[] data, GlDataFactory dataFactory) : this(dataFactory)
         {
             m_Data = data.ToList();
             Resize(m_Data.Count);
             SetSubData(data, 0);
         }
 
-        public GlDataBuffer(GlDataContext dataContext)
+        public GlDataBuffer(GlDataFactory dataFactory)
         {
-            m_dataContext = dataContext;
+            m_dataFactory = dataFactory;
 
             m_StructSize = Marshal.SizeOf(typeof(T));
             Capacity = 1;
@@ -56,7 +56,7 @@ namespace Mesher.GraphicsCore.Buffers
 
         public void AddRange(T[] data)
         {
-            DataContext.BeginChangeData();
+            DataFactory.BeginChangeData();
 
             Bind();
 
@@ -74,7 +74,7 @@ namespace Mesher.GraphicsCore.Buffers
 
             Unbind();
 
-            DataContext.EndChangeData();
+            DataFactory.EndChangeData();
         }
 
         public void RemoveAt(Int32 id)
@@ -90,7 +90,7 @@ namespace Mesher.GraphicsCore.Buffers
 
         public void Add(T data)
         {
-            m_dataContext.BeginChangeData();
+            m_dataFactory.BeginChangeData();
 
             Bind();
 
@@ -108,7 +108,7 @@ namespace Mesher.GraphicsCore.Buffers
 
             Unbind();
 
-            m_dataContext.EndChangeData();
+            m_dataFactory.EndChangeData();
         }
 
         public void Clear()

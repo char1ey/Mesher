@@ -5,13 +5,14 @@ using Mesher.GraphicsCore.Collections;
 using Mesher.GraphicsCore.Primitives;
 using Mesher.GraphicsCore.RenderContexts;
 using Mesher.GraphicsCore.Texture;
+using Mesher.GraphicsCore.Texture.OpenGL;
 using Mesher.Mathematics;
 
 namespace Mesher.GraphicsCore.Renderers.OpenGL
 {
     public class DefaultGlRTrianglesRenderer : RTrianglesRenderer
     {
-        private const Int32 LIGHTS_COUNT = 32;
+        private const Int32 MAX_LIGHTS_COUNT = 32;
         private ShaderProgram.GlShaderProgram m_shaderProgram;
 
         private Int32 m_lightsCountId;
@@ -60,7 +61,7 @@ namespace Mesher.GraphicsCore.Renderers.OpenGL
 
         internal DefaultGlRTrianglesRenderer()
         {
-            m_shaderProgram = new ShaderProgram.GlShaderProgram(null, Properties.Resources.DefaultVertexShaderProgram, Properties.Resources.DefaultFragmentShaderProgram);
+            m_shaderProgram = new ShaderProgram.GlShaderProgram(null, Properties.Resources.DefaultTrianglesVertexShader, Properties.Resources.DefaultTrianglesFragmentShader);
 
             InitVariablesLocations();
         }
@@ -68,19 +69,19 @@ namespace Mesher.GraphicsCore.Renderers.OpenGL
         private void InitVariablesLocations()
         {
             m_lightsCountId = m_shaderProgram.GetUniformLocation("lightsCount");
-            m_lightTypeIds = new Int32[LIGHTS_COUNT];
-            m_lightAmbientColorIds = new Int32[LIGHTS_COUNT];
-            m_lightDiffuseColorIds = new Int32[LIGHTS_COUNT];
-            m_lightSpecularColorIds = new Int32[LIGHTS_COUNT];
-            m_lightPositionIds = new Int32[LIGHTS_COUNT];
-            m_lightDirectionIds = new Int32[LIGHTS_COUNT];
-            m_lightInnerAngleIds = new Int32[LIGHTS_COUNT];
-            m_lightOuterAngleIds = new Int32[LIGHTS_COUNT];
-            m_lightAttenuationConstantIds = new Int32[LIGHTS_COUNT];
-            m_lightAttenuationLinearIds = new Int32[LIGHTS_COUNT];
-            m_lightAttenuationQuadraticIds = new Int32[LIGHTS_COUNT];
+            m_lightTypeIds = new Int32[MAX_LIGHTS_COUNT];
+            m_lightAmbientColorIds = new Int32[MAX_LIGHTS_COUNT];
+            m_lightDiffuseColorIds = new Int32[MAX_LIGHTS_COUNT];
+            m_lightSpecularColorIds = new Int32[MAX_LIGHTS_COUNT];
+            m_lightPositionIds = new Int32[MAX_LIGHTS_COUNT];
+            m_lightDirectionIds = new Int32[MAX_LIGHTS_COUNT];
+            m_lightInnerAngleIds = new Int32[MAX_LIGHTS_COUNT];
+            m_lightOuterAngleIds = new Int32[MAX_LIGHTS_COUNT];
+            m_lightAttenuationConstantIds = new Int32[MAX_LIGHTS_COUNT];
+            m_lightAttenuationLinearIds = new Int32[MAX_LIGHTS_COUNT];
+            m_lightAttenuationQuadraticIds = new Int32[MAX_LIGHTS_COUNT];
 
-            for (var i = 0; i < LIGHTS_COUNT; i++)
+            for (var i = 0; i < MAX_LIGHTS_COUNT; i++)
             {
                 m_lightTypeIds[i] = m_shaderProgram.GetUniformLocation($"lights[{i}].lightType");
                 m_lightAmbientColorIds[i] = m_shaderProgram.GetUniformLocation($"lights[{i}].ambientColor");

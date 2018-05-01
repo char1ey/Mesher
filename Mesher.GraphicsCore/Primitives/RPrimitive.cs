@@ -9,7 +9,7 @@ namespace Mesher.GraphicsCore.Primitives
     public abstract class RPrimitive
     {
         public RScene RScene { get; private set; }
-        protected IDataContext DataContext { get; private set; }
+        protected IDataFactory DataFactory { get; private set; }
 
         public Mat4 Matrix { get; set; }
 
@@ -18,12 +18,12 @@ namespace Mesher.GraphicsCore.Primitives
         public Boolean IndexedRendering { get; set; }
         public IIndexBuffer Indexes { get; private set; }
 
-        internal RPrimitive(IDataContext dataContext, RScene scene)
+        internal RPrimitive(IDataFactory dataFactory, RScene scene)
         {
-            DataContext = dataContext;
+            DataFactory = dataFactory;
             RScene = scene;
-            Positions = dataContext.CreateDataBuffer<Vec3>();
-            Indexes = dataContext.CreateIndexBuffer();
+            Positions = dataFactory.CreateDataBuffer<Vec3>();
+            Indexes = dataFactory.CreateIndexBuffer();
         }
 
         public abstract void Render(RSceneRenderer sceneRenderer, IRenderContext renderContext);

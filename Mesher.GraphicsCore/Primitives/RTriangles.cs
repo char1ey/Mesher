@@ -20,14 +20,14 @@ namespace Mesher.GraphicsCore.Primitives
         public IDataBuffer<Vec3> Normals { get; set; }
 
         public Boolean HasMaterial { get; set; }
-        public Material.Material Material { get; set; }
+        public Material.RMaterial Material { get; set; }
 
-        public RTriangles(IDataContext dataContext, RScene scene) : base(dataContext, scene)
+        public RTriangles(IDataFactory dataFactory, RScene scene) : base(dataFactory, scene)
         {
-            TexCoords = dataContext.CreateDataBuffer<Vec2>();
-            Normals = dataContext.CreateDataBuffer<Vec3>();
-            Tangents = dataContext.CreateDataBuffer<Vec3>();
-            BiTangents = dataContext.CreateDataBuffer<Vec3>();
+            TexCoords = dataFactory.CreateDataBuffer<Vec2>();
+            Normals = dataFactory.CreateDataBuffer<Vec3>();
+            Tangents = dataFactory.CreateDataBuffer<Vec3>();
+            BiTangents = dataFactory.CreateDataBuffer<Vec3>();
         }
 
         public override void Render(RSceneRenderer sceneRenderer, IRenderContext renderContext)

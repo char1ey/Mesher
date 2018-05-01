@@ -22,10 +22,8 @@ namespace Mesher.GraphicsCore.Renderers.OpenGL
 
         public override void Render(RScene rScene, IRenderContext renderContext)
         {
-            renderContext.BeginRender();
             foreach (var primitive in rScene.Primitives)
                 primitive.Render(this, renderContext);
-            renderContext.EndRender();
         }
     }
 }

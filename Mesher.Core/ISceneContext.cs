@@ -1,10 +1,9 @@
 ﻿using System;
-using Mesher.Core.Objects.Scene;
-using Mesher.Core.Renderers;
 using Mesher.Core.SceneContexts.Components;
 using Mesher.GraphicsCore;
 using Mesher.GraphicsCore.Camera;
 using Mesher.GraphicsCore.Data.OpenGL;
+using Mesher.GraphicsCore.Primitives;
 using Mesher.GraphicsCore.RenderContexts;
 
 namespace Mesher.Core
@@ -16,9 +15,7 @@ namespace Mesher.Core
         
         Camera Camera { get; set; }
 
-        Scene Scene { get; set; }
-
-        SceneRendererBase SceneRenderer { get; set; }
+        RScene Scene { get; set; }
 
         CameraControler CameraControler { get; set; }
 

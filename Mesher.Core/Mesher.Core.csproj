@@ -53,25 +53,22 @@
     <Compile Include="ArcBallCameraControler.cs" />
     <Compile Include="Collections\SceneFormComponents.cs" />
     <Compile Include="CameraControler.cs" />
-    <Compile Include="Test\GCoreTest.cs">
+    <Compile Include="Documents.cs" />
+    <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Test\GCoreTest.Designer.cs">
-      <DependentUpon>GCoreTest.cs</DependentUpon>
+    <Compile Include="MainWindow.Designer.cs">
+      <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="ISceneContext.cs" />
     <Compile Include="Renderers\SceneContextGraphics.cs" />
-    <Compile Include="Test\SceneContextWinformsGTest.cs">
+    <Compile Include="SceneContextWinforms.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Test\SceneContextWinformsGTest.Designer.cs">
-      <DependentUpon>SceneContextWinformsGTest.cs</DependentUpon>
+    <Compile Include="SceneContextWinforms.Designer.cs">
+      <DependentUpon>SceneContextWinforms.cs</DependentUpon>
     </Compile>
     <Compile Include="Data\DataLoader.cs" />
-    <Compile Include="Collections\Lights.cs" />
-    <Compile Include="Objects\Mesh\Mesh.cs" />
-    <Compile Include="Collections\Meshes.cs" />
-    <Compile Include="Objects\Scene\Scene.cs" />
     <Compile Include="Plugins\IPlugin.cs" />
     <Compile Include="Plugins\PluginSystem.cs" />
     <Compile Include="Program.cs" />
@@ -81,12 +78,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Renderers\SceneRendererBase.cs" />
-    <Compile Include="Renderers\SceneRenderer.cs" />
     <Compile Include="SceneContexts\Components\Axises.cs" />
     <Compile Include="SceneContexts\Components\SceneContextComponent.cs" />
-    <EmbeddedResource Include="Test\SceneContextWinformsGTest.resx">
-      <DependentUpon>SceneContextWinformsGTest.cs</DependentUpon>
+    <EmbeddedResource Include="SceneContextWinforms.resx">
+      <DependentUpon>SceneContextWinforms.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -104,8 +99,6 @@
     </Compile>
     <None Include="Resources\ComponentsFragmentShader.glsl" />
     <None Include="Resources\ComponentsVertexShader.glsl" />
-    <None Include="Resources\DefaultFragmentShaderProgram.glsl" />
-    <None Include="Resources\DefaultVertexShaderProgram.glsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

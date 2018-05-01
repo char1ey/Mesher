@@ -63,9 +63,9 @@ namespace Mesher.GraphicsCore.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] DefaultFragmentShaderProgram {
+        internal static byte[] DefaultEdgesFragmentShader {
             get {
-                object obj = ResourceManager.GetObject("DefaultFragmentShaderProgram", resourceCulture);
+                object obj = ResourceManager.GetObject("DefaultEdgesFragmentShader", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -73,9 +73,29 @@ namespace Mesher.GraphicsCore.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] DefaultVertexShaderProgram {
+        internal static byte[] DefaultEdgesVertexShader {
             get {
-                object obj = ResourceManager.GetObject("DefaultVertexShaderProgram", resourceCulture);
+                object obj = ResourceManager.GetObject("DefaultEdgesVertexShader", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] DefaultTrianglesFragmentShader {
+            get {
+                object obj = ResourceManager.GetObject("DefaultTrianglesFragmentShader", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] DefaultTrianglesVertexShader {
+            get {
+                object obj = ResourceManager.GetObject("DefaultTrianglesVertexShader", resourceCulture);
                 return ((byte[])(obj));
             }
         }

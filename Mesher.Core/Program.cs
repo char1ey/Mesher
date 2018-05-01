@@ -14,7 +14,7 @@ namespace Mesher.Core
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new GCoreTest());
+            Application.Run(new MainWindow());
         }
     }
 }

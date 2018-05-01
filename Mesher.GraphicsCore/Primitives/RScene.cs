@@ -1,45 +1,55 @@
 ﻿using System.Collections.Generic;
 using Mesher.GraphicsCore.Collections;
 using Mesher.GraphicsCore.Data;
+using Mesher.GraphicsCore.Light;
 
 namespace Mesher.GraphicsCore.Primitives
 {
     public class RScene
     {
-        private IDataContext m_dataContext;
+        private IDataFactory m_dataFactory;
 
         private List<RPrimitive> m_primitives;
-        public Lights Lights { get; private set; }
-
+	    public List<RLight> m_lights;
+		
         public List<RPrimitive> Primitives
         {
             get { return m_primitives; }
         }
 
-        public RScene(IDataContext dataContext)
+		public List<RLight> Lights { get { return m_lights; } }
+
+        public RScene(IDataFactory dataFactory)
         {
-            m_dataContext = dataContext;
+            m_dataFactory = dataFactory;
             m_primitives = new List<RPrimitive>();
-            Lights = new Lights();
+            m_lights = new List<RLight>();
         }
+
+	    public RLight AddLight()
+	    {
+		    var light = new RLight(m_dataFactory, this);
+			m_lights.Add(light);
+		    return light;
+	    }
 
         public RTriangles AddTriangles()
         {
-            var triangles = new RTriangles(m_dataContext, this);
+            var triangles = new RTriangles(m_dataFactory, this);
             m_primitives.Add(triangles);
             return triangles;
         }
 
         public REdges AddEdges()
         {
-            var edges = new REdges(m_dataContext, this);
+            var edges = new REdges(m_dataFactory, this);
             m_primitives.Add(edges);
             return edges;
         }
 
         public RGlyphs AddGlyphs()
         {
-            var glyphs = new RGlyphs(m_dataContext, this);
+            var glyphs = new RGlyphs(m_dataFactory, this);
             m_primitives.Add(glyphs);
             return glyphs;
         }

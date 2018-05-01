@@ -6,6 +6,7 @@ using Mesher.GraphicsCore.Buffers;
 using Mesher.GraphicsCore.Data;
 using Mesher.GraphicsCore.Data.OpenGL;
 using Mesher.GraphicsCore.ShaderProgram.Exceptions;
+using Mesher.GraphicsCore.Texture.OpenGL;
 using Mesher.Mathematics;
 
 namespace Mesher.GraphicsCore.ShaderProgram
@@ -24,15 +25,15 @@ namespace Mesher.GraphicsCore.ShaderProgram
         private Int32 m_indiciesCount;
         private Int32 m_verticesCount;
 
-        private GlDataContext m_dataContext;
+        private GlDataFactory m_dataFactory;
 
-        internal GlDataContext DataContext { get { return m_dataContext; } }
+        internal GlDataFactory DataFactory { get { return m_dataFactory; } }
 
         internal UInt32 Id { get { return m_id; } }
 
-        internal GlShaderProgram(GlDataContext dataContext, String vertexShaderSource, String fragmentShaderSource)
+        internal GlShaderProgram(GlDataFactory dataFactory, String vertexShaderSource, String fragmentShaderSource)
         {
-            m_dataContext = dataContext;
+            m_dataFactory = dataFactory;
 
             m_vertexShaderSource = vertexShaderSource;
             m_fragmentShaderSource = fragmentShaderSource;
@@ -42,8 +43,8 @@ namespace Mesher.GraphicsCore.ShaderProgram
             m_items = new List<IBindableItem>();
         }
 
-        internal GlShaderProgram(GlDataContext dataContext, Byte[] vertexShaderSource, Byte[] fragmentShaderSource)
-        : this(dataContext, ToString(vertexShaderSource), ToString(fragmentShaderSource)) { }
+        internal GlShaderProgram(GlDataFactory dataFactory, Byte[] vertexShaderSource, Byte[] fragmentShaderSource)
+        : this(dataFactory, ToString(vertexShaderSource), ToString(fragmentShaderSource)) { }
 
         private void CreateShaderProgram()
         {
@@ -263,14 +264,14 @@ namespace Mesher.GraphicsCore.ShaderProgram
             SetBuffer((GlIndexBuffer)indexBuffer);
         }
 
-        public void SetValue(String name, Texture.GlTexture value)
+        public void SetValue(String name, GlTexture value)
         {
             value.Bind();
             Gl.Uniform1(Gl.GetUniformLocation(m_id, name), value.Bind());
             m_items.Add(value);
         }
 
-        public void SetValue(Int32 id, Texture.GlTexture value)
+        public void SetValue(Int32 id, GlTexture value)
         {
             value.Bind();
             Gl.Uniform1(id, value.Bind());
@@ -279,7 +280,7 @@ namespace Mesher.GraphicsCore.ShaderProgram
 
         public void SetValue(String name, Texture.Texture value)
         {
-            SetValue(name, (Texture.GlTexture)value);
+            SetValue(name, (GlTexture)value);
         }
 
         public void SetValue(String name, Mat4 matrix)

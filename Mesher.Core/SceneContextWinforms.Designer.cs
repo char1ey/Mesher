@@ -1,17 +1,13 @@
-﻿using Mesher.Core.SceneContexts;
-using Mesher.GraphicsCore;
-using Mesher.GraphicsCore.Data.OpenGL;
-
-namespace Mesher.Plugins.EditLight
+﻿namespace Mesher.Core.Test
 {
-    partial class MainForm
+    partial class SceneContextWinforms
     {
-        /// <summary>
+        /// <summary> 
         /// Обязательная переменная конструктора.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
+        /// <summary> 
         /// Освободить все используемые ресурсы.
         /// </summary>
         /// <param name="disposing">истинно, если управляемый ресурс должен быть удален; иначе ложно.</param>
@@ -24,9 +20,9 @@ namespace Mesher.Plugins.EditLight
             base.Dispose(disposing);
         }
 
-        #region Код, автоматически созданный конструктором форм Windows
+        #region Код, автоматически созданный конструктором компонентов
 
-        /// <summary>
+        /// <summary> 
         /// Требуемый метод для поддержки конструктора — не изменяйте 
         /// содержимое этого метода с помощью редактора кода.
         /// </summary>
@@ -34,21 +30,16 @@ namespace Mesher.Plugins.EditLight
         {
             this.SuspendLayout();
             // 
-            // MainForm
+            // SceneContext
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(596, 338);
-            this.Name = "MainForm";
-            this.Text = "Form1";
+            this.Name = "SceneContextWinforms";
+            this.Size = new System.Drawing.Size(185, 168);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
-        private GlDataFactory m_dataFactory;
     }
 }
-

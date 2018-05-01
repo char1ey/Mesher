@@ -16,7 +16,7 @@ namespace Mesher.GraphicsCore
 
         private RSceneRenderer m_rSceneRenderer;
 
-        public abstract IDataContext DataContext { get; }
+        public abstract IDataFactory DataFactory { get; }
 
         public abstract IRenderContext CreateRenderContext(IntPtr handle);
 

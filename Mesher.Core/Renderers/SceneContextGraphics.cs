@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Mesher.GraphicsCore;
+using Mesher.GraphicsCore.Primitives;
 using Mesher.GraphicsCore.ShaderProgram;
 using Mesher.Mathematics;
 
@@ -15,10 +16,14 @@ namespace Mesher.Core.Renderers
         private ISceneContext m_sceneContext;
         private GlShaderProgram m_shaderProgram;
 
-        public SceneContextGraphics(ISceneContext sceneContext)
+	    private MesherGraphics m_graphics;
+	    private RScene m_rScene;
+
+        public SceneContextGraphics(MesherGraphics graphics, ISceneContext sceneContext)
         {
             m_sceneContext = sceneContext;
-           // m_shaderProgram = sceneContext.DataContext.CreateShaderProgram(Properties.Resources.ComponentsVertexShader, Properties.Resources.ComponentsFragmentShader);
+	        m_graphics = graphics;
+	        m_rScene = m_graphics.CreateRScene();
         }
 
         public void DrawLine(Vec3 p0, Vec3 p1, Single lineWidth, Color color)
