@@ -53,7 +53,8 @@
     <Compile Include="ArcBallCameraControler.cs" />
     <Compile Include="Collections\SceneFormComponents.cs" />
     <Compile Include="CameraControler.cs" />
-    <Compile Include="Documents.cs" />
+    <Compile Include="Document.cs" />
+    <Compile Include="IDocument.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
