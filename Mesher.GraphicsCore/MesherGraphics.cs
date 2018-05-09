@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Mesher.GraphicsCore.Data;
+using Mesher.GraphicsCore.Light;
 using Mesher.GraphicsCore.Primitives;
 using Mesher.GraphicsCore.RenderContexts;
 using Mesher.GraphicsCore.Renderers;
@@ -28,9 +29,27 @@ namespace Mesher.GraphicsCore
             }
         }
 
-        public abstract IRenderContext CreateRenderContext(IntPtr handle);
+        public RTriangles CreateRTriangles()
+        {
+            return new RTriangles(DataFactory);
+        }
 
-        public abstract RScene CreateRScene();
+        public REdges CreateREdges()
+        {
+            return new REdges(DataFactory);
+        }
+
+        public RGlyphs CreateRGlyphs()
+        {
+            return new RGlyphs(DataFactory);
+        }
+
+        public RLight CreateRLight()
+        {
+            return new RLight(DataFactory);
+        }
+
+        public abstract IRenderContext CreateRenderContext(IntPtr handle);
 
         protected abstract RenderersFactory CreateRSceneRenderer();
     }

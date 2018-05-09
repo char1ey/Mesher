@@ -94,7 +94,6 @@
     <Compile Include="Primitives\REdges.cs" />
     <Compile Include="Primitives\RGlyphs.cs" />
     <Compile Include="Primitives\RPrimitive.cs" />
-    <Compile Include="Primitives\RScene.cs" />
     <Compile Include="Primitives\RTriangles.cs" />
     <Compile Include="Texture\Texture.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

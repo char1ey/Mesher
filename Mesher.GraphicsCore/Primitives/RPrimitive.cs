@@ -1,4 +1,5 @@
 ﻿using System;
+using Mesher.GraphicsCore.Collections;
 using Mesher.GraphicsCore.Data;
 using Mesher.GraphicsCore.RenderContexts;
 using Mesher.GraphicsCore.Renderers;
@@ -8,7 +9,6 @@ namespace Mesher.GraphicsCore.Primitives
 {
     public abstract class RPrimitive
     {
-        public RScene RScene { get; private set; }
         protected IDataFactory DataFactory { get; private set; }
 
         public Mat4 Matrix { get; set; }
@@ -18,14 +18,13 @@ namespace Mesher.GraphicsCore.Primitives
         public Boolean IndexedRendering { get; set; }
         public IIndexBuffer Indexes { get; private set; }
 
-        internal RPrimitive(IDataFactory dataFactory, RScene scene)
+        internal RPrimitive(IDataFactory dataFactory)
         {
             DataFactory = dataFactory;
-            RScene = scene;
             Positions = dataFactory.CreateDataBuffer<Vec3>();
             Indexes = dataFactory.CreateIndexBuffer();
         }
 
-        public abstract void Render(RenderersFactory sceneRenderer, IRenderContext renderContext);
+        public abstract void Render(RenderersFactory renderersFactory, Lights lights, IRenderContext renderContext);
     }
 }

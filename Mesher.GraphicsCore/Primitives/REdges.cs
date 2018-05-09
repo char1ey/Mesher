@@ -1,4 +1,5 @@
 ﻿using System;
+using Mesher.GraphicsCore.Collections;
 using Mesher.GraphicsCore.Data;
 using Mesher.GraphicsCore.RenderContexts;
 using Mesher.GraphicsCore.Renderers;
@@ -9,13 +10,13 @@ namespace Mesher.GraphicsCore.Primitives
     {
         public Single Width { get; set; }
 
-        public REdges(IDataFactory dataFactory, RScene scene) : base(dataFactory, scene)
+        internal REdges(IDataFactory dataFactory) : base(dataFactory)
         {
         }
 
-        public override void Render(RenderersFactory sceneRenderer, IRenderContext renderContext)
+        public override void Render(RenderersFactory renderersFactory, Lights lights, IRenderContext renderContext)
         {
-            sceneRenderer.EdgesRenderer.Render(this, renderContext);
+            renderersFactory.EdgesRenderer.Render(this, lights, renderContext);
         }
     }
 }

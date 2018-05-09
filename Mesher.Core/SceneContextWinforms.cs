@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Mesher.Core.Collections;
 using Mesher.Core.SceneContexts.Components;
 using Mesher.GraphicsCore.Camera;
+using Mesher.GraphicsCore.Collections;
 using Mesher.GraphicsCore.Primitives;
 using Mesher.GraphicsCore.RenderContexts;
 using Mesher.GraphicsCore.Renderers;
@@ -22,7 +23,7 @@ namespace Mesher.Core
             get { return RenderContext.RCamera; }
             set { RenderContext.RCamera = value; }
         }
-        public RScene Scene { get; set; }
+        // public RScene Scene { get; set; }
         public RenderersFactory RenderersFactory { get; set; }
         public CameraControler CameraControler { get; set; }
         public IRenderContext RenderContext
@@ -69,22 +70,22 @@ namespace Mesher.Core
             m_renderContext.SwapBuffers();
         }
 
-        public void Render()
+        public void Render(RPrimitive primitive)
         {
             if (Camera == null)
                 Camera = new OrthographicRCamera(m_renderContext.Width, m_renderContext.Height, new Vec3(0, 0, 1), new Vec3(0, 1, 0), new Vec3(0, 0, 0));
 
             BeginRender();
 
-            foreach(var primitive in Scene.Primitives)
-                primitive.Render(RenderersFactory, m_renderContext);
 
-			m_renderContext.ClearDepthBuffer();
-			
-			//foreach (var component in SceneContextComponents)
-			//	component.Draw(m_sceneContextGraphics);
-			
-			EndRender();
+            primitive.Render(RenderersFactory, new Lights(), m_renderContext);
+
+            m_renderContext.ClearDepthBuffer();
+
+            //foreach (var component in SceneContextComponents)
+            //	component.Draw(m_sceneContextGraphics);
+
+            EndRender();
         }
 
         protected override void OnResize(EventArgs e)
@@ -120,7 +121,7 @@ namespace Mesher.Core
 
         protected override void OnMouseClick(MouseEventArgs e)
         {
-            if(e.Button == MouseButtons.Left)
+            if (e.Button == MouseButtons.Left)
                 foreach (var component in SceneContextComponents)
                     component.MouseClick(new Point(e.Location.X, Height - e.Location.Y));
             base.OnMouseClick(e);

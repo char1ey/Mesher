@@ -1,5 +1,6 @@
 ﻿using System;
 using Mesher.GraphicsCore.Buffers;
+using Mesher.GraphicsCore.Collections;
 using Mesher.GraphicsCore.Primitives;
 using Mesher.GraphicsCore.RenderContexts;
 using Mesher.GraphicsCore.Texture;
@@ -73,15 +74,15 @@ namespace Mesher.GraphicsCore.Renderers.OpenGL
 			m_positionsId = m_shaderProgram.GetAttributeLocation("position");
 		}
 
-		public override void Render(REdges rEdges, IRenderContext renderContext)
+		public override void Render(REdges rEdges, Lights lights, IRenderContext renderContext)
         {
 			m_shaderProgram.Bind();
 
-			m_shaderProgram.SetValue(m_lightsCountId, rEdges.RScene.Lights.Count);
+			m_shaderProgram.SetValue(m_lightsCountId, lights.Count);
 
-			for (var i = 0; i < rEdges.RScene.Lights.Count; i++)
+			for (var i = 0; i < lights.Count; i++)
 			{
-				var light = rEdges.RScene.Lights[i];
+				var light = lights[i];
 
 				m_shaderProgram.SetValue(m_lightTypeIds[i], (Int32)light.LightType);
 				m_shaderProgram.SetValue(m_lightAmbientColorIds[i], light.AmbientColor);

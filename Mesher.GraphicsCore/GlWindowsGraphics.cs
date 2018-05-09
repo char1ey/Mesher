@@ -40,11 +40,6 @@ namespace Mesher.GraphicsCore
             return renderContext;
         }
 
-        public override RScene CreateRScene()
-        {
-            return new RScene(m_dataFactory);
-        }
-
         protected override RenderersFactory CreateRSceneRenderer()
         {
             return new DefaultGlRenderersFactory();

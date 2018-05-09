@@ -15,7 +15,7 @@ namespace Mesher.Core
         
         RCamera Camera { get; set; }
 
-        RScene Scene { get; set; }
+        //RScene Scene { get; set; }
 
         CameraControler CameraControler { get; set; }
 
@@ -27,6 +27,6 @@ namespace Mesher.Core
         void Remove(SceneContextComponent component);
         void RemoveAt(int id);
 
-        void Render();
+        void Render(RPrimitive primitive);
     }
 }

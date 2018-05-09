@@ -15,7 +15,7 @@ namespace Mesher.Core.Data
 {
 	public static class DataLoader
 	{
-		public static RScene LoadScene(String filePath, MesherGraphics graphics)
+		public static RTriangles LoadScene(String filePath, MesherGraphics graphics)
 		{
 			var path = filePath.Substring(0, filePath.LastIndexOf("\\") + 1);
 
@@ -23,17 +23,19 @@ namespace Mesher.Core.Data
 
 			var aiScene = importer.ImportFile(filePath, Assimp.PostProcessPreset.TargetRealTimeMaximumQuality);
 
-			var rScene = graphics.CreateRScene();
-
+            /*
 			if (aiScene.HasLights)
 				for (var i = 0; i < aiScene.LightCount; i++)
 					rScene.Lights.Add(InitLight(aiScene.Lights[i], rScene));
+            */
+
+		    RTriangles mesh = null;
 
 			if (aiScene.HasMeshes)
 				for (var i = 0; i < aiScene.MeshCount; i++)
 				{
 					var aiMesh = aiScene.Meshes[i];
-					var mesh = rScene.AddTriangles();
+					mesh = graphics.CreateRTriangles();
 
 					if (aiMesh.HasVertices)
 					{
@@ -76,7 +78,7 @@ namespace Mesher.Core.Data
 						mesh.Material = GetMaterial(aiScene.Materials[aiMesh.MaterialIndex], path, graphics.DataFactory);
 				}
 
-			return rScene;
+			return mesh;
 		}
 
 		private static RMaterial GetMaterial(Assimp.Material aiMaterial, String filePath, IDataFactory dataFactory)
@@ -147,6 +149,7 @@ namespace Mesher.Core.Data
 			return dataFactory.CreateTexture((Bitmap)Image.FromFile(filePath + aiTexture.FilePath));
 		}
 
+        /*
 		private static RLight InitLight(Assimp.Light aiLight, RScene rScene)
 		{
 			var light = rScene.AddLight();
@@ -175,7 +178,7 @@ namespace Mesher.Core.Data
 			}
 
 			return light;
-		}
+		}*/
 
 		private static Color3 GetColor(Assimp.Color3D color)
 		{

@@ -1,5 +1,6 @@
 ﻿using System;
 using Mesher.GraphicsCore.Buffers;
+using Mesher.GraphicsCore.Collections;
 using Mesher.GraphicsCore.Data;
 using Mesher.GraphicsCore.RenderContexts;
 using Mesher.GraphicsCore.Renderers;
@@ -22,7 +23,7 @@ namespace Mesher.GraphicsCore.Primitives
         public Boolean HasMaterial { get; set; }
         public Material.RMaterial Material { get; set; }
 
-        public RTriangles(IDataFactory dataFactory, RScene scene) : base(dataFactory, scene)
+        internal RTriangles(IDataFactory dataFactory) : base(dataFactory)
         {
             TexCoords = dataFactory.CreateDataBuffer<Vec2>();
             Normals = dataFactory.CreateDataBuffer<Vec3>();
@@ -30,9 +31,9 @@ namespace Mesher.GraphicsCore.Primitives
             BiTangents = dataFactory.CreateDataBuffer<Vec3>();
         }
 
-        public override void Render(RenderersFactory sceneRenderer, IRenderContext renderContext)
+        public override void Render(RenderersFactory renderersFactory, Lights lights, IRenderContext renderContext)
         {
-            sceneRenderer.TrianglesRenderer.Render(this, renderContext);
+            renderersFactory.TrianglesRenderer.Render(this, lights, renderContext);
         }
     }
 }

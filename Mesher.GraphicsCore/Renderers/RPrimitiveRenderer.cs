@@ -1,10 +1,11 @@
-﻿using Mesher.GraphicsCore.Primitives;
+﻿using Mesher.GraphicsCore.Collections;
+using Mesher.GraphicsCore.Primitives;
 using Mesher.GraphicsCore.RenderContexts;
 
 namespace Mesher.GraphicsCore.Renderers
 {
     public abstract class RPrimitiveRenderer<T> where T : RPrimitive
     {
-        public abstract void Render(T rTriangles, IRenderContext renderContext);
+        public abstract void Render(T rTriangles, Lights lights, IRenderContext renderContext);
     }
 }

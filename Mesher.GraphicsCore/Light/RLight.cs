@@ -13,10 +13,6 @@ namespace Mesher.GraphicsCore.Light
 
 	    private IDataFactory m_dataFactory;
 
-	    private IFrameBuffer m_frameBuffer;
-
-		public RScene RScene { get; private set; }
-  
         public Int32 Id { get; internal set; }
         public String Name { get; set; }
         public LightType LightType { get; set; }
@@ -34,10 +30,9 @@ namespace Mesher.GraphicsCore.Light
 		public Boolean HasShadowMap { get; set; }
 		public Texture.Texture ShadowMap { get; private set; }
 
-	    public RLight(IDataFactory dataFactory, RScene scene)
+	    internal RLight(IDataFactory dataFactory)
 	    {
 		    m_dataFactory = dataFactory;
-		    RScene = scene;
 	    }
 
 	    public void RenderShadowMap(RenderersFactory renderersFactory, List<RPrimitive> primitives)

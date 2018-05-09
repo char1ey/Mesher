@@ -14,9 +14,9 @@ namespace Mesher.Core.Objects
 
         public RTriangles RTriangles { get; private set; }
 
-        public Mesh(RScene rScene, MesherGraphics graphics)
+        public Mesh(MesherGraphics graphics)
         {
-            RTriangles = rScene.AddTriangles();
+            RTriangles = graphics.CreateRTriangles();
             m_graphics = graphics;
         }
 

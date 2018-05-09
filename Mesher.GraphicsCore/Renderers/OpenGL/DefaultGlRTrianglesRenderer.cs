@@ -122,15 +122,15 @@ namespace Mesher.GraphicsCore.Renderers.OpenGL
             m_materialTextureNormalId = m_shaderProgram.GetUniformLocation("material.textureNormal");
         }
 
-        public override void Render(RTriangles rTriangles, IRenderContext renderContext)
+        public override void Render(RTriangles rTriangles, Lights lights, IRenderContext renderContext)
         {
             m_shaderProgram.Bind();
 
-            m_shaderProgram.SetValue(m_lightsCountId, rTriangles.RScene.Lights.Count);
+            m_shaderProgram.SetValue(m_lightsCountId, lights.Count);
 
-            for (var i = 0; i < rTriangles.RScene.Lights.Count; i++)
+            for (var i = 0; i < lights.Count; i++)
             {
-                var light = rTriangles.RScene.Lights[i];
+                var light = lights[i];
 
                 m_shaderProgram.SetValue(m_lightTypeIds[i], (Int32)light.LightType);
                 m_shaderProgram.SetValue(m_lightAmbientColorIds[i], light.AmbientColor);

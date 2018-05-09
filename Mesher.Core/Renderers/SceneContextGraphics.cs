@@ -17,13 +17,11 @@ namespace Mesher.Core.Renderers
         private GlShaderProgram m_shaderProgram;
 
 	    private MesherGraphics m_graphics;
-	    private RScene m_rScene;
 
         public SceneContextGraphics(MesherGraphics graphics, ISceneContext sceneContext)
         {
             m_sceneContext = sceneContext;
 	        m_graphics = graphics;
-	        m_rScene = m_graphics.CreateRScene();
         }
 
         public void DrawLine(Vec3 p0, Vec3 p1, Single lineWidth, Color color)

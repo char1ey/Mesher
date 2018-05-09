@@ -11,7 +11,8 @@ namespace Mesher.Core.Test
 {
     public partial class MainWindow : Form
     {
-        private RScene m_rScene;
+        //private RScene m_rScene;
+        private RTriangles m_rTriangles;
 
         private GlWindowsGraphics m_graphics;
         //public SceneForm.SceneForm SceneForm;
@@ -22,7 +23,7 @@ namespace Mesher.Core.Test
 
             m_graphics = new GlWindowsGraphics((GlWindowsRenderContext) sceneContext1.RenderContext);
 
-            sceneContext1.Scene = m_rScene = m_graphics.CreateRScene();
+            m_rTriangles = m_graphics.CreateRTriangles();
             sceneContext1.RenderersFactory = m_graphics.RenderersFactory;
             //sceneContext1.Add(new Axises(sceneContext1));
             sceneContext1.CameraControler = new ArcBallCameraControler(sceneContext1);
@@ -38,15 +39,10 @@ namespace Mesher.Core.Test
 
         private void Render()
         {
-            if (m_rScene == null)
+            if (m_rTriangles == null)
                 return;
-            sceneContext1.Scene = m_rScene;
-            sceneContext1.Render();
-            sceneContext1.BeginRender();
 
-            sceneContext1.Render();
-
-            sceneContext1.EndRender();
+            sceneContext1.Render(m_rTriangles);
         }
 
         private void sceneContext1_MouseMove(Object sender, MouseEventArgs e)
@@ -74,7 +70,7 @@ namespace Mesher.Core.Test
 
                 if (File.Exists(openFileDialog.FileName))
                 {
-                    m_rScene = DataLoader.LoadScene(openFileDialog.FileName, m_graphics);
+                    m_rTriangles = DataLoader.LoadScene(openFileDialog.FileName, m_graphics);
                 }
             }
 
