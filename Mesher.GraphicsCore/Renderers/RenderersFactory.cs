@@ -3,11 +3,12 @@ using Mesher.GraphicsCore.RenderContexts;
 
 namespace Mesher.GraphicsCore.Renderers
 {
-    public abstract class RSceneRenderer
+    public abstract class RenderersFactory
     {
         private RTrianglesRenderer m_trianglesRenderer;
         private REdgesRenderer m_edgesRenderer;
         private RGlyphRenderer m_glyphsRenderer;
+        private RLightRenderer m_lightRenderer;
 
         public RTrianglesRenderer TrianglesRenderer
         {
@@ -38,9 +39,19 @@ namespace Mesher.GraphicsCore.Renderers
             }
         }
 
+        public RLightRenderer LightRenderer
+        {
+            get
+            {
+                if (m_lightRenderer == null)
+                    m_lightRenderer = CreateLightRenderer();
+                return m_lightRenderer;
+            }
+        }
+
         protected abstract RTrianglesRenderer CreateTrianglesRenderer();
         protected abstract REdgesRenderer CreateEdgesRenderer();
         protected abstract RGlyphRenderer CreateGlyphsRenderer();
-        public abstract void Render(RScene rScene, IRenderContext renderContext);
+        protected abstract RLightRenderer CreateLightRenderer();
     }
 }

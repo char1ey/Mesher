@@ -13,7 +13,7 @@ namespace Mesher.Core
         int Width { get; }
         int Height { get; }
         
-        Camera Camera { get; set; }
+        RCamera Camera { get; set; }
 
         RScene Scene { get; set; }
 

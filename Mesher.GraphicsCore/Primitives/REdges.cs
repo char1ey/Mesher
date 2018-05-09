@@ -13,7 +13,7 @@ namespace Mesher.GraphicsCore.Primitives
         {
         }
 
-        public override void Render(RSceneRenderer sceneRenderer, IRenderContext renderContext)
+        public override void Render(RenderersFactory sceneRenderer, IRenderContext renderContext)
         {
             sceneRenderer.EdgesRenderer.Render(this, renderContext);
         }

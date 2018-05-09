@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Windows.Forms;
 using Mesher.Core.Collections;
-using Mesher.Core.Renderers;
 using Mesher.Core.SceneContexts.Components;
 using Mesher.GraphicsCore.Camera;
 using Mesher.GraphicsCore.Primitives;
@@ -10,23 +9,21 @@ using Mesher.GraphicsCore.RenderContexts;
 using Mesher.GraphicsCore.Renderers;
 using Mesher.Mathematics;
 
-namespace Mesher.Core.Test
+namespace Mesher.Core
 {
     public partial class SceneContextWinforms : UserControl, ISceneContext
     {
         private readonly IRenderContext m_renderContext;
 
-        private SceneContextGraphics m_sceneContextGraphics;
-
         private MouseButtons m_previousMouseButton;
 
-        public Camera Camera
+        public RCamera Camera
         {
-            get { return RenderContext.Camera; }
-            set { RenderContext.Camera = value; }
+            get { return RenderContext.RCamera; }
+            set { RenderContext.RCamera = value; }
         }
         public RScene Scene { get; set; }
-        public RSceneRenderer SceneRenderer { get; set; }
+        public RenderersFactory RenderersFactory { get; set; }
         public CameraControler CameraControler { get; set; }
         public IRenderContext RenderContext
         {
@@ -57,7 +54,6 @@ namespace Mesher.Core.Test
             m_renderContext.ClearColor = Color.DimGray;
             InitializeComponent();
             SceneContextComponents = new SceneFormComponents();
-            //m_sceneContextGraphics = new SceneContextGraphics(this);
         }
 
         public void BeginRender()
@@ -76,11 +72,12 @@ namespace Mesher.Core.Test
         public void Render()
         {
             if (Camera == null)
-                Camera = new OrthographicCamera(m_renderContext.Width, m_renderContext.Height, new Vec3(0, 0, 1), new Vec3(0, 1, 0), new Vec3(0, 0, 0));
+                Camera = new OrthographicRCamera(m_renderContext.Width, m_renderContext.Height, new Vec3(0, 0, 1), new Vec3(0, 1, 0), new Vec3(0, 0, 0));
 
             BeginRender();
 
-			SceneRenderer.Render(Scene, m_renderContext);
+            foreach(var primitive in Scene.Primitives)
+                primitive.Render(RenderersFactory, m_renderContext);
 
 			m_renderContext.ClearDepthBuffer();
 			
@@ -95,7 +92,7 @@ namespace Mesher.Core.Test
             m_renderContext.SetSize(Width, Height);
 
             if (Camera != null)
-                ((OrthographicCamera)Camera).UpdateSize(Width, Height);
+                ((OrthographicRCamera)Camera).UpdateSize(Width, Height);
 
             base.OnResize(e);
         }

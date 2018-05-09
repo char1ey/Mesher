@@ -3,7 +3,7 @@ using Mesher.GraphicsCore.RenderContexts;
 
 namespace Mesher.GraphicsCore.Renderers.OpenGL
 {
-    public class DefaultGlRSceneRenderer : RSceneRenderer
+    public class DefaultGlRenderersFactory : RenderersFactory
     {
         protected override RTrianglesRenderer CreateTrianglesRenderer()
         {
@@ -20,10 +20,9 @@ namespace Mesher.GraphicsCore.Renderers.OpenGL
             return new DefaultGlRGlyphsRenderer();
         }
 
-        public override void Render(RScene rScene, IRenderContext renderContext)
+        protected override RLightRenderer CreateLightRenderer()
         {
-            foreach (var primitive in rScene.Primitives)
-                primitive.Render(this, renderContext);
+            return new DefaultGlRLightRenderer();
         }
     }
 }

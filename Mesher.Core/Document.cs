@@ -3,11 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Mesher.Core.Objects;
 
 namespace Mesher.Core
 {
-	public class Document : IDocument
+	public class Document
 	{
+        public Scene Scene { get; set; }
+
+	    public void Rebuild()
+	    {
+
+	    }
+
+	    public void Render()
+	    {
+
+	    }
+
 	    public void Save(String path)
 	    {
 	        throw new NotImplementedException();

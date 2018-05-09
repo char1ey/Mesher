@@ -3,14 +3,14 @@ using Mesher.Mathematics;
 
 namespace Mesher.GraphicsCore.Camera
 {
-    public class OrthographicCamera : Camera
+    public class OrthographicRCamera : RCamera
     {
         private const Single ZNear = -1000000;
         private const Single ZFar = 1000000;
 
-        public OrthographicCamera() { }
+        public OrthographicRCamera() { }
 
-        public OrthographicCamera(Single width, Single height, Vec3 position, Vec3 upVector, Vec3 lookAtPoint) 
+        public OrthographicRCamera(Single width, Single height, Vec3 position, Vec3 upVector, Vec3 lookAtPoint) 
             : base(Mat4.Ortho(-width/2, width/2, -height/2, height/2, ZNear, ZFar), position, upVector, lookAtPoint)
         {
         }

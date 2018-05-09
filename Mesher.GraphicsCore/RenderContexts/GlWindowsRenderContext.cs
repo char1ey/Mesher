@@ -18,7 +18,7 @@ namespace Mesher.GraphicsCore.RenderContexts
 
         public Int32 Width { get; private set; }
         public Int32 Height { get; private set; }
-        public Camera.Camera Camera { get; set; }
+        public Camera.RCamera RCamera { get; set; }
 
         public Color ClearColor { get; set; }
 

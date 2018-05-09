@@ -6,6 +6,8 @@ namespace Mesher.Core
 {
     static class Program
     {
+        public static MesherApplication MesherApplication { get; set; }
+
         /// <summary>
         /// Главная точка входа для приложения.
         /// </summary>
@@ -14,7 +16,10 @@ namespace Mesher.Core
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainWindow());
+
+            MesherApplication = new MesherApplication();
+
+            Application.Run(MesherApplication.MainWindow);
         }
     }
 }

@@ -3,7 +3,7 @@ using Mesher.GraphicsCore.Camera;
 
 namespace Mesher.Core.Collections
 {
-    public class Cameras : List<Camera>
+    public class Cameras : List<RCamera>
     {
     }
 }

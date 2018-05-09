@@ -96,8 +96,8 @@ namespace Mesher.GraphicsCore.Renderers.OpenGL
 				m_shaderProgram.SetValue(m_lightAttenuationQuadraticIds[i], light.AttenuationQuadratic);
 			}
 
-			m_shaderProgram.SetValue(m_cameraProjectionMatrixId, renderContext.Camera.ProjectionMatrix);
-			m_shaderProgram.SetValue(m_cameraViewMatrixId, renderContext.Camera.ViewMatrix);
+			m_shaderProgram.SetValue(m_cameraProjectionMatrixId, renderContext.RCamera.ProjectionMatrix);
+			m_shaderProgram.SetValue(m_cameraViewMatrixId, renderContext.RCamera.ViewMatrix);
 
 			m_shaderProgram.SetBuffer(m_positionsId, (GlDataBuffer<Vec3>)rEdges.Positions);
 			

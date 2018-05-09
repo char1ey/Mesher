@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using Mesher.GraphicsCore.Data;
 using Mesher.GraphicsCore.Primitives;
+using Mesher.GraphicsCore.Renderers;
 using Mesher.Mathematics;
 
 namespace Mesher.GraphicsCore.Light
@@ -38,9 +40,9 @@ namespace Mesher.GraphicsCore.Light
 		    RScene = scene;
 	    }
 
-	    public void RenderShadowMap()
+	    public void RenderShadowMap(RenderersFactory renderersFactory, List<RPrimitive> primitives)
 	    {
-		    throw new NotImplementedException();
+		    renderersFactory.LightRenderer.RenderShadowMap(this, primitives);
 	    }
     }
 }

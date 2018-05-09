@@ -14,21 +14,24 @@ namespace Mesher.GraphicsCore
     {
         //TODO encapsulate dataContext
 
-        private RSceneRenderer m_rSceneRenderer;
+        private RenderersFactory m_renderersFactory;
 
         public abstract IDataFactory DataFactory { get; }
+
+        public RenderersFactory RenderersFactory
+        {
+            get
+            {
+                if (m_renderersFactory == null)
+                    m_renderersFactory = CreateRSceneRenderer();
+                return m_renderersFactory;
+            }
+        }
 
         public abstract IRenderContext CreateRenderContext(IntPtr handle);
 
         public abstract RScene CreateRScene();
 
-        public RSceneRenderer GetRSceneRenderer()
-        {
-            if (m_rSceneRenderer == null)
-                m_rSceneRenderer = CreateRSceneRenderer();
-            return m_rSceneRenderer;
-        }
-
-        protected abstract RSceneRenderer CreateRSceneRenderer();
+        protected abstract RenderersFactory CreateRSceneRenderer();
     }
 }

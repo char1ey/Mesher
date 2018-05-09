@@ -23,7 +23,7 @@ namespace Mesher.Core.Test
             m_graphics = new GlWindowsGraphics((GlWindowsRenderContext) sceneContext1.RenderContext);
 
             sceneContext1.Scene = m_rScene = m_graphics.CreateRScene();
-            sceneContext1.SceneRenderer = m_graphics.GetRSceneRenderer();
+            sceneContext1.RenderersFactory = m_graphics.RenderersFactory;
             //sceneContext1.Add(new Axises(sceneContext1));
             sceneContext1.CameraControler = new ArcBallCameraControler(sceneContext1);
 

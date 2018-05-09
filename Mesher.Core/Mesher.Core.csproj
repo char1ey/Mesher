@@ -54,7 +54,6 @@
     <Compile Include="Collections\SceneFormComponents.cs" />
     <Compile Include="CameraControler.cs" />
     <Compile Include="Document.cs" />
-    <Compile Include="IDocument.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -62,6 +61,11 @@
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="ISceneContext.cs" />
+    <Compile Include="MesherApplication.cs" />
+    <Compile Include="Objects\Camera.cs" />
+    <Compile Include="Objects\IDocumentItem.cs" />
+    <Compile Include="Objects\Mesh.cs" />
+    <Compile Include="Objects\Scene.cs" />
     <Compile Include="Renderers\SceneContextGraphics.cs" />
     <Compile Include="SceneContextWinforms.cs">
       <SubType>UserControl</SubType>
