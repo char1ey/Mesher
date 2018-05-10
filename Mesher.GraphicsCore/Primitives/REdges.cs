@@ -14,9 +14,9 @@ namespace Mesher.GraphicsCore.Primitives
         {
         }
 
-        public override void Render(RenderersFactory renderersFactory, Lights lights, IRenderContext renderContext)
+        public override void Render(RenderersFactory renderersFactory, RLights rLights, IRenderContext renderContext)
         {
-            renderersFactory.EdgesRenderer.Render(this, lights, renderContext);
+            renderersFactory.EdgesRenderer.Render(this, rLights, renderContext);
         }
     }
 }

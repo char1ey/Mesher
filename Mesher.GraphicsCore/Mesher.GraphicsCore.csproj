@@ -67,7 +67,7 @@
     <Compile Include="Camera\RCamera.cs" />
     <Compile Include="Camera\OrthographicRCamera.cs" />
     <Compile Include="Camera\PerspectiveRCamera.cs" />
-    <Compile Include="Collections\Cameras.cs" />
+    <Compile Include="Collections\RCameras.cs" />
     <Compile Include="GlWindowsGraphics.cs" />
     <Compile Include="Light\RLight.cs" />
     <Compile Include="Light\LightType.cs" />
@@ -89,7 +89,7 @@
     <Compile Include="Data\IIndexBuffer.cs" />
     <Compile Include="RenderContexts\IRenderContext.cs" />
     <Compile Include="ShaderProgram\IShaderProgram.cs" />
-    <Compile Include="Collections\Lights.cs" />
+    <Compile Include="Collections\RLights.cs" />
     <Compile Include="Texture\PixelFormat.cs" />
     <Compile Include="Primitives\REdges.cs" />
     <Compile Include="Primitives\RGlyphs.cs" />

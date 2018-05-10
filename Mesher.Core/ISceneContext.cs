@@ -1,4 +1,5 @@
 ﻿using System;
+using Mesher.Core.Objects;
 using Mesher.Core.SceneContexts.Components;
 using Mesher.GraphicsCore;
 using Mesher.GraphicsCore.Camera;
@@ -15,17 +16,11 @@ namespace Mesher.Core
         
         RCamera Camera { get; set; }
 
-        //RScene Scene { get; set; }
+        Scene Scene { get; set; }
 
         CameraControler CameraControler { get; set; }
 
         IRenderContext RenderContext { get; set; }
-
-        IntPtr Handle { get; }
-
-        void Add(SceneContextComponent component);
-        void Remove(SceneContextComponent component);
-        void RemoveAt(int id);
 
         void Render(RPrimitive primitive);
     }

@@ -1,18 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using Mesher.GraphicsCore.Light;
+﻿using Mesher.GraphicsCore.Collections;
 
 namespace Mesher.Core.Collections
 {
-    public class Lights : List<Light>
+    public class Lights
     {
-        public const Int32 MAX_LIGHTS_COUNT = 127;
-        public new void Add(Light light)
-        {
-            if(Count + 1 > MAX_LIGHTS_COUNT)
-                throw new OverflowException();
-
-            Add(light);
-        }
+        public RLights RLights { get; private set; }
     }
 }

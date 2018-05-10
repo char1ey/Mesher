@@ -2,7 +2,7 @@
 
 namespace Mesher.GraphicsCore.Collections
 {
-    public class Lights : List<Light.RLight>
+    public class RLights : List<Light.RLight>
     {
     }
 }

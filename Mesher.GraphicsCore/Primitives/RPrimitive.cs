@@ -25,6 +25,6 @@ namespace Mesher.GraphicsCore.Primitives
             Indexes = dataFactory.CreateIndexBuffer();
         }
 
-        public abstract void Render(RenderersFactory renderersFactory, Lights lights, IRenderContext renderContext);
+        public abstract void Render(RenderersFactory renderersFactory, RLights rLights, IRenderContext renderContext);
     }
 }

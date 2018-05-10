@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Mesher.GraphicsCore.Camera;
 
-namespace Mesher.Core.Collections
+namespace Mesher.GraphicsCore.Collections
 {
-    public class Cameras : List<RCamera>
+    public class RCameras : List<RCamera>
     {
     }
 }

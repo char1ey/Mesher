@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using Mesher.Core.Collections;
+using Mesher.Core.Objects;
 using Mesher.Core.SceneContexts.Components;
 using Mesher.GraphicsCore.Camera;
 using Mesher.GraphicsCore.Collections;
@@ -23,7 +24,7 @@ namespace Mesher.Core
             get { return RenderContext.RCamera; }
             set { RenderContext.RCamera = value; }
         }
-        // public RScene Scene { get; set; }
+        public Scene Scene { get; set; }
         public RenderersFactory RenderersFactory { get; set; }
         public CameraControler CameraControler { get; set; }
         public IRenderContext RenderContext
@@ -32,29 +33,11 @@ namespace Mesher.Core
             set { }
         }
 
-        public SceneFormComponents SceneContextComponents { get; private set; }
-
-        public void Add(SceneContextComponent component)
-        {
-            SceneContextComponents.Add(component);
-        }
-
-        public void Remove(SceneContextComponent component)
-        {
-            SceneContextComponents.Remove(component);
-        }
-
-        public void RemoveAt(Int32 id)
-        {
-            SceneContextComponents.RemoveAt(id);
-        }
-
         public SceneContextWinforms()
         {
             m_renderContext = new GlWindowsRenderContext(Handle);
             m_renderContext.ClearColor = Color.DimGray;
             InitializeComponent();
-            SceneContextComponents = new SceneFormComponents();
         }
 
         public void BeginRender()
@@ -77,13 +60,7 @@ namespace Mesher.Core
 
             BeginRender();
 
-
-            primitive.Render(RenderersFactory, new Lights(), m_renderContext);
-
-            m_renderContext.ClearDepthBuffer();
-
-            //foreach (var component in SceneContextComponents)
-            //	component.Draw(m_sceneContextGraphics);
+            primitive.Render(RenderersFactory, new RLights(), m_renderContext);
 
             EndRender();
         }
@@ -119,14 +96,6 @@ namespace Mesher.Core
             base.OnKeyDown(e);
         }
 
-        protected override void OnMouseClick(MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-                foreach (var component in SceneContextComponents)
-                    component.MouseClick(new Point(e.Location.X, Height - e.Location.Y));
-            base.OnMouseClick(e);
-        }
-
         protected override void OnMouseMove(MouseEventArgs e)
         {
             if (Camera == null)
@@ -142,9 +111,6 @@ namespace Mesher.Core
                     CameraControler.Rotate(e.Location);
             }
             m_previousMouseButton = e.Button;
-
-            foreach (var component in SceneContextComponents)
-                component.MouseMove(new Point(e.Location.X, Height - e.Location.Y));
 
             base.OnMouseMove(e);
         }

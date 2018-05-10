@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArcBallCameraControler.cs" />
+    <Compile Include="Collections\Lights.cs" />
     <Compile Include="Collections\SceneFormComponents.cs" />
     <Compile Include="CameraControler.cs" />
     <Compile Include="Document.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="MesherApplication.cs" />
     <Compile Include="Objects\Camera.cs" />
     <Compile Include="Objects\IDocumentItem.cs" />
+    <Compile Include="Objects\Light.cs" />
     <Compile Include="Objects\Mesh.cs" />
     <Compile Include="Objects\Scene.cs" />
     <Compile Include="Renderers\SceneContextGraphics.cs" />

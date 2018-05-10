@@ -56,17 +56,17 @@ namespace Mesher.GraphicsCore.Renderers.OpenGL
 
 			for (var i = 0; i < MAX_LIGHTS_COUNT; i++)
 			{
-				m_lightTypeIds[i] = m_shaderProgram.GetUniformLocation($"lights[{i}].lightType");
-				m_lightAmbientColorIds[i] = m_shaderProgram.GetUniformLocation($"lights[{i}].ambientColor");
-				m_lightDiffuseColorIds[i] = m_shaderProgram.GetUniformLocation($"lights[{i}].diffuseColor");
-				m_lightSpecularColorIds[i] = m_shaderProgram.GetUniformLocation($"lights[{i}].specularColor");
-				m_lightPositionIds[i] = m_shaderProgram.GetUniformLocation($"lights[{i}].position");
-				m_lightDirectionIds[i] = m_shaderProgram.GetUniformLocation($"lights[{i}].direction");
-				m_lightInnerAngleIds[i] = m_shaderProgram.GetUniformLocation($"lights[{i}].innerAngle");
-				m_lightOuterAngleIds[i] = m_shaderProgram.GetUniformLocation($"lights[{i}].outerAngle");
-				m_lightAttenuationConstantIds[i] = m_shaderProgram.GetUniformLocation($"lights[{i}].attenuationConstant");
-				m_lightAttenuationLinearIds[i] = m_shaderProgram.GetUniformLocation($"lights[{i}].attenuationLinear");
-				m_lightAttenuationQuadraticIds[i] = m_shaderProgram.GetUniformLocation($"lights[{i}].attenuationQuadratic");
+				m_lightTypeIds[i] = m_shaderProgram.GetUniformLocation($"rLights[{i}].lightType");
+				m_lightAmbientColorIds[i] = m_shaderProgram.GetUniformLocation($"rLights[{i}].ambientColor");
+				m_lightDiffuseColorIds[i] = m_shaderProgram.GetUniformLocation($"rLights[{i}].diffuseColor");
+				m_lightSpecularColorIds[i] = m_shaderProgram.GetUniformLocation($"rLights[{i}].specularColor");
+				m_lightPositionIds[i] = m_shaderProgram.GetUniformLocation($"rLights[{i}].position");
+				m_lightDirectionIds[i] = m_shaderProgram.GetUniformLocation($"rLights[{i}].direction");
+				m_lightInnerAngleIds[i] = m_shaderProgram.GetUniformLocation($"rLights[{i}].innerAngle");
+				m_lightOuterAngleIds[i] = m_shaderProgram.GetUniformLocation($"rLights[{i}].outerAngle");
+				m_lightAttenuationConstantIds[i] = m_shaderProgram.GetUniformLocation($"rLights[{i}].attenuationConstant");
+				m_lightAttenuationLinearIds[i] = m_shaderProgram.GetUniformLocation($"rLights[{i}].attenuationLinear");
+				m_lightAttenuationQuadraticIds[i] = m_shaderProgram.GetUniformLocation($"rLights[{i}].attenuationQuadratic");
 			}
 
 			m_cameraProjectionMatrixId = m_shaderProgram.GetUniformLocation("proj");
@@ -74,15 +74,15 @@ namespace Mesher.GraphicsCore.Renderers.OpenGL
 			m_positionsId = m_shaderProgram.GetAttributeLocation("position");
 		}
 
-		public override void Render(REdges rEdges, Lights lights, IRenderContext renderContext)
+		public override void Render(REdges rEdges, RLights rLights, IRenderContext renderContext)
         {
 			m_shaderProgram.Bind();
 
-			m_shaderProgram.SetValue(m_lightsCountId, lights.Count);
+			m_shaderProgram.SetValue(m_lightsCountId, rLights.Count);
 
-			for (var i = 0; i < lights.Count; i++)
+			for (var i = 0; i < rLights.Count; i++)
 			{
-				var light = lights[i];
+				var light = rLights[i];
 
 				m_shaderProgram.SetValue(m_lightTypeIds[i], (Int32)light.LightType);
 				m_shaderProgram.SetValue(m_lightAmbientColorIds[i], light.AmbientColor);

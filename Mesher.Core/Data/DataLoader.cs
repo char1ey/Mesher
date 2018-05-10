@@ -26,7 +26,7 @@ namespace Mesher.Core.Data
             /*
 			if (aiScene.HasLights)
 				for (var i = 0; i < aiScene.LightCount; i++)
-					rScene.Lights.Add(InitLight(aiScene.Lights[i], rScene));
+					rScene.RLights.Add(InitLight(aiScene.RLights[i], rScene));
             */
 
 		    RTriangles mesh = null;

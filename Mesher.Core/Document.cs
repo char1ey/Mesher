@@ -9,6 +9,7 @@ namespace Mesher.Core
 {
 	public class Document
 	{
+        public List<Camera> Cameras { get; private set; }
         public Scene Scene { get; set; }
 
 	    public void Rebuild()

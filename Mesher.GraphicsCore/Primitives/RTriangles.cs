@@ -31,9 +31,9 @@ namespace Mesher.GraphicsCore.Primitives
             BiTangents = dataFactory.CreateDataBuffer<Vec3>();
         }
 
-        public override void Render(RenderersFactory renderersFactory, Lights lights, IRenderContext renderContext)
+        public override void Render(RenderersFactory renderersFactory, RLights rLights, IRenderContext renderContext)
         {
-            renderersFactory.TrianglesRenderer.Render(this, lights, renderContext);
+            renderersFactory.TrianglesRenderer.Render(this, rLights, renderContext);
         }
     }
 }
