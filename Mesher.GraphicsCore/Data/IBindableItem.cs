@@ -1,4 +1,4 @@
-﻿namespace Mesher.GraphicsCore.Buffers
+﻿namespace Mesher.GraphicsCore.Data
 {
     internal interface IBindableItem
     {

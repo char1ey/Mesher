@@ -3,7 +3,7 @@ using Mesher.GraphicsCore.Buffers;
 
 namespace Mesher.GraphicsCore.Data.OpenGL
 {
-    public class GlIndexBuffer : IIndexBuffer, IDisposable, IBindableItem
+    public class GlIndexBuffer : IIndexBuffer, IBindableItem, IDisposable
     {
         private GlDataFactory m_dataFactory;
 
@@ -77,16 +77,6 @@ namespace Mesher.GraphicsCore.Data.OpenGL
             m_id = new UInt32[1];
             Gl.GenBuffers(1, m_id);
             m_dataFactory.EndChangeData();
-        }
-
-        void IBindableItem.Bind()
-        {
-            Bind();
-        }
-
-        void IBindableItem.Unbind()
-        {
-            Unbind();
         }
 
         public void Unbind()

@@ -8,5 +8,6 @@ namespace Mesher.Core.Objects
 {
     public class Camera
     {
+        public ISceneContext SceneContext { get; private set; }
     }
 }

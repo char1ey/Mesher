@@ -59,7 +59,7 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Buffers\IBindableItem.cs" />
+    <Compile Include="Data\IBindableItem.cs" />
     <Compile Include="Data\IFrameBuffer.cs" />
     <Compile Include="Data\OpenGL\GlFrameBuffer.cs" />
     <Compile Include="Data\OpenGL\GlIndexBuffer.cs" />

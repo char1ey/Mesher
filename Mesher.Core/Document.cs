@@ -12,6 +12,11 @@ namespace Mesher.Core
         public List<Camera> Cameras { get; private set; }
         public Scene Scene { get; set; }
 
+	    public Document()
+	    {
+	        Cameras = new List<Camera>();
+	    }
+
 	    public void Rebuild()
 	    {
 
@@ -19,7 +24,8 @@ namespace Mesher.Core
 
 	    public void Render()
 	    {
-
+            foreach(var camera in Cameras)
+                Scene.Render(camera.SceneContext);
 	    }
 
 	    public void Save(String path)

@@ -166,15 +166,5 @@ namespace Mesher.GraphicsCore.Buffers
             Bind();
             Gl.DeleteBuffers(1, m_Id);
         }
-
-       /* void IBindableItem.Bind()
-        {
-            Bind();
-        }
-
-        void IBindableItem.Unbind()
-        {
-            Unbind();
-        }*/
     }
 }
