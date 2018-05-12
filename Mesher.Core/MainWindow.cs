@@ -22,18 +22,18 @@ namespace Mesher.Core.Test
             DocumentView.CameraControler = new ArcBallCameraControler(DocumentView);
             DocumentView.MouseWheel += DocumentViewMouseWheel;
         }
-
-        private void DocumentViewMouseWheel(Object sender, MouseEventArgs e)
-        {
-            Render();
-        }
-
+        
         private void Render()
         {
             if (m_mesherApplication.CurrentDocument == null)
                 return;
 
            m_mesherApplication.CurrentDocument.Render();
+        }
+
+        private void DocumentViewMouseWheel(Object sender, MouseEventArgs e)
+        {
+            Render();
         }
 
         private void sceneContext1_MouseMove(Object sender, MouseEventArgs e)
