@@ -4,19 +4,31 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Mesher.Core.Test;
+using Mesher.GraphicsCore;
+using Mesher.GraphicsCore.Data.OpenGL;
+using Mesher.GraphicsCore.RenderContexts;
 
 namespace Mesher.Core
 {
     public class MesherApplication
     {
-        public Document Document { get; set; }
+        public MesherGraphics Graphics { get; set; }
+        public Document CurrentDocument { get; set; }
         public MainWindow MainWindow { get; private set; }
 
+        public List<IDocumentView> DocumentViews { get; private set; }
         public List<Plugins.IPlugin> Plugins { get; private set; }
 
         public MesherApplication()
         {
-            MainWindow = new MainWindow();
+            Graphics = new GlWindowsGraphics();
+            MainWindow = new MainWindow(this);
+            DocumentViews = new List<IDocumentView> {MainWindow.DocumentView};
+        }
+
+        public Document LoadDocument(String fileName)
+        {
+            return Document.Load(fileName, this);
         }
     }
 }

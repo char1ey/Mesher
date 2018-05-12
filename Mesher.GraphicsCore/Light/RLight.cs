@@ -11,11 +11,11 @@ namespace Mesher.GraphicsCore.Light
     {
 		//TODO shadowmap
 
-	    private IDataFactory m_dataFactory;
+	    private IDataContext m_dataContext;
 
         public Int32 Id { get; internal set; }
         public String Name { get; set; }
-        public LightType LightType { get; set; }
+        public RLightType RLightType { get; set; }
         public Color3 AmbientColor { get; set; }
         public Color3 DiffuseColor { get; set; }
         public Color3 SpecularColor { get; set; }
@@ -30,9 +30,9 @@ namespace Mesher.GraphicsCore.Light
 		public Boolean HasShadowMap { get; set; }
 		public Texture.Texture ShadowMap { get; private set; }
 
-	    internal RLight(IDataFactory dataFactory)
+	    internal RLight(IDataContext dataContext)
 	    {
-		    m_dataFactory = dataFactory;
+		    m_dataContext = dataContext;
 	    }
 
 	    public void RenderShadowMap(RenderersFactory renderersFactory, List<RPrimitive> primitives)

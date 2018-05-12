@@ -9,6 +9,7 @@ namespace Mesher.GraphicsCore.Data
 
         void AddRange(T[] values);
         void RemoveAt(Int32 id);
+        void Clear();
         T this[Int32 index] { get; set; }
     }
 }

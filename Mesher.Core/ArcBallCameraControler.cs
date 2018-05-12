@@ -15,59 +15,59 @@ namespace Mesher.Core
 
         private Point m_previousMousePosition;
 
-        public ArcBallCameraControler(ISceneContext sceneContext) : base(sceneContext)
+        public ArcBallCameraControler(IDocumentView documentView) : base(documentView)
         {
         }
 
         public override void Inaction(Point currentScreenCoordinate)
         {
-            SceneContext.Camera.ClearStack();
+            DocumentView.Camera.ClearStack();
             m_previousMousePosition = currentScreenCoordinate;
         }
 
         public override void Move(Point currentScreenCoordinate)
         {
-            SceneContext.Camera.Pop();
+            DocumentView.Camera.Pop();
 
-            var a = SceneContext.Camera.UnProject(m_previousMousePosition.X, SceneContext.Height - m_previousMousePosition.Y, 0, SceneContext.Width, SceneContext.Height);
-            var b = SceneContext.Camera.UnProject(currentScreenCoordinate.X, SceneContext.Height - currentScreenCoordinate.Y, 0, SceneContext.Width, SceneContext.Height);
+            var a = DocumentView.Camera.UnProject(m_previousMousePosition.X, DocumentView.Height - m_previousMousePosition.Y, 0, DocumentView.Width, DocumentView.Height);
+            var b = DocumentView.Camera.UnProject(currentScreenCoordinate.X, DocumentView.Height - currentScreenCoordinate.Y, 0, DocumentView.Width, DocumentView.Height);
 
-            SceneContext.Camera.Push();
-            SceneContext.Camera.Move(a - b);
+            DocumentView.Camera.Push();
+            DocumentView.Camera.Move(a - b);
         }
 
         public override void Rotate(Point currentScreeCoordinate)
         {
-            SceneContext.Camera.Pop();
+            DocumentView.Camera.Pop();
 
-            SceneContext.Camera.Push();
+            DocumentView.Camera.Push();
 
             var v0 = GetArcBallVector(m_previousMousePosition.X, m_previousMousePosition.Y);
             var v1 = GetArcBallVector(currentScreeCoordinate.X, currentScreeCoordinate.Y);
 
-            var axis = Mat3.Inverse(SceneContext.Camera.ViewMatrix.ToMat3()) * (SceneContext.Camera.ProjectionMatrix.ToMat3() * v0.Cross(v1).Normalize()).Normalize();
+            var axis = Mat3.Inverse(DocumentView.Camera.ViewMatrix.ToMat3()) * (DocumentView.Camera.ProjectionMatrix.ToMat3() * v0.Cross(v1).Normalize()).Normalize();
             var angle = v0.Angle(v1);
 
-            SceneContext.Camera.Rotate(axis, -angle * ROTATION_SPEED);
+            DocumentView.Camera.Rotate(axis, -angle * ROTATION_SPEED);
         }
 
         public override void Zoom(Point currentScreenCoordinate, Single delta)
         {
             var zoom = delta * ZOOM_SPEED;
-            SceneContext.Camera.Zoom(zoom < 0 ? -1 / zoom : zoom);
+            DocumentView.Camera.Zoom(zoom < 0 ? -1 / zoom : zoom);
 
-            var a = SceneContext.Camera.UnProject(SceneContext.Width / 2f, SceneContext.Height / 2f, 0, SceneContext.Width, SceneContext.Height);
-            var b = SceneContext.Camera.UnProject(currentScreenCoordinate.X, SceneContext.Height - currentScreenCoordinate.Y, 0, SceneContext.Width, SceneContext.Height);
+            var a = DocumentView.Camera.UnProject(DocumentView.Width / 2f, DocumentView.Height / 2f, 0, DocumentView.Width, DocumentView.Height);
+            var b = DocumentView.Camera.UnProject(currentScreenCoordinate.X, DocumentView.Height - currentScreenCoordinate.Y, 0, DocumentView.Width, DocumentView.Height);
 
-            a = Plane.XYPlane.Cross(new Line(a, (SceneContext.Camera.LookAtPoint - SceneContext.Camera.Position).Normalize()));
-            b = Plane.XYPlane.Cross(new Line(b, (SceneContext.Camera.LookAtPoint - SceneContext.Camera.Position).Normalize()));
+            a = Plane.XYPlane.Cross(new Line(a, (DocumentView.Camera.LookAtPoint - DocumentView.Camera.Position).Normalize()));
+            b = Plane.XYPlane.Cross(new Line(b, (DocumentView.Camera.LookAtPoint - DocumentView.Camera.Position).Normalize()));
 
-            SceneContext.Camera.Move((b - a) * zoom / 7.2f);
+            DocumentView.Camera.Move((b - a) * zoom / 7.2f);
         }
 
         private Vec3 GetArcBallVector(Int32 x, Int32 y)
         {
-            var ret = new Vec3(2f * x / SceneContext.Width - 1, 2f * y / SceneContext.Height - 1, 0);
+            var ret = new Vec3(2f * x / DocumentView.Width - 1, 2f * y / DocumentView.Height - 1, 0);
 
             ret.Y = -ret.Y;
 

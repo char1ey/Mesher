@@ -23,12 +23,12 @@ namespace Mesher.GraphicsCore.Primitives
         public Boolean HasMaterial { get; set; }
         public Material.RMaterial Material { get; set; }
 
-        internal RTriangles(IDataFactory dataFactory) : base(dataFactory)
+        internal RTriangles(IDataContext dataContext) : base(dataContext)
         {
-            TexCoords = dataFactory.CreateDataBuffer<Vec2>();
-            Normals = dataFactory.CreateDataBuffer<Vec3>();
-            Tangents = dataFactory.CreateDataBuffer<Vec3>();
-            BiTangents = dataFactory.CreateDataBuffer<Vec3>();
+            TexCoords = dataContext.CreateDataBuffer<Vec2>();
+            Normals = dataContext.CreateDataBuffer<Vec3>();
+            Tangents = dataContext.CreateDataBuffer<Vec3>();
+            BiTangents = dataContext.CreateDataBuffer<Vec3>();
         }
 
         public override void Render(RenderersFactory renderersFactory, RLights rLights, IRenderContext renderContext)

@@ -36,7 +36,7 @@
             this.toolStripMenuItemPlugins = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
-            this.sceneContext1 = new SceneContextWinforms();
+            this.DocumentView = new DocumentViewWinforms(m_mesherApplication);
             // 
             // menuStrip
             // 
@@ -77,17 +77,17 @@
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             // 
-            // sceneContext1
+            // DocumentView
             // 
-            this.sceneContext1.Camera = null;
-            this.sceneContext1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.sceneContext1.Location = new System.Drawing.Point(0, 24);
-            this.sceneContext1.Name = "sceneContext1";
-            this.sceneContext1.Size = new System.Drawing.Size(596, 314);
-            this.sceneContext1.TabIndex = 0;
-            this.sceneContext1.Paint += new System.Windows.Forms.PaintEventHandler(this.sceneContext1_Paint);
-            this.sceneContext1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.sceneContext1_MouseMove);
-            this.sceneContext1.Resize += new System.EventHandler(this.sceneContext1_Resize);
+            this.DocumentView.Camera = null;
+            this.DocumentView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DocumentView.Location = new System.Drawing.Point(0, 24);
+            this.DocumentView.Name = "DocumentView";
+            this.DocumentView.Size = new System.Drawing.Size(596, 314);
+            this.DocumentView.TabIndex = 0;
+            this.DocumentView.Paint += new System.Windows.Forms.PaintEventHandler(this.sceneContext1_Paint);
+            this.DocumentView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.sceneContext1_MouseMove);
+            this.DocumentView.Resize += new System.EventHandler(this.sceneContext1_Resize);
             // 
             // toolStripMenuItemPlugins
             // 
@@ -100,7 +100,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(596, 338);
-            this.Controls.Add(this.sceneContext1);
+            this.Controls.Add(this.DocumentView);
             this.Controls.Add(this.menuStrip);
             this.MainMenuStrip = this.menuStrip;
             this.Name = "MainForm";
@@ -114,7 +114,7 @@
 
         #endregion
 
-        private SceneContextWinforms sceneContext1;
+        public DocumentViewWinforms DocumentView;
         private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItemFile;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;

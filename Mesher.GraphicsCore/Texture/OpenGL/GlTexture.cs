@@ -13,9 +13,9 @@ namespace Mesher.GraphicsCore.Texture.OpenGL
 
 		private UInt32[] m_id;
 
-        private GlDataFactory m_dataFactory;
+        private GlDataContext m_dataContext;
 
-        internal GlDataFactory DataFactory { get { return m_dataFactory; } }
+        internal GlDataContext DataContext { get { return m_dataContext; } }
 
         static GlTexture()
         {
@@ -28,9 +28,9 @@ namespace Mesher.GraphicsCore.Texture.OpenGL
                 ActiveTextures[i] = -1;
         }
 
-        internal GlTexture(Bitmap image, GlDataFactory dataFactory) : base(image.Width, image.Height, PixelFormat.Format32)
+        internal GlTexture(Bitmap image, GlDataContext dataContext) : base(image.Width, image.Height, PixelFormat.Format32)
         {
-            m_dataFactory = dataFactory;
+            m_dataContext = dataContext;
 
 	        Width = image.Width;
 	        Height = image.Height;
@@ -43,13 +43,13 @@ namespace Mesher.GraphicsCore.Texture.OpenGL
             image.UnlockBits(d);
         }
 
-	    internal GlTexture(Int32 width, Int32 height, GlDataFactory dataFactory) : this(width, height, IntPtr.Zero, dataFactory)
+	    internal GlTexture(Int32 width, Int32 height, GlDataContext dataContext) : this(width, height, IntPtr.Zero, dataContext)
 	    {
 		}
 
-        internal GlTexture(Int32 width, Int32 height, IntPtr pixels, GlDataFactory dataFactory) : base(width, height, PixelFormat.Format32)
+        internal GlTexture(Int32 width, Int32 height, IntPtr pixels, GlDataContext dataContext) : base(width, height, PixelFormat.Format32)
         {
-            m_dataFactory = dataFactory;
+            m_dataContext = dataContext;
 
             Width = width;
             Height = height;

@@ -9,20 +9,20 @@ namespace Mesher.GraphicsCore.Primitives
 {
     public abstract class RPrimitive
     {
-        protected IDataFactory DataFactory { get; private set; }
+        protected IDataContext DataContext { get; private set; }
 
         public Mat4 Matrix { get; set; }
 
-        public IDataBuffer<Vec3> Positions { get; private set; }
+        public IDataBuffer<Vec3> Positions { get; set; }
 
         public Boolean IndexedRendering { get; set; }
-        public IIndexBuffer Indexes { get; private set; }
+        public IIndexBuffer Indexes { get; set; }
 
-        internal RPrimitive(IDataFactory dataFactory)
+        internal RPrimitive(IDataContext dataContext)
         {
-            DataFactory = dataFactory;
-            Positions = dataFactory.CreateDataBuffer<Vec3>();
-            Indexes = dataFactory.CreateIndexBuffer();
+            DataContext = dataContext;
+            Positions = dataContext.CreateDataBuffer<Vec3>();
+            Indexes = dataContext.CreateIndexBuffer();
         }
 
         public abstract void Render(RenderersFactory renderersFactory, RLights rLights, IRenderContext renderContext);

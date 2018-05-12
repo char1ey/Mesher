@@ -4,6 +4,7 @@ using System.Drawing;
 using Mesher.GraphicsCore.Buffers;
 using Mesher.GraphicsCore.RenderContexts;
 using Mesher.GraphicsCore.Texture;
+using Mesher.GraphicsCore.Texture.OpenGL;
 
 namespace Mesher.GraphicsCore.Data.OpenGL
 {
@@ -17,7 +18,7 @@ namespace Mesher.GraphicsCore.Data.OpenGL
 
         private List<IDisposable> m_buffers;
 
-        private List<Texture.GlTexture> m_textures;
+        private List<GlTexture> m_textures;
 
         private List<ShaderProgram.GlShaderProgram> m_shaderPrograms;
 
@@ -28,7 +29,7 @@ namespace Mesher.GraphicsCore.Data.OpenGL
 
         public GlDataContext(GlWindowsRenderContext defaultRenderWindow)
         {
-            m_textures = new List<Texture.GlTexture>();
+            m_textures = new List<GlTexture>();
             m_buffers = new List<IDisposable>();
             m_renderWindows = new List<GlWindowsRenderContext>();     
             m_shaderPrograms = new List<ShaderProgram.GlShaderProgram>();
@@ -36,7 +37,7 @@ namespace Mesher.GraphicsCore.Data.OpenGL
             m_hglrc = Win32.wglCreateContext(m_defaultRenderContext.RenderWindowHandle);
         }
 
-        public GlIndexBuffer CreateIndexBuffer(Int32[] indicies)
+        public GlIndexBuffer CreateIndexBuffer(List<Int32> indicies)
         {
             m_defaultRenderContext.BeginRender();
             var buffer = new GlIndexBuffer(indicies, this);
@@ -102,10 +103,10 @@ namespace Mesher.GraphicsCore.Data.OpenGL
             return CreateTexture(bitmap);
         }
 
-        public Texture.GlTexture CreateTexture(Bitmap bitmap)
+        public GlTexture CreateTexture(Bitmap bitmap)
         {
             m_defaultRenderContext.BeginRender();
-            var texture = new Texture.GlTexture(bitmap, this);
+            var texture = new GlTexture(bitmap, this);
             m_defaultRenderContext.EndRender();
             m_textures.Add(texture);
             return texture;

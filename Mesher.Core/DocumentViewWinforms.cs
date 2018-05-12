@@ -6,6 +6,7 @@ using Mesher.Core.Objects;
 using Mesher.Core.SceneContexts.Components;
 using Mesher.GraphicsCore.Camera;
 using Mesher.GraphicsCore.Collections;
+using Mesher.GraphicsCore.Data.OpenGL;
 using Mesher.GraphicsCore.Primitives;
 using Mesher.GraphicsCore.RenderContexts;
 using Mesher.GraphicsCore.Renderers;
@@ -13,29 +14,37 @@ using Mesher.Mathematics;
 
 namespace Mesher.Core
 {
-    public partial class SceneContextWinforms : UserControl, ISceneContext
+    public partial class DocumentViewWinforms : UserControl, IDocumentView
     {
-        private readonly IRenderContext m_renderContext;
+        private readonly GlWindowsRenderContext m_renderContext;
 
         private MouseButtons m_previousMouseButton;
 
+        private MesherApplication m_mesherApplication;
+
         public RCamera Camera
         {
-            get { return RenderContext.RCamera; }
-            set { RenderContext.RCamera = value; }
+            get
+            {
+                if (m_renderContext.RCamera == null)
+                    m_renderContext.RCamera = new OrthographicRCamera(m_renderContext.Width, m_renderContext.Height, new Vec3(0, 0, 1), new Vec3(0, 1, 0), new Vec3(0, 0, 0));
+                return m_renderContext.RCamera;
+            }
+            set { m_renderContext.RCamera = value; }
         }
-        public Scene Scene { get; set; }
-        public RenderersFactory RenderersFactory { get; set; }
+
+        public Document Document { get; set; }
         public CameraControler CameraControler { get; set; }
+
         public IRenderContext RenderContext
         {
             get { return m_renderContext; }
-            set { }
         }
 
-        public SceneContextWinforms()
+        public DocumentViewWinforms(MesherApplication application)
         {
-            m_renderContext = new GlWindowsRenderContext(Handle);
+            m_mesherApplication = application;
+            m_renderContext = (GlWindowsRenderContext)application.Graphics.CreateRenderContext(Handle);
             m_renderContext.ClearColor = Color.DimGray;
             InitializeComponent();
         }
@@ -53,15 +62,12 @@ namespace Mesher.Core
             m_renderContext.SwapBuffers();
         }
 
-        public void Render(RPrimitive primitive)
+        public void Render()
         {
-            if (Camera == null)
-                Camera = new OrthographicRCamera(m_renderContext.Width, m_renderContext.Height, new Vec3(0, 0, 1), new Vec3(0, 1, 0), new Vec3(0, 0, 0));
-
             BeginRender();
 
-            primitive.Render(RenderersFactory, new RLights(), m_renderContext);
-
+            Document.Render();
+ 
             EndRender();
         }
 

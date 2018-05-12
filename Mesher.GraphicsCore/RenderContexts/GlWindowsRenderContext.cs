@@ -22,9 +22,9 @@ namespace Mesher.GraphicsCore.RenderContexts
 
         public Color ClearColor { get; set; }
 
-        public GlDataFactory DataFactory { get; set; }
+        public GlDataContext DataContext { get; set; }
 
-        public GlWindowsRenderContext(IntPtr handle)
+        internal GlWindowsRenderContext(IntPtr handle)
         {
             m_handle = handle;
 
@@ -61,9 +61,9 @@ namespace Mesher.GraphicsCore.RenderContexts
 
         public void BeginRender()
         {
-            if (DataFactory == null)
+            if (DataContext == null)
                 return;
-            Win32.wglMakeCurrent(RenderWindowHandle, DataFactory.GlrcHandle);
+            Win32.wglMakeCurrent(RenderWindowHandle, DataContext.GlrcHandle);
         }
 
         public void EndRender()

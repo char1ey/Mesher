@@ -1,6 +1,6 @@
 ﻿namespace Mesher.Core
 {
-    partial class SceneContextWinforms
+    partial class DocumentViewWinforms
     {
         /// <summary> 
         /// Обязательная переменная конструктора.
@@ -30,11 +30,11 @@
         {
             this.SuspendLayout();
             // 
-            // SceneContext
+            // DocumentView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Name = "SceneContextWinforms";
+            this.Name = "DocumentViewWinforms";
             this.Size = new System.Drawing.Size(185, 168);
             this.ResumeLayout(false);
 

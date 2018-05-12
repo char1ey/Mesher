@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Mesher.Core.Data;
 using Mesher.GraphicsCore;
+using Mesher.GraphicsCore.Data.OpenGL;
 using Mesher.GraphicsCore.Primitives;
 using Mesher.GraphicsCore.RenderContexts;
 
@@ -11,38 +12,28 @@ namespace Mesher.Core.Test
 {
     public partial class MainWindow : Form
     {
-        //private RScene m_rScene;
-        private RTriangles m_rTriangles;
+        private readonly MesherApplication m_mesherApplication;
 
-        private GlWindowsGraphics m_graphics;
-        //public SceneForm.SceneForm SceneForm;
-
-        public MainWindow()
+        public MainWindow(MesherApplication mesherApplication)
         {
+            m_mesherApplication = mesherApplication;
             InitializeComponent();
-
-            m_graphics = new GlWindowsGraphics((GlWindowsRenderContext) sceneContext1.RenderContext);
-
-            m_rTriangles = m_graphics.CreateRTriangles();
-            sceneContext1.RenderersFactory = m_graphics.RenderersFactory;
-            //sceneContext1.Add(new Axises(sceneContext1));
-            sceneContext1.CameraControler = new ArcBallCameraControler(sceneContext1);
-
-
-            sceneContext1.MouseWheel += SceneContext1_MouseWheel;
+            
+            DocumentView.CameraControler = new ArcBallCameraControler(DocumentView);
+            DocumentView.MouseWheel += DocumentViewMouseWheel;
         }
 
-        private void SceneContext1_MouseWheel(Object sender, MouseEventArgs e)
+        private void DocumentViewMouseWheel(Object sender, MouseEventArgs e)
         {
             Render();
         }
 
         private void Render()
         {
-            if (m_rTriangles == null)
+            if (m_mesherApplication.CurrentDocument == null)
                 return;
 
-            sceneContext1.Render(m_rTriangles);
+           m_mesherApplication.CurrentDocument.Render();
         }
 
         private void sceneContext1_MouseMove(Object sender, MouseEventArgs e)
@@ -70,11 +61,13 @@ namespace Mesher.Core.Test
 
                 if (File.Exists(openFileDialog.FileName))
                 {
-                    m_rTriangles = DataLoader.LoadScene(openFileDialog.FileName, m_graphics);
+                    m_mesherApplication.CurrentDocument = m_mesherApplication.LoadDocument(openFileDialog.FileName);
+                    m_mesherApplication.CurrentDocument.Rebuild();
+                    DocumentView.Document = m_mesherApplication.CurrentDocument;
                 }
             }
 
-            sceneContext1.Update();
+            DocumentView.Update();
             Render();
         }
     }

@@ -15,7 +15,7 @@ namespace Mesher.GraphicsCore.Primitives
 
 		public int Heights { get; set; }
 
-		internal RGlyphs(IDataFactory dataFactory) : base(dataFactory)
+		internal RGlyphs(IDataContext dataContext) : base(dataContext)
         {
         }
 

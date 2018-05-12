@@ -19,6 +19,7 @@ namespace Mesher.Core.Objects
         {
             Meshes = new List<Mesh>();
             Lights = new Lights();
+            m_graphics = graphics;
         }
 
         public Mesh AddMesh()
@@ -30,13 +31,14 @@ namespace Mesher.Core.Objects
 
         public void Rebuild()
         {
-            throw new NotImplementedException();
+            foreach(var mesh in Meshes)
+                mesh.Rebuild();
         }
 
-        public void Render(ISceneContext sceneContext)
+        public void Render(IDocumentView documentView)
         {
             foreach (var mesh in Meshes)
-                mesh.Render(sceneContext);
+                mesh.Render(documentView);
         }
     }
 }

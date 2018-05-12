@@ -8,6 +8,6 @@ namespace Mesher.Core.Objects
 {
     public class Camera
     {
-        public ISceneContext SceneContext { get; private set; }
+        public IDocumentView DocumentView { get; private set; }
     }
 }

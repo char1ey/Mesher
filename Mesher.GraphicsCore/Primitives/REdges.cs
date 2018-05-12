@@ -10,7 +10,7 @@ namespace Mesher.GraphicsCore.Primitives
     {
         public Single Width { get; set; }
 
-        internal REdges(IDataFactory dataFactory) : base(dataFactory)
+        internal REdges(IDataContext dataContext) : base(dataContext)
         {
         }
 

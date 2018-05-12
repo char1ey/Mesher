@@ -1,6 +1,6 @@
 ﻿namespace Mesher.GraphicsCore.Light
 {
-    public enum LightType
+    public enum RLightType
     {
         Undefined = 0,
         Directional = 1,

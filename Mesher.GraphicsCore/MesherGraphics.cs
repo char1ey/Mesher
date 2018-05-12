@@ -17,7 +17,7 @@ namespace Mesher.GraphicsCore
 
         private RenderersFactory m_renderersFactory;
 
-        public abstract IDataFactory DataFactory { get; }
+        public abstract IDataContext DataContext { get; }
 
         public RenderersFactory RenderersFactory
         {
@@ -31,22 +31,22 @@ namespace Mesher.GraphicsCore
 
         public RTriangles CreateRTriangles()
         {
-            return new RTriangles(DataFactory);
+            return new RTriangles(DataContext);
         }
 
         public REdges CreateREdges()
         {
-            return new REdges(DataFactory);
+            return new REdges(DataContext);
         }
 
         public RGlyphs CreateRGlyphs()
         {
-            return new RGlyphs(DataFactory);
+            return new RGlyphs(DataContext);
         }
 
         public RLight CreateRLight()
         {
-            return new RLight(DataFactory);
+            return new RLight(DataContext);
         }
 
         public abstract IRenderContext CreateRenderContext(IntPtr handle);

@@ -28,7 +28,7 @@ namespace Mesher.Core.SceneContexts.Components
         private Color m_planeYZColor;
         private Color m_planeZXColor;
 
-        public Axises(ISceneContext sceneContext) : base(sceneContext)
+        public Axises(IDocumentView documentView) : base(documentView)
         {
             m_axisesCenter = new Vec3(80, 80, 0);
             m_axisXColor = XColor;
@@ -41,9 +41,9 @@ namespace Mesher.Core.SceneContexts.Components
 
         public override void Draw(SceneContextGraphics graphics)
         {
-            var axisX = new Vec3(SceneContext.Camera.ViewMatrix.Col0).Normalize();
-            var axisY = new Vec3(SceneContext.Camera.ViewMatrix.Col1).Normalize();
-            var axisZ = new Vec3(SceneContext.Camera.ViewMatrix.Col2).Normalize();
+            var axisX = new Vec3(DocumentView.Camera.ViewMatrix.Col0).Normalize();
+            var axisY = new Vec3(DocumentView.Camera.ViewMatrix.Col1).Normalize();
+            var axisZ = new Vec3(DocumentView.Camera.ViewMatrix.Col2).Normalize();
             var p0 = m_axisesCenter;
 
             graphics.DrawLine(p0, p0 + axisX * AXIS_LENGTH, 3f, m_axisXColor);
@@ -83,28 +83,28 @@ namespace Mesher.Core.SceneContexts.Components
         {
             if (CheckPlaneXYIntersect(location))
             {
-                var len = (SceneContext.Camera.Position - SceneContext.Camera.LookAtPoint).Length();
-                SceneContext.Camera.Position = SceneContext.Camera.LookAtPoint + new Vec3(0, 0, 1) * len;
-                SceneContext.Camera.UpVector = new Vec3(0, 1, 0);
+                var len = (DocumentView.Camera.Position - DocumentView.Camera.LookAtPoint).Length();
+                DocumentView.Camera.Position = DocumentView.Camera.LookAtPoint + new Vec3(0, 0, 1) * len;
+                DocumentView.Camera.UpVector = new Vec3(0, 1, 0);
             }
             else if (CheckPlaneYZIntersect(location))
             {
-                var len = (SceneContext.Camera.Position - SceneContext.Camera.LookAtPoint).Length();
-                SceneContext.Camera.Position = SceneContext.Camera.LookAtPoint + new Vec3(1, 0, 0) * len;
-                SceneContext.Camera.UpVector = new Vec3(0, 0, 1);
+                var len = (DocumentView.Camera.Position - DocumentView.Camera.LookAtPoint).Length();
+                DocumentView.Camera.Position = DocumentView.Camera.LookAtPoint + new Vec3(1, 0, 0) * len;
+                DocumentView.Camera.UpVector = new Vec3(0, 0, 1);
             }
             else if (CheckPlaneZXIntersect(location))
             {
-                var len = (SceneContext.Camera.Position - SceneContext.Camera.LookAtPoint).Length();
-                SceneContext.Camera.Position = SceneContext.Camera.LookAtPoint + new Vec3(0, 1, 0) * len;
-                SceneContext.Camera.UpVector = new Vec3(1, 0, 0);
+                var len = (DocumentView.Camera.Position - DocumentView.Camera.LookAtPoint).Length();
+                DocumentView.Camera.Position = DocumentView.Camera.LookAtPoint + new Vec3(0, 1, 0) * len;
+                DocumentView.Camera.UpVector = new Vec3(1, 0, 0);
             }
         }
 
         private bool CheckPlaneXYIntersect(Point p)
         {
-            var axisX = new Vec3(SceneContext.Camera.ViewMatrix.Col0).Normalize();
-            var axisY = new Vec3(SceneContext.Camera.ViewMatrix.Col1).Normalize();
+            var axisX = new Vec3(DocumentView.Camera.ViewMatrix.Col0).Normalize();
+            var axisY = new Vec3(DocumentView.Camera.ViewMatrix.Col1).Normalize();
 
             var p0 = m_axisesCenter;
             var p1 = p0 + axisX * PLANE_SIZE;
@@ -118,8 +118,8 @@ namespace Mesher.Core.SceneContexts.Components
 
         private bool CheckPlaneYZIntersect(Point p)
         {
-            var axisY = new Vec3(SceneContext.Camera.ViewMatrix.Col1).Normalize();
-            var axisZ = new Vec3(SceneContext.Camera.ViewMatrix.Col2).Normalize();
+            var axisY = new Vec3(DocumentView.Camera.ViewMatrix.Col1).Normalize();
+            var axisZ = new Vec3(DocumentView.Camera.ViewMatrix.Col2).Normalize();
 
             var p0 = m_axisesCenter;
             var p1 = p0 + axisZ * PLANE_SIZE;
@@ -133,8 +133,8 @@ namespace Mesher.Core.SceneContexts.Components
 
         private bool CheckPlaneZXIntersect(Point p)
         {
-            var axisX = new Vec3(SceneContext.Camera.ViewMatrix.Col0).Normalize();
-            var axisZ = new Vec3(SceneContext.Camera.ViewMatrix.Col2).Normalize();
+            var axisX = new Vec3(DocumentView.Camera.ViewMatrix.Col0).Normalize();
+            var axisZ = new Vec3(DocumentView.Camera.ViewMatrix.Col2).Normalize();
 
             var p0 = m_axisesCenter;
             var p1 = p0 + axisZ * PLANE_SIZE;

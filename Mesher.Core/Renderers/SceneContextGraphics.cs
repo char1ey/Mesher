@@ -13,14 +13,14 @@ namespace Mesher.Core.Renderers
 {
     public class SceneContextGraphics
     {
-        private ISceneContext m_sceneContext;
+        private IDocumentView m_documentView;
         private GlShaderProgram m_shaderProgram;
 
 	    private MesherGraphics m_graphics;
 
-        public SceneContextGraphics(MesherGraphics graphics, ISceneContext sceneContext)
+        public SceneContextGraphics(MesherGraphics graphics, IDocumentView documentView)
         {
-            m_sceneContext = sceneContext;
+            m_documentView = documentView;
 	        m_graphics = graphics;
         }
 
@@ -62,8 +62,8 @@ namespace Mesher.Core.Renderers
 
         private void InitView()
         {
-            m_shaderProgram.SetValue("viewPort", new Vec4(0, 0, m_sceneContext.Width, m_sceneContext.Height));
-            m_shaderProgram.SetValue("clipDistance", (Single)Math.Max(m_sceneContext.Width, m_sceneContext.Height));
+            m_shaderProgram.SetValue("viewPort", new Vec4(0, 0, m_documentView.Width, m_documentView.Height));
+            m_shaderProgram.SetValue("clipDistance", (Single)Math.Max(m_documentView.Width, m_documentView.Height));
         }
     }
 }

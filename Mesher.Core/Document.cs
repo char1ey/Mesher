@@ -3,29 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Mesher.Core.Data;
 using Mesher.Core.Objects;
+using Mesher.GraphicsCore;
 
 namespace Mesher.Core
 {
 	public class Document
 	{
-        public List<Camera> Cameras { get; private set; }
+	    private MesherApplication m_mesherApplication;
         public Scene Scene { get; set; }
 
-	    public Document()
+	    public Document(MesherApplication application)
 	    {
-	        Cameras = new List<Camera>();
+	        m_mesherApplication = application;
+            Scene = new Scene(m_mesherApplication.Graphics);
 	    }
 
 	    public void Rebuild()
 	    {
-
+            Scene.Rebuild();
 	    }
 
 	    public void Render()
 	    {
-            foreach(var camera in Cameras)
-                Scene.Render(camera.SceneContext);
+	        foreach (var documentView in m_mesherApplication.DocumentViews)
+	        {
+	            documentView.BeginRender();
+	            Scene.Render(documentView);
+	            documentView.EndRender();
+	        }
 	    }
 
 	    public void Save(String path)
@@ -33,9 +40,9 @@ namespace Mesher.Core
 	        throw new NotImplementedException();
 	    }
 
-	    public void Load(String fileName)
+	    public static Document Load(String fileName, MesherApplication application)
 	    {
-	        throw new NotImplementedException();
+	        return DataLoaderPrototype.LoadDocument(fileName, application);
 	    }
 	}
 }

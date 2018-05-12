@@ -84,7 +84,7 @@ namespace Mesher.GraphicsCore.Renderers.OpenGL
 			{
 				var light = rLights[i];
 
-				m_shaderProgram.SetValue(m_lightTypeIds[i], (Int32)light.LightType);
+				m_shaderProgram.SetValue(m_lightTypeIds[i], (Int32)light.RLightType);
 				m_shaderProgram.SetValue(m_lightAmbientColorIds[i], light.AmbientColor);
 				m_shaderProgram.SetValue(m_lightDiffuseColorIds[i], light.DiffuseColor);
 				m_shaderProgram.SetValue(m_lightSpecularColorIds[i], light.SpecularColor);

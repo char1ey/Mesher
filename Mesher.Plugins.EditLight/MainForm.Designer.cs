@@ -48,7 +48,7 @@ namespace Mesher.Plugins.EditLight
 
         #endregion
 
-        private GlDataFactory m_dataFactory;
+        private GlDataContext m_dataContext;
     }
 }
 

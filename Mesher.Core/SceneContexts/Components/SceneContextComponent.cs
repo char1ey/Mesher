@@ -11,11 +11,11 @@ namespace Mesher.Core.SceneContexts.Components
         public Point Location { get; set; }
         public Size Size { get; set; }
 
-        public ISceneContext SceneContext { get; private set; }
+        public IDocumentView DocumentView { get; private set; }
 
-        public SceneContextComponent(ISceneContext sceneContext)
+        public SceneContextComponent(IDocumentView documentView)
         {
-            SceneContext = sceneContext;
+            DocumentView = documentView;
             ChildComponents = new SceneFormComponents();
         }
 

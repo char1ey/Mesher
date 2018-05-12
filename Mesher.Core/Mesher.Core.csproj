@@ -54,6 +54,7 @@
     <Compile Include="Collections\Lights.cs" />
     <Compile Include="Collections\SceneFormComponents.cs" />
     <Compile Include="CameraControler.cs" />
+    <Compile Include="Data\DataLoaderPrototype.cs" />
     <Compile Include="Document.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
@@ -61,19 +62,21 @@
     <Compile Include="MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="ISceneContext.cs" />
+    <Compile Include="IDocumentView.cs" />
     <Compile Include="MesherApplication.cs" />
     <Compile Include="Objects\Camera.cs" />
     <Compile Include="Objects\IDocumentItem.cs" />
     <Compile Include="Objects\Light.cs" />
+    <Compile Include="Objects\Material.cs" />
     <Compile Include="Objects\Mesh.cs" />
+    <Compile Include="Objects\LightType.cs" />
     <Compile Include="Objects\Scene.cs" />
     <Compile Include="Renderers\SceneContextGraphics.cs" />
-    <Compile Include="SceneContextWinforms.cs">
+    <Compile Include="DocumentViewWinforms.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SceneContextWinforms.Designer.cs">
-      <DependentUpon>SceneContextWinforms.cs</DependentUpon>
+    <Compile Include="DocumentViewWinforms.Designer.cs">
+      <DependentUpon>DocumentViewWinforms.cs</DependentUpon>
     </Compile>
     <Compile Include="Data\DataLoader.cs" />
     <Compile Include="Plugins\IPlugin.cs" />
@@ -87,15 +90,17 @@
     </Compile>
     <Compile Include="SceneContexts\Components\Axises.cs" />
     <Compile Include="SceneContexts\Components\SceneContextComponent.cs" />
-    <EmbeddedResource Include="SceneContextWinforms.resx">
-      <DependentUpon>SceneContextWinforms.cs</DependentUpon>
+    <EmbeddedResource Include="DocumentViewWinforms.resx">
+      <DependentUpon>DocumentViewWinforms.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainWindow.resx">
+      <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="ClassDiagram1.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

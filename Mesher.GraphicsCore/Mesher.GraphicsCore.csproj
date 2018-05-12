@@ -70,7 +70,7 @@
     <Compile Include="Collections\RCameras.cs" />
     <Compile Include="GlWindowsGraphics.cs" />
     <Compile Include="Light\RLight.cs" />
-    <Compile Include="Light\LightType.cs" />
+    <Compile Include="Light\RLightType.cs" />
     <Compile Include="Material\RMaterial.cs" />
     <Compile Include="MesherGraphics.cs" />
     <Compile Include="Renderers\OpenGL\DefaultGlRenderersFactory.cs" />
@@ -85,7 +85,7 @@
     <Compile Include="Renderers\RPrimitiveRenderer.cs" />
     <Compile Include="Renderers\RTrianglesRenderer.cs" />
     <Compile Include="Data\IDataBuffer.cs" />
-    <Compile Include="Data\IDataFactory.cs" />
+    <Compile Include="Data\IDataContext.cs" />
     <Compile Include="Data\IIndexBuffer.cs" />
     <Compile Include="RenderContexts\IRenderContext.cs" />
     <Compile Include="ShaderProgram\IShaderProgram.cs" />
@@ -103,7 +103,7 @@
     </Compile>
     <Compile Include="RenderContexts\GlWindowsRenderContext.cs" />
     <Compile Include="Imports\OpenGL.cs" />
-    <Compile Include="Data\OpenGL\GlDataFactory.cs" />
+    <Compile Include="Data\OpenGL\GlDataContext.cs" />
     <Compile Include="ShaderProgram\RenderMode.cs" />
     <Compile Include="ShaderProgram\GlShaderProgram.cs" />
     <Compile Include="ShaderProgram\Exceptions\LinkShaderProgramException.cs" />

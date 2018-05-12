@@ -9,19 +9,21 @@ using Mesher.GraphicsCore.RenderContexts;
 
 namespace Mesher.Core
 {
-    public interface ISceneContext
+    public interface IDocumentView
     {
         int Width { get; }
         int Height { get; }
         
         RCamera Camera { get; set; }
 
-        Scene Scene { get; set; }
+        Document Document { get; set; }
 
         CameraControler CameraControler { get; set; }
 
-        IRenderContext RenderContext { get; set; }
+        IRenderContext RenderContext { get; }
 
-        void Render(RPrimitive primitive);
+        void BeginRender();
+        void EndRender();
+        void Render();
     }
 }
