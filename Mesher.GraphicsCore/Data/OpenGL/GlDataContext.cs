@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Mesher.GraphicsCore.Buffers;
+using Mesher.GraphicsCore.Imports;
 using Mesher.GraphicsCore.RenderContexts;
 using Mesher.GraphicsCore.Texture;
 using Mesher.GraphicsCore.Texture.OpenGL;

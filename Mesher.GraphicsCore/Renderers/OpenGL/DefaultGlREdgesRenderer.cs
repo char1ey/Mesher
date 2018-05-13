@@ -1,6 +1,7 @@
 ﻿using System;
-using Mesher.GraphicsCore.Buffers;
+using Mesher.GraphicsCore.Camera;
 using Mesher.GraphicsCore.Collections;
+using Mesher.GraphicsCore.Data.OpenGL;
 using Mesher.GraphicsCore.Primitives;
 using Mesher.GraphicsCore.RenderContexts;
 using Mesher.GraphicsCore.Texture;
@@ -74,15 +75,15 @@ namespace Mesher.GraphicsCore.Renderers.OpenGL
 			m_positionsId = m_shaderProgram.GetAttributeLocation("position");
 		}
 
-		public override void Render(REdges rEdges, RLights rLights, IRenderContext renderContext)
+		public override void Render(REdges rEdges, RenderArgs renderArgs)
         {
 			m_shaderProgram.Bind();
 
-			m_shaderProgram.SetValue(m_lightsCountId, rLights.Count);
+			m_shaderProgram.SetValue(m_lightsCountId, renderArgs.RLights.Count);
 
-			for (var i = 0; i < rLights.Count; i++)
+			for (var i = 0; i < renderArgs.RLights.Count; i++)
 			{
-				var light = rLights[i];
+				var light = renderArgs.RLights[i];
 
 				m_shaderProgram.SetValue(m_lightTypeIds[i], (Int32)light.RLightType);
 				m_shaderProgram.SetValue(m_lightAmbientColorIds[i], light.AmbientColor);
@@ -97,8 +98,8 @@ namespace Mesher.GraphicsCore.Renderers.OpenGL
 				m_shaderProgram.SetValue(m_lightAttenuationQuadraticIds[i], light.AttenuationQuadratic);
 			}
 
-			m_shaderProgram.SetValue(m_cameraProjectionMatrixId, renderContext.RCamera.ProjectionMatrix);
-			m_shaderProgram.SetValue(m_cameraViewMatrixId, renderContext.RCamera.ViewMatrix);
+			m_shaderProgram.SetValue(m_cameraProjectionMatrixId, renderArgs.RCamera.ProjectionMatrix);
+			m_shaderProgram.SetValue(m_cameraViewMatrixId, renderArgs.RCamera.ViewMatrix);
 
 			m_shaderProgram.SetBuffer(m_positionsId, (GlDataBuffer<Vec3>)rEdges.Positions);
 			

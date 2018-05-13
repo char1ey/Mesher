@@ -20,7 +20,7 @@ namespace Mesher.GraphicsCore.Camera
             ProjectionMatrix = Mat4.Ortho(-width / 2, width / 2, -height / 2, height / 2, ZNear, ZFar);
         }
 
-        public override void Zoom(Single zoom)
+        public void Zoom(Single zoom)
         {
             ProjectionMatrix *= Mat4.Scale(zoom);
         }

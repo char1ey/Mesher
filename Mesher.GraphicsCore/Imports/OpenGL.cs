@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Mesher.Mathematics;
 
-namespace Mesher.GraphicsCore
+namespace Mesher.GraphicsCore.Imports
 {
     public static class Gl
     {

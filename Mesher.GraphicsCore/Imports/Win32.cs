@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Mesher.GraphicsCore
+namespace Mesher.GraphicsCore.Imports
 {
     internal static class Win32
     {

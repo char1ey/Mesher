@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Mesher.Core.Test;
 using Mesher.GraphicsCore;
 using Mesher.GraphicsCore.Data.OpenGL;
 using Mesher.GraphicsCore.RenderContexts;
@@ -17,7 +16,7 @@ namespace Mesher.Core
         public MainWindow MainWindow { get; private set; }
 
         public List<IDocumentView> DocumentViews { get; private set; }
-        public List<Plugins.IPlugin> Plugins { get; private set; }
+        public List<Plugins.Plugin> Plugins { get; private set; }
 
         public MesherApplication()
         {

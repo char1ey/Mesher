@@ -37,7 +37,7 @@ namespace Mesher.Core.Objects
 
         public Mesh(Scene scene, MesherGraphics graphics)
         {
-            RTriangles = graphics.CreateRTriangles();
+            RTriangles = graphics.CreateTriangles();
             m_graphics = graphics;
             Scene = scene;
 
@@ -94,7 +94,13 @@ namespace Mesher.Core.Objects
 
         public void Render(IDocumentView documentView)
         {
-            m_graphics.RenderersFactory.TrianglesRenderer.Render(RTriangles, Scene.Lights.RLights, documentView.RenderContext);
+            var renderArgs = new RenderArgs
+            {
+                RLights = Scene.Lights.RLights,
+                RCamera = documentView.RenderContext.RCamera
+            };
+
+            m_graphics.RenderersFactory.TrianglesRenderer.Render(RTriangles, renderArgs);
         }
     }
 }

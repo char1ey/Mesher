@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using Mesher.GraphicsCore.Data;
-using Mesher.GraphicsCore.Data.OpenGL;
+using Mesher.GraphicsCore.Imports;
 
-namespace Mesher.GraphicsCore.Buffers
+namespace Mesher.GraphicsCore.Data.OpenGL
 {
     public class GlDataBuffer<T> : IDataBuffer<T>, IBindableItem, IDisposable where T : struct
     {

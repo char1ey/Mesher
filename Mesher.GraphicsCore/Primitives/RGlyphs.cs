@@ -1,4 +1,5 @@
-﻿using Mesher.GraphicsCore.Collections;
+﻿using Mesher.GraphicsCore.Camera;
+using Mesher.GraphicsCore.Collections;
 using Mesher.GraphicsCore.Data;
 using Mesher.GraphicsCore.RenderContexts;
 using Mesher.GraphicsCore.Renderers;
@@ -19,9 +20,9 @@ namespace Mesher.GraphicsCore.Primitives
         {
         }
 
-        public override void Render(RenderersFactory renderersFactory, RLights rLights, IRenderContext renderContext)
+        public override void Render(RenderersFactory renderersFactory, RenderArgs renderArgs)
         {
-            renderersFactory.GlyphsRenderer.Render(this, rLights, renderContext);
+            renderersFactory.GlyphsRenderer.Render(this, renderArgs);
         }
     }
 }

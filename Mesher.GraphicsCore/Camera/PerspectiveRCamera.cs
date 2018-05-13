@@ -14,7 +14,7 @@ namespace Mesher.GraphicsCore.Camera
             
         }
 
-        public override void Zoom(Single zoom)
+        public void Zoom(Single zoom)
         {
             Position = LookAtPoint + (Position - LookAtPoint) / zoom;
         }

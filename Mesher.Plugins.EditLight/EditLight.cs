@@ -1,4 +1,5 @@
 ﻿using System;
+using Mesher.Core;
 using Mesher.Core.Plugins;
 using Mesher.Core.Renderers;
 using Mesher.GraphicsCore;
@@ -6,28 +7,19 @@ using Mesher.GraphicsCore.Data.OpenGL;
 
 namespace Mesher.Plugins.EditLight
 {
-    public class EditLight : IPlugin
+    public class EditLight : Plugin
     {
         private MainForm m_form;
 
-        public String Name { get; }
-
-        public EditLight()
+        public EditLight(Document document) : base(document)
         {
             Name = @"Edit light";
         }
 
-        public void Execute(MesherGraphics graphics)
+        public override void Execute()
         {
            // m_form = new MainForm(factory, scene);
             m_form.Show();
         }
-
-	    public void Render()
-	    {
-		    throw new NotImplementedException();
-	    }
-
-	    public Boolean Enabled { get; }
     }
 }

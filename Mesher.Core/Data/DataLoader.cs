@@ -35,7 +35,7 @@ namespace Mesher.Core.Data
 				for (var i = 0; i < aiScene.MeshCount; i++)
 				{
 					var aiMesh = aiScene.Meshes[i];
-					mesh = graphics.CreateRTriangles();
+					mesh = graphics.CreateTriangles();
 
 					if (aiMesh.HasVertices)
 					{

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Mesher.GraphicsCore.Camera;
 using Mesher.Mathematics;
 
 namespace Mesher.Core
@@ -54,7 +55,7 @@ namespace Mesher.Core
         public override void Zoom(Point currentScreenCoordinate, Single delta)
         {
             var zoom = delta * ZOOM_SPEED;
-            DocumentView.Camera.Zoom(zoom < 0 ? -1 / zoom : zoom);
+            ((OrthographicRCamera)DocumentView.Camera).Zoom(zoom < 0 ? -1 / zoom : zoom);
 
             var a = DocumentView.Camera.UnProject(DocumentView.Width / 2f, DocumentView.Height / 2f, 0, DocumentView.Width, DocumentView.Height);
             var b = DocumentView.Camera.UnProject(currentScreenCoordinate.X, DocumentView.Height - currentScreenCoordinate.Y, 0, DocumentView.Width, DocumentView.Height);

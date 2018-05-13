@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Mesher.GraphicsCore.Buffers;
 
 namespace Mesher.GraphicsCore.Data.OpenGL
 {

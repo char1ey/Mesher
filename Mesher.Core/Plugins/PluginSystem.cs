@@ -7,9 +7,9 @@ namespace Mesher.Core.Plugins
 {
     internal class PluginSystem
     {
-        public static List<IPlugin> GetPlugins(String path)
+        public static List<Plugin> GetPlugins(String path)
         {
-            var plugins = new List<IPlugin>();
+            var plugins = new List<Plugin>();
 
             if (!Directory.Exists(path))
                 return plugins;
@@ -26,7 +26,7 @@ namespace Mesher.Core.Plugins
                 } catch { }
             }
 
-            var pluginType = typeof(IPlugin);
+            var pluginType = typeof(Plugin);
             ICollection<Type> pluginTypes = new List<Type>();
 
             foreach (var assembly in assemblies)
@@ -46,7 +46,7 @@ namespace Mesher.Core.Plugins
 
             foreach (var type in pluginTypes)
             {
-                var plugin = (IPlugin)Activator.CreateInstance(type);
+                var plugin = (Plugin)Activator.CreateInstance(type);
                 plugins.Add(plugin);
             }
 

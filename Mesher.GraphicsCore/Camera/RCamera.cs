@@ -4,7 +4,7 @@ using Mesher.Mathematics;
 
 namespace Mesher.GraphicsCore.Camera
 {
-    public abstract class RCamera
+    public class RCamera
     {
 	    private const Double EPS = 1e-9;
 
@@ -25,14 +25,14 @@ namespace Mesher.GraphicsCore.Camera
         public Vec3 UpVector { get; set; }
         public Vec3 LookAtPoint { get; set; }
 
-        public RCamera()
+        internal RCamera()
         {
             m_positionsStack = new Stack<Vec3>();
             m_upVectorsStack = new Stack<Vec3>();
             m_lookAtPointsStack = new Stack<Vec3>();
         }
 
-        public RCamera(Mat4 projectionMatrix, Vec3 position, Vec3 upVector, Vec3 lookAtPoint) : this()
+        internal RCamera(Mat4 projectionMatrix, Vec3 position, Vec3 upVector, Vec3 lookAtPoint) : this()
         {
             ProjectionMatrix = projectionMatrix;
             Position = position;
@@ -95,7 +95,5 @@ namespace Mesher.GraphicsCore.Camera
         {
             return UnProject(new Vec3(x, y, z), windowWidth, windowHeight);
         }
-
-        public abstract void Zoom(Single zoom);
     }
 }

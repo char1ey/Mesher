@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Mesher.GraphicsCore.Data.OpenGL;
+using Mesher.GraphicsCore.Imports;
 
 namespace Mesher.GraphicsCore.RenderContexts
 {
@@ -52,11 +53,8 @@ namespace Mesher.GraphicsCore.RenderContexts
         {
             Width = width;
             Height = height;
-            BeginRender();
             //TODO move viewport to camera
             Win32.glViewport(0, 0, width, height);
-            
-            EndRender();
         }
 
         public void BeginRender()
@@ -72,19 +70,15 @@ namespace Mesher.GraphicsCore.RenderContexts
 
         public void ClearColorBuffer(Color color)
         {
-            BeginRender();
             Gl.ClearColor(color);
             Gl.Enable(Gl.GL_DEPTH_TEST);
             Gl.Clear(Gl.GL_COLOR_BUFFER_BIT);
-            EndRender();
         }
 
         public void ClearDepthBuffer()
         {
-            BeginRender();
             Gl.Enable(Gl.GL_DEPTH_TEST);
             Gl.Clear(Gl.GL_DEPTH_BUFFER_BIT);
-            EndRender();
         }
 
         public void SwapBuffers()

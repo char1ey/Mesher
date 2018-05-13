@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Mesher.GraphicsCore.Camera;
 using Mesher.GraphicsCore.Data;
 using Mesher.GraphicsCore.Light;
+using Mesher.GraphicsCore.Material;
 using Mesher.GraphicsCore.Primitives;
 using Mesher.GraphicsCore.RenderContexts;
 using Mesher.GraphicsCore.Renderers;
@@ -29,24 +31,34 @@ namespace Mesher.GraphicsCore
             }
         }
 
-        public RTriangles CreateRTriangles()
+        public RTriangles CreateTriangles()
         {
             return new RTriangles(DataContext);
         }
 
-        public REdges CreateREdges()
+        public REdges CreateEdges()
         {
             return new REdges(DataContext);
         }
 
-        public RGlyphs CreateRGlyphs()
+        public RGlyphs CreateGlyphs()
         {
             return new RGlyphs(DataContext);
         }
 
-        public RLight CreateRLight()
+        public RLight CreateLight()
         {
             return new RLight(DataContext);
+        }
+
+        public RMaterial CreateMaterial()
+        {
+            return new RMaterial();
+        }
+
+        public RCamera CreateCamera() 
+        {
+            return new RCamera();
         }
 
         public abstract IRenderContext CreateRenderContext(IntPtr handle);

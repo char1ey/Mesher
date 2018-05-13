@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Mesher.GraphicsCore.Buffers;
 using Mesher.GraphicsCore.Data;
 using Mesher.GraphicsCore.Data.OpenGL;
+using Mesher.GraphicsCore.Imports;
 using Mesher.GraphicsCore.ShaderProgram.Exceptions;
 using Mesher.GraphicsCore.Texture.OpenGL;
 using Mesher.Mathematics;

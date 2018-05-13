@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Mesher.Core.Data;
+using Mesher.Core.Events;
+using Mesher.Core.Events.EventArgs;
 using Mesher.Core.Objects;
 using Mesher.GraphicsCore;
 
@@ -13,6 +15,9 @@ namespace Mesher.Core
 	{
 	    private MesherApplication m_mesherApplication;
         public Scene Scene { get; set; }
+
+	    public event OnBeforeRender BeforeRender;
+	    public event OnAfterRender AfterRender;
 
 	    public Document(MesherApplication application)
 	    {
@@ -30,7 +35,14 @@ namespace Mesher.Core
 	        foreach (var documentView in m_mesherApplication.DocumentViews)
 	        {
 	            documentView.BeginRender();
+
+	            var args = new RenderEventArgs(m_mesherApplication.Graphics, documentView.RenderContext);
+                BeforeRender?.Invoke(this, args);
+
 	            Scene.Render(documentView);
+
+                AfterRender?.Invoke(this, args);
+
 	            documentView.EndRender();
 	        }
 	    }

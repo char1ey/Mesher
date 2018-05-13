@@ -1,14 +1,8 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
-using Mesher.Core.Data;
-using Mesher.GraphicsCore;
-using Mesher.GraphicsCore.Data.OpenGL;
-using Mesher.GraphicsCore.Primitives;
-using Mesher.GraphicsCore.RenderContexts;
 
-namespace Mesher.Core.Test
+namespace Mesher.Core
 {
     public partial class MainWindow : Form
     {

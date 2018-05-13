@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-using Mesher.GraphicsCore.Buffers;
 using Mesher.GraphicsCore.Data;
 using Mesher.GraphicsCore.Data.OpenGL;
+using Mesher.GraphicsCore.Imports;
 
 namespace Mesher.GraphicsCore.Texture.OpenGL
 {
