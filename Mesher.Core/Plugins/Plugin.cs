@@ -7,13 +7,13 @@ namespace Mesher.Core.Plugins
 {
     public abstract class Plugin
     {
-        public Document Document { get; private set; }
+        public MesherApplication MesherApplication { get; private set; }
 		public Boolean Enabled { get; protected set; }
         public String Name { get; protected set; }
 
-        public Plugin(Document document)
+        public Plugin(MesherApplication mesherApplication)
         {
-            Document = document;
+            MesherApplication = mesherApplication;
         }
 
         public abstract void Execute();

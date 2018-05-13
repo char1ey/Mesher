@@ -36,7 +36,7 @@ namespace Mesher.Core
 	        {
 	            documentView.BeginRender();
 
-	            var args = new RenderEventArgs(m_mesherApplication.Graphics, documentView.RenderContext);
+	            var args = new RenderEventArgs(m_mesherApplication.Graphics, documentView);
                 BeforeRender?.Invoke(this, args);
 
 	            Scene.Render(documentView);

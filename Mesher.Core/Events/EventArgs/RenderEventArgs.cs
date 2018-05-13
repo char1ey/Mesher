@@ -11,12 +11,12 @@ namespace Mesher.Core.Events.EventArgs
     public class RenderEventArgs : System.EventArgs
     {
         public MesherGraphics Graphics { get; private set; }
-        public IRenderContext RenderContext { get; private set; }
+        public IDocumentView DocumentView { get; private set; }
 
-        public RenderEventArgs(MesherGraphics graphics, IRenderContext renderContext)
+        public RenderEventArgs(MesherGraphics graphics, IDocumentView documentView)
         {
             Graphics = graphics;
-            RenderContext = renderContext;
+            DocumentView = documentView;
         }
     }
 }

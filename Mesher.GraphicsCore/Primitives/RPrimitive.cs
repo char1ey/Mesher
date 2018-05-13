@@ -8,7 +8,7 @@ using Mesher.Mathematics;
 
 namespace Mesher.GraphicsCore.Primitives
 {
-    public abstract class RPrimitive
+    public abstract class RPrimitive : IDisposable
     {
         protected IDataContext DataContext { get; private set; }
 
@@ -27,5 +27,10 @@ namespace Mesher.GraphicsCore.Primitives
         }
 
         public abstract void Render(RenderersFactory renderersFactory, RenderArgs renderArgs);
+        public virtual void Dispose()
+        {
+            Positions?.Dispose();
+            Indexes?.Dispose();
+        }
     }
 }

@@ -56,8 +56,12 @@
     <Compile Include="CameraControler.cs" />
     <Compile Include="Data\DataLoaderPrototype.cs" />
     <Compile Include="Document.cs" />
+    <Compile Include="Events\EventArgs\ChangeDocumentEventArgs.cs" />
     <Compile Include="Events\EventArgs\RenderEventArgs.cs" />
-    <Compile Include="Events\Events.cs" />
+    <Compile Include="Events\OnAfterDocumentChange.cs" />
+    <Compile Include="Events\OnAfterRender.cs" />
+    <Compile Include="Events\OnBeforeDocumentChange.cs" />
+    <Compile Include="Events\OnBeforeRender.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>

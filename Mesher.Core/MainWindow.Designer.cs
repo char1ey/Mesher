@@ -93,7 +93,7 @@
             // 
             this.toolStripMenuItemPlugins.Name = "toolStripMenuItemPlugins";
             this.toolStripMenuItemPlugins.Size = new System.Drawing.Size(58, 20);
-            this.toolStripMenuItemPlugins.Text = "Plugins";
+            this.toolStripMenuItemPlugins.Text = "PluginsSystem";
             // 
             // MainForm
             // 

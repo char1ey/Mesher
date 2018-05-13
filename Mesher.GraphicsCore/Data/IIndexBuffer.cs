@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Mesher.GraphicsCore.Data
 {
-    public interface IIndexBuffer
+    public interface IIndexBuffer : IDisposable
     {
         Int32 Count { get; }
 

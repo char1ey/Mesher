@@ -2,7 +2,7 @@
 
 namespace Mesher.GraphicsCore.Data
 {
-    public interface IDataBuffer<T> where T : struct
+    public interface IDataBuffer<T> : IDisposable where T : struct
     {
         Int32 Count { get; }
         void Add(T value);

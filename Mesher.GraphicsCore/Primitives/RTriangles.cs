@@ -35,5 +35,14 @@ namespace Mesher.GraphicsCore.Primitives
         {
             renderersFactory.TrianglesRenderer.Render(this, renderArgs);
         }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            TexCoords?.Dispose();
+            Normals?.Dispose();
+            Tangents?.Dispose();
+            BiTangents.Dispose();
+        }
     }
 }

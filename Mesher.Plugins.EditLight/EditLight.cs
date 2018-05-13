@@ -11,7 +11,7 @@ namespace Mesher.Plugins.EditLight
     {
         private MainForm m_form;
 
-        public EditLight(Document document) : base(document)
+        public EditLight(MesherApplication mesherApplication) : base(mesherApplication)
         {
             Name = @"Edit light";
         }

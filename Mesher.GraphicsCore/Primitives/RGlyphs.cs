@@ -24,5 +24,10 @@ namespace Mesher.GraphicsCore.Primitives
         {
             renderersFactory.GlyphsRenderer.Render(this, renderArgs);
         }
+
+        public override void Dispose()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

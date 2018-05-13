@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using Mesher.Core.Plugins;
 
 namespace Mesher.Core
 {
@@ -12,11 +13,26 @@ namespace Mesher.Core
         {
             m_mesherApplication = mesherApplication;
             InitializeComponent();
-            
+
+            foreach (var plugin in mesherApplication.PluginsSystem.Plugins)
+            {
+                var item = toolStripMenuItemPlugins.DropDownItems.Add(plugin.Name);
+                item.Tag = plugin;
+                item.Click += Item_Click;
+            }
+
             DocumentView.CameraControler = new ArcBallCameraControler(DocumentView);
             DocumentView.MouseWheel += DocumentViewMouseWheel;
         }
-        
+
+        private void Item_Click(object sender, EventArgs e)
+        {
+            var menuItem = (ToolStripMenuItem) sender;
+            var plugin = (Plugin) menuItem.Tag;
+
+            plugin.Execute();
+        }
+
         private void Render()
         {
             if (m_mesherApplication.CurrentDocument == null)

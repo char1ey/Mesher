@@ -5,9 +5,15 @@ using System.Reflection;
 
 namespace Mesher.Core.Plugins
 {
-    internal class PluginSystem
+    public class PluginSystem
     {
-        public static List<Plugin> GetPlugins(String path)
+        public List<Plugin> Plugins { get; private set; }
+
+        public PluginSystem(String pluginsFolderPath, MesherApplication mesherApplication)
+        {
+            Plugins = GetPlugins(pluginsFolderPath, mesherApplication);
+        }
+        private static List<Plugin> GetPlugins(String path, MesherApplication mesherApplication)
         {
             var plugins = new List<Plugin>();
 
@@ -39,14 +45,14 @@ namespace Mesher.Core.Plugins
                         if (type.IsInterface || type.IsAbstract)
                             continue;
 
-                        if (type.GetInterface(pluginType.FullName) != null)
+                        if (type.IsSubclassOf(pluginType))
                             pluginTypes.Add(type);
                     }
                 }
 
             foreach (var type in pluginTypes)
             {
-                var plugin = (Plugin)Activator.CreateInstance(type);
+                var plugin = (Plugin)Activator.CreateInstance(type, mesherApplication);
                 plugins.Add(plugin);
             }
 

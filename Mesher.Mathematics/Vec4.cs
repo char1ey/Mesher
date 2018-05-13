@@ -112,5 +112,10 @@ namespace Mesher.Mathematics
             var tmp = new Vec4(x * y);
             return tmp.X + tmp.Y + (tmp.Z + tmp.W);
         }
+
+        public Vec3 ToVec3()
+        {
+            return new Vec3(X, Y, Z);
+        }
     }
 }
