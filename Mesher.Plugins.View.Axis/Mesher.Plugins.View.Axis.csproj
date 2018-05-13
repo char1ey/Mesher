@@ -51,9 +51,9 @@
       <Project>{75b753b3-33d5-474f-aa07-257bf6943111}</Project>
       <Name>Mesher.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Mesher.GraphicsCore\Mesher.GraphicsCore.csproj">
+    <ProjectReference Include="..\Mesher.Graphics\Mesher.Graphics.csproj">
       <Project>{A6C36013-04D8-46E7-A737-38CD4E739885}</Project>
-      <Name>Mesher.GraphicsCore</Name>
+      <Name>Mesher.Graphics</Name>
     </ProjectReference>
     <ProjectReference Include="..\Mesher.Mathematics\Mesher.Mathematics.csproj">
       <Project>{12CF173C-2A66-4664-BA94-3D823CE12A69}</Project>

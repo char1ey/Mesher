@@ -1,7 +1,7 @@
 ﻿using System;
-using Mesher.GraphicsCore;
-using Mesher.GraphicsCore.Material;
-using Mesher.GraphicsCore.Texture;
+using Mesher.Graphics;
+using Mesher.Graphics.Material;
+using Mesher.Graphics.Texture;
 using Mesher.Mathematics;
 
 namespace Mesher.Core.Objects

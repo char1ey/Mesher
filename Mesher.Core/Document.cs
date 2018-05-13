@@ -7,7 +7,6 @@ using Mesher.Core.Data;
 using Mesher.Core.Events;
 using Mesher.Core.Events.EventArgs;
 using Mesher.Core.Objects;
-using Mesher.GraphicsCore;
 
 namespace Mesher.Core
 {

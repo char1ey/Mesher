@@ -7,9 +7,7 @@ using System.Threading.Tasks;
 using Mesher.Core.Events;
 using Mesher.Core.Events.EventArgs;
 using Mesher.Core.Plugins;
-using Mesher.GraphicsCore;
-using Mesher.GraphicsCore.Data.OpenGL;
-using Mesher.GraphicsCore.RenderContexts;
+using Mesher.Graphics;
 
 namespace Mesher.Core
 {

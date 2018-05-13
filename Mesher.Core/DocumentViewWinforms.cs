@@ -4,12 +4,8 @@ using System.Windows.Forms;
 using Mesher.Core.Collections;
 using Mesher.Core.Objects;
 using Mesher.Core.SceneContexts.Components;
-using Mesher.GraphicsCore.Camera;
-using Mesher.GraphicsCore.Collections;
-using Mesher.GraphicsCore.Data.OpenGL;
-using Mesher.GraphicsCore.Primitives;
-using Mesher.GraphicsCore.RenderContexts;
-using Mesher.GraphicsCore.Renderers;
+using Mesher.Graphics.Camera;
+using Mesher.Graphics.RenderContexts;
 using Mesher.Mathematics;
 
 namespace Mesher.Core

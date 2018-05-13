@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Assimp;
 using Mesher.Core.Collections;
-using Mesher.GraphicsCore;
+using Mesher.Graphics;
 
 namespace Mesher.Core.Objects
 {

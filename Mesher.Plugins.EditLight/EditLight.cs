@@ -2,8 +2,6 @@
 using Mesher.Core;
 using Mesher.Core.Plugins;
 using Mesher.Core.Renderers;
-using Mesher.GraphicsCore;
-using Mesher.GraphicsCore.Data.OpenGL;
 
 namespace Mesher.Plugins.EditLight
 {

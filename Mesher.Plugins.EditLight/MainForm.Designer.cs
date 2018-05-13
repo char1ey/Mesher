@@ -1,6 +1,5 @@
 ﻿using Mesher.Core.SceneContexts;
-using Mesher.GraphicsCore;
-using Mesher.GraphicsCore.Data.OpenGL;
+using Mesher.Graphics.Data.OpenGL;
 
 namespace Mesher.Plugins.EditLight
 {

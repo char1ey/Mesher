@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Mesher.GraphicsCore;
-using Mesher.GraphicsCore.Data;
-using Mesher.GraphicsCore.Primitives;
+using Mesher.Graphics;
+using Mesher.Graphics.Primitives;
 using Mesher.Mathematics;
 
 namespace Mesher.Core.Objects

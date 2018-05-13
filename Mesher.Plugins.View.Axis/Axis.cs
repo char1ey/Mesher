@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using Mesher.GraphicsCore;
-using Mesher.GraphicsCore.Collections;
-using Mesher.GraphicsCore.Primitives;
+using Mesher.Graphics;
+using Mesher.Graphics.Collections;
+using Mesher.Graphics.Primitives;
 using Mesher.Mathematics;
 
 namespace Mesher.Plugins.View.Axis

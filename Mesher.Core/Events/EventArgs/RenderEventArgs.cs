@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Mesher.GraphicsCore;
-using Mesher.GraphicsCore.RenderContexts;
+using Mesher.Graphics;
 
 namespace Mesher.Core.Events.EventArgs
 {

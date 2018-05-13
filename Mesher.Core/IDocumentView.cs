@@ -1,11 +1,8 @@
 ﻿using System;
 using Mesher.Core.Objects;
 using Mesher.Core.SceneContexts.Components;
-using Mesher.GraphicsCore;
-using Mesher.GraphicsCore.Camera;
-using Mesher.GraphicsCore.Data.OpenGL;
-using Mesher.GraphicsCore.Primitives;
-using Mesher.GraphicsCore.RenderContexts;
+using Mesher.Graphics.Camera;
+using Mesher.Graphics.RenderContexts;
 
 namespace Mesher.Core
 {

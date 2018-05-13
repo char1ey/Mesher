@@ -4,9 +4,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Mesher.GraphicsCore;
-using Mesher.GraphicsCore.Primitives;
-using Mesher.GraphicsCore.ShaderProgram;
+using Mesher.Graphics;
+using Mesher.Graphics.ShaderProgram;
 using Mesher.Mathematics;
 
 namespace Mesher.Core.Renderers

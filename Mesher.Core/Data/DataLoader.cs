@@ -2,13 +2,11 @@
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using Mesher.GraphicsCore;
-using Mesher.GraphicsCore.Data;
-using Mesher.GraphicsCore.Data.OpenGL;
-using Mesher.GraphicsCore.Light;
-using Mesher.GraphicsCore.Material;
-using Mesher.GraphicsCore.Primitives;
-using Mesher.GraphicsCore.Texture;
+using Mesher.Graphics;
+using Mesher.Graphics.Data;
+using Mesher.Graphics.Material;
+using Mesher.Graphics.Primitives;
+using Mesher.Graphics.Texture;
 using Mesher.Mathematics;
 
 namespace Mesher.Core.Data

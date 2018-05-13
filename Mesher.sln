@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2002
+VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mesher.GraphicsCore", "Mesher.GraphicsCore\Mesher.GraphicsCore.csproj", "{A6C36013-04D8-46E7-A737-38CD4E739885}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mesher.Graphics", "Mesher.Graphics\Mesher.Graphics.csproj", "{A6C36013-04D8-46E7-A737-38CD4E739885}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mesher.Mathematics", "Mesher.Mathematics\Mesher.Mathematics.csproj", "{12CF173C-2A66-4664-BA94-3D823CE12A69}"
 EndProject

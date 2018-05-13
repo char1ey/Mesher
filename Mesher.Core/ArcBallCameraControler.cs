@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Mesher.GraphicsCore.Camera;
+using Mesher.Graphics.Camera;
 using Mesher.Mathematics;
 
 namespace Mesher.Core
