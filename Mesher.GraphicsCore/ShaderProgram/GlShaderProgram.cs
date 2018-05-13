@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using Mesher.GraphicsCore.Data;
@@ -332,6 +333,16 @@ namespace Mesher.GraphicsCore.ShaderProgram
         public void SetValue(String name, Color4 v)
         {
             Gl.Uniform4(Gl.GetUniformLocation(m_id, name), v.R, v.G, v.B, v.A);
+        }
+
+        public void SetValue(String name, Color v)
+        {
+            SetValue(Gl.GetUniformLocation(m_id, name), v);
+        }
+
+        public void SetValue(Int32 id, Color v)
+        {
+            Gl.Uniform4(id, v.R / 255f, v.G / 255f, v.B / 255f, v.A / 255f);
         }
 
         public void SetValue(Int32 id, Color4 v)

@@ -31,6 +31,8 @@ namespace Mesher.GraphicsCore.Renderers.OpenGL
 		private Int32 m_cameraProjectionMatrixId;
 		private Int32 m_cameraViewMatrixId;
 
+        private Int32 m_colorId;
+
 		private Int32 m_positionsId;
 
 		internal DefaultGlREdgesRenderer()
@@ -73,6 +75,7 @@ namespace Mesher.GraphicsCore.Renderers.OpenGL
 			m_cameraProjectionMatrixId = m_shaderProgram.GetUniformLocation("proj");
 			m_cameraViewMatrixId = m_shaderProgram.GetUniformLocation("modelView");
 			m_positionsId = m_shaderProgram.GetAttributeLocation("position");
+		    m_colorId = m_shaderProgram.GetUniformLocation("color");
 		}
 
 		public override void Render(REdges rEdges, RenderArgs renderArgs)
@@ -100,6 +103,8 @@ namespace Mesher.GraphicsCore.Renderers.OpenGL
 
 			m_shaderProgram.SetValue(m_cameraProjectionMatrixId, renderArgs.RCamera.ProjectionMatrix);
 			m_shaderProgram.SetValue(m_cameraViewMatrixId, renderArgs.RCamera.ViewMatrix);
+
+            m_shaderProgram.SetValue(m_colorId, rEdges.Color);
 
 			m_shaderProgram.SetBuffer(m_positionsId, (GlDataBuffer<Vec3>)rEdges.Positions);
 			
