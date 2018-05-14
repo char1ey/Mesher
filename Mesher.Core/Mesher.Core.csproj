@@ -57,11 +57,15 @@
     <Compile Include="Data\DataLoaderPrototype.cs" />
     <Compile Include="Document.cs" />
     <Compile Include="Events\EventArgs\ChangeDocumentEventArgs.cs" />
+    <Compile Include="Events\EventArgs\DocumentViewRemoveEventArgs.cs" />
+    <Compile Include="Events\EventArgs\DocumentViewAddEventArgs.cs" />
     <Compile Include="Events\EventArgs\RenderEventArgs.cs" />
     <Compile Include="Events\OnAfterDocumentChange.cs" />
-    <Compile Include="Events\OnAfterRender.cs" />
-    <Compile Include="Events\OnBeforeDocumentChange.cs" />
+    <Compile Include="Events\OnDocumentViewRemove.cs" />
+    <Compile Include="Events\OnDocumentViewAdd.cs" />
     <Compile Include="Events\OnBeforeRender.cs" />
+    <Compile Include="Events\OnBeforeDocumentChange.cs" />
+    <Compile Include="Events\OnAfterRender.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
