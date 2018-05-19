@@ -86,7 +86,7 @@
             this.DocumentView.Size = new System.Drawing.Size(596, 314);
             this.DocumentView.TabIndex = 0;
             this.DocumentView.Paint += new System.Windows.Forms.PaintEventHandler(this.sceneContext1_Paint);
-            this.DocumentView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.sceneContext1_MouseMove);
+            this.DocumentView.MouseMove += this.sceneContext1_MouseMove;
             this.DocumentView.Resize += new System.EventHandler(this.sceneContext1_Resize);
             // 
             // toolStripMenuItemPlugins

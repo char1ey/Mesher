@@ -1,4 +1,5 @@
 ﻿using System;
+using Mesher.Core.Events;
 using Mesher.Core.Objects;
 using Mesher.Core.SceneContexts.Components;
 using Mesher.Graphics.Camera;
@@ -22,5 +23,7 @@ namespace Mesher.Core
         void BeginRender();
         void EndRender();
         void Render();
+
+        event OnMouseMove MouseMove;
     }
 }

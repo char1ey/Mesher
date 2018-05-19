@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using Mesher.Core.Events.EventArgs;
 using Mesher.Core.Plugins;
 
 namespace Mesher.Core
@@ -46,7 +47,7 @@ namespace Mesher.Core
             Render();
         }
 
-        private void sceneContext1_MouseMove(Object sender, MouseEventArgs e)
+        private void sceneContext1_MouseMove(Object sender, MouseMoveEventArgs e)
         {
             Render();
         }

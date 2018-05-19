@@ -2,6 +2,8 @@
 using System.Drawing;
 using System.Windows.Forms;
 using Mesher.Core.Collections;
+using Mesher.Core.Events;
+using Mesher.Core.Events.EventArgs;
 using Mesher.Core.Objects;
 using Mesher.Core.SceneContexts.Components;
 using Mesher.Graphics.Camera;
@@ -17,6 +19,8 @@ namespace Mesher.Core
         private MouseButtons m_previousMouseButton;
 
         private MesherApplication m_mesherApplication;
+
+        public new event OnMouseMove MouseMove;
 
         public RCamera Camera
         {
@@ -67,6 +71,8 @@ namespace Mesher.Core
             EndRender();
         }
 
+
+
         protected override void OnResize(EventArgs e)
         {
             m_renderContext.SetSize(Width, Height);
@@ -114,6 +120,8 @@ namespace Mesher.Core
             }
             m_previousMouseButton = e.Button;
 
+            var args = new MouseMoveEventArgs(new Vec2(e.X, e.Y));
+            MouseMove?.Invoke(this, args);
             base.OnMouseMove(e);
         }
     }
