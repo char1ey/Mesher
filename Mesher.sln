@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mesher.Mathematics", "Meshe
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{AC672649-A825-44F1-AE64-F0C62685BFEA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mesher.Plugins.EditLight", "Mesher.Plugins.EditLight\Mesher.Plugins.EditLight.csproj", "{BBB61ABB-95D4-4E6D-ADE4-0F696BD7D568}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mesher.Core", "Mesher.Core\Mesher.Core.csproj", "{75B753B3-33D5-474F-AA07-257BF6943111}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mesher.Plugins.View.Axis", "Mesher.Plugins.View.Axis\Mesher.Plugins.View.Axis.csproj", "{DBF1F5BD-80D9-4282-ADEB-99ED6F631D4A}"
@@ -49,18 +47,6 @@ Global
 		{12CF173C-2A66-4664-BA94-3D823CE12A69}.Release|x64.Build.0 = Release|Any CPU
 		{12CF173C-2A66-4664-BA94-3D823CE12A69}.Release|x86.ActiveCfg = Release|Any CPU
 		{12CF173C-2A66-4664-BA94-3D823CE12A69}.Release|x86.Build.0 = Release|Any CPU
-		{BBB61ABB-95D4-4E6D-ADE4-0F696BD7D568}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BBB61ABB-95D4-4E6D-ADE4-0F696BD7D568}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BBB61ABB-95D4-4E6D-ADE4-0F696BD7D568}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{BBB61ABB-95D4-4E6D-ADE4-0F696BD7D568}.Debug|x64.Build.0 = Debug|Any CPU
-		{BBB61ABB-95D4-4E6D-ADE4-0F696BD7D568}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{BBB61ABB-95D4-4E6D-ADE4-0F696BD7D568}.Debug|x86.Build.0 = Debug|Any CPU
-		{BBB61ABB-95D4-4E6D-ADE4-0F696BD7D568}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BBB61ABB-95D4-4E6D-ADE4-0F696BD7D568}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BBB61ABB-95D4-4E6D-ADE4-0F696BD7D568}.Release|x64.ActiveCfg = Release|Any CPU
-		{BBB61ABB-95D4-4E6D-ADE4-0F696BD7D568}.Release|x64.Build.0 = Release|Any CPU
-		{BBB61ABB-95D4-4E6D-ADE4-0F696BD7D568}.Release|x86.ActiveCfg = Release|Any CPU
-		{BBB61ABB-95D4-4E6D-ADE4-0F696BD7D568}.Release|x86.Build.0 = Release|Any CPU
 		{75B753B3-33D5-474F-AA07-257BF6943111}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{75B753B3-33D5-474F-AA07-257BF6943111}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75B753B3-33D5-474F-AA07-257BF6943111}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -90,7 +76,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{BBB61ABB-95D4-4E6D-ADE4-0F696BD7D568} = {AC672649-A825-44F1-AE64-F0C62685BFEA}
 		{DBF1F5BD-80D9-4282-ADEB-99ED6F631D4A} = {AC672649-A825-44F1-AE64-F0C62685BFEA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
