@@ -20,8 +20,6 @@ namespace Mesher.Core
 
         private MesherApplication m_mesherApplication;
 
-        public new event OnMouseMove MouseMove;
-
         public RCamera Camera
         {
             get
@@ -40,6 +38,8 @@ namespace Mesher.Core
         {
             get { return m_renderContext; }
         }
+
+        public event OnAfterDocumentViewRender AfterDocumentViewRender;
 
         public DocumentViewWinforms(MesherApplication application)
         {
@@ -62,16 +62,17 @@ namespace Mesher.Core
             m_renderContext.SwapBuffers();
         }
 
-        public void Render()
+        public void Render(Scene scene)
         {
-            BeginRender();
-
-            Document.Render();
+            scene.Render(this);
  
-            EndRender();
+            var args = new DocumentViewRenderEventArgs(m_mesherApplication.Graphics);
+            AfterDocumentViewRender?.Invoke(this, args);
+
+            foreach(var postRenderItem in args.PostRenderItems)
+                foreach(var primitive in postRenderItem.Primitives)
+                    primitive.Render(m_mesherApplication.Graphics.RenderersFactory, postRenderItem.RenderArgs);
         }
-
-
 
         protected override void OnResize(EventArgs e)
         {
@@ -120,8 +121,6 @@ namespace Mesher.Core
             }
             m_previousMouseButton = e.Button;
 
-            var args = new MouseMoveEventArgs(new Vec2(e.X, e.Y));
-            MouseMove?.Invoke(this, args);
             base.OnMouseMove(e);
         }
     }

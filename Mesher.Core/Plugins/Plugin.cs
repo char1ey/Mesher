@@ -3,7 +3,7 @@ using Mesher.Core.Renderers;
 
 namespace Mesher.Core.Plugins
 {
-    public abstract class Plugin
+    public abstract class Plugin : IDisposable
     {
         public MesherApplication MesherApplication { get; private set; }
 		public Boolean Enabled { get; protected set; }
@@ -15,5 +15,6 @@ namespace Mesher.Core.Plugins
         }
 
         public abstract void Execute();
+        public abstract void Dispose();
     }
 }

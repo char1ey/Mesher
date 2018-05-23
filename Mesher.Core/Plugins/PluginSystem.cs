@@ -7,18 +7,16 @@ namespace Mesher.Core.Plugins
 {
     public class PluginSystem
     {
-        public List<Plugin> Plugins { get; private set; }
+        public List<Type> Plugins { get; private set; }
 
-        public PluginSystem(String pluginsFolderPath, MesherApplication mesherApplication)
+        public PluginSystem(String pluginsFolderPath)
         {
-            Plugins = GetPlugins(pluginsFolderPath, mesherApplication);
+            Plugins = GetPlugins(pluginsFolderPath);
         }
-        private static List<Plugin> GetPlugins(String path, MesherApplication mesherApplication)
+        private static List<Type> GetPlugins(String path)
         {
-            var plugins = new List<Plugin>();
-
             if (!Directory.Exists(path))
-                return plugins;
+                return new List<Type>();
 
             var dllFileNames = Directory.GetFiles(path, "*.dll");
             var assemblies = new List<Assembly>();
@@ -33,7 +31,7 @@ namespace Mesher.Core.Plugins
             }
 
             var pluginType = typeof(Plugin);
-            ICollection<Type> pluginTypes = new List<Type>();
+            List<Type> pluginTypes = new List<Type>();
 
             foreach (var assembly in assemblies)
                 if (assembly != null)
@@ -50,13 +48,7 @@ namespace Mesher.Core.Plugins
                     }
                 }
 
-            foreach (var type in pluginTypes)
-            {
-                var plugin = (Plugin)Activator.CreateInstance(type, mesherApplication);
-                plugins.Add(plugin);
-            }
-
-            return plugins;
+            return pluginTypes;
         }
     }
 }

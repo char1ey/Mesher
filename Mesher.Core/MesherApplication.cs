@@ -36,10 +36,12 @@ namespace Mesher.Core
 
         public event OnBeforeDocumentChange BeforeDocumentChange;
         public event OnAfterDocumentChange AfterDocumentChange;
+        public event OnDocumentViewAdd DocumentViewAdd;
+        public event OnDocumentViewRemove DocumentViewRemove;
 
         public MesherApplication()
         {
-            PluginsSystem = new PluginSystem(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + Path.DirectorySeparatorChar, this);
+            PluginsSystem = new PluginSystem(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + Path.DirectorySeparatorChar);
 
             Graphics = new GlWindowsGraphics();
             MainWindow = new MainWindow(this);

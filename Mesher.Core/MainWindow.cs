@@ -17,8 +17,9 @@ namespace Mesher.Core
 
             foreach (var plugin in mesherApplication.PluginsSystem.Plugins)
             {
-                var item = toolStripMenuItemPlugins.DropDownItems.Add(plugin.Name);
-                item.Tag = plugin;
+                var p = (ViewDependetPlugin)Activator.CreateInstance(plugin, m_mesherApplication, DocumentView);
+                var item = toolStripMenuItemPlugins.DropDownItems.Add(p.Name);
+                item.Tag = p;
                 item.Click += Item_Click;
             }
 
@@ -47,7 +48,7 @@ namespace Mesher.Core
             Render();
         }
 
-        private void sceneContext1_MouseMove(Object sender, MouseMoveEventArgs e)
+        private void sceneContext1_MouseMove(Object sender, MouseEventArgs e)
         {
             Render();
         }

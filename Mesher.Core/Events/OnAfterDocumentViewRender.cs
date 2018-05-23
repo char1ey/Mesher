@@ -7,5 +7,5 @@ using Mesher.Core.Events.EventArgs;
 
 namespace Mesher.Core.Events
 {
-    public delegate void OnMouseMove(object sender, MouseMoveEventArgs args);
+    public delegate void OnAfterDocumentViewRender(object sender, DocumentViewRenderEventArgs args);
 }

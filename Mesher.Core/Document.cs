@@ -38,7 +38,7 @@ namespace Mesher.Core
 	            var args = new RenderEventArgs(m_mesherApplication.Graphics, documentView);
                 BeforeRender?.Invoke(this, args);
 
-	            Scene.Render(documentView);
+	            documentView.Render(Scene);
 
                 AfterRender?.Invoke(this, args);
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 using Mesher.Core.Events;
 using Mesher.Core.Objects;
 using Mesher.Core.SceneContexts.Components;
@@ -22,8 +23,14 @@ namespace Mesher.Core
 
         void BeginRender();
         void EndRender();
-        void Render();
+        void Render(Scene scene);
 
-        event OnMouseMove MouseMove;
+        event MouseEventHandler MouseMove;
+        event MouseEventHandler MouseWheel;
+        event MouseEventHandler MouseClick;
+        event KeyEventHandler KeyDown;
+        event KeyEventHandler KeyUp;
+        event EventHandler Resize;
+        event OnAfterDocumentViewRender AfterDocumentViewRender;
     }
 }
