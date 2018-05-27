@@ -67,9 +67,17 @@ namespace Mesher.Plugins.View.Axis
             camera.Position = new Vec3(0, 0, 1);
             camera.UpVector = new Vec3(0, 1, 0);
 
-            var eAxisX = CreateAxis(args.Graphics, m_axisXColor, DocumentView.RenderContext.RCamera.ViewMatrix.Col0.ToVec3());
-            var eAxisY = CreateAxis(args.Graphics, m_axisYColor, DocumentView.RenderContext.RCamera.ViewMatrix.Col1.ToVec3());
-            var eAxisZ = CreateAxis(args.Graphics, m_axisZColor, DocumentView.RenderContext.RCamera.ViewMatrix.Col2.ToVec3());
+            var axisX = DocumentView.RenderContext.RCamera.ViewMatrix.Col0.ToVec3();
+            var axisY = DocumentView.RenderContext.RCamera.ViewMatrix.Col1.ToVec3();
+            var axisZ = DocumentView.RenderContext.RCamera.ViewMatrix.Col2.ToVec3();
+
+            var eAxisX = CreateAxis(args.Graphics, m_axisXColor, axisX);
+            var eAxisY = CreateAxis(args.Graphics, m_axisYColor, axisY);
+            var eAxisZ = CreateAxis(args.Graphics, m_axisZColor, axisZ);
+
+            var ePlaneXY = CreatePlane(args.Graphics, m_planeXYColor, axisX, axisY);
+            var ePlaneYZ = CreatePlane(args.Graphics, m_planeYZColor, axisY, axisZ);
+            var ePlaneZX = CreatePlane(args.Graphics, m_planeZXColor, axisZ, axisX);
 
             var postRenderItem = new PostRenderItem
             {
@@ -83,6 +91,9 @@ namespace Mesher.Plugins.View.Axis
             postRenderItem.Primitives.Add(eAxisX);
             postRenderItem.Primitives.Add(eAxisY);
             postRenderItem.Primitives.Add(eAxisZ);
+            postRenderItem.Primitives.Add(ePlaneXY);
+            postRenderItem.Primitives.Add(ePlaneYZ);
+            postRenderItem.Primitives.Add(ePlaneZX);
 
             args.PostRenderItems.Add(postRenderItem);
         }
@@ -143,7 +154,21 @@ namespace Mesher.Plugins.View.Axis
 
             triangles.HasMaterial = true;
             triangles.Material = new RMaterial();
-            triangles.Material.ColorAmbient = new Color4();
+            triangles.Material.HasColorAmbient = true;
+            triangles.Material.ColorAmbient = new Color4(color);
+
+            var p0 = m_axisesCenter;
+            var p1 = p0 + axis0 * PLANE_SIZE;
+            var p2 = p0 + axis1 * PLANE_SIZE;
+            var p3 = p0 + axis0 * PLANE_SIZE + axis1 * PLANE_SIZE;
+
+            triangles.Positions.Add(p0);
+            triangles.Positions.Add(p1);
+            triangles.Positions.Add(p2);
+            triangles.Positions.Add(p3);
+
+            triangles.IndexedRendering = true;
+            triangles.Indexes.AddRange(new List<Int32>{0, 1, 2, 1, 2, 3});
 
             return triangles;
         }

@@ -7,7 +7,7 @@ using Mesher.Mathematics;
 
 namespace Mesher.Graphics.Light
 {
-    public class RLight
+    public class RLight : IDisposable
     {
 		//TODO shadowmap
 
@@ -39,5 +39,10 @@ namespace Mesher.Graphics.Light
 	    {
 		    renderersFactory.LightRenderer.RenderShadowMap(this, primitives);
 	    }
+
+        public void Dispose()
+        {
+            ShadowMap?.Dispose();
+        }
     }
 }

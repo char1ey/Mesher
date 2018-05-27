@@ -74,6 +74,9 @@ float getAtenuation(float d, Light light)
 
 vec4 getAmbientMaterial()
 {
+	if(!material.hasColorAmbient && !material.hasTextureAmbient)
+		return vec4(0);
+
 	vec4 ret = vec4(1);
 
 	if(material.hasColorAmbient)
@@ -86,6 +89,9 @@ vec4 getAmbientMaterial()
 
 vec4 getDiffuseMaterial()
 {
+	if(!material.hasColorDiffuse && !material.hasTextureDiffuse)
+		return vec4(0);
+
 	vec4 ret = vec4(1);
 
 	if(material.hasColorDiffuse)
@@ -98,6 +104,9 @@ vec4 getDiffuseMaterial()
 
 vec4 getSpecularMaterial()
 {
+	if(!material.hasColorSpecular && !material.hasTextureSpecular)
+		return vec4(0);
+
 	vec4 ret = vec4(1);
 
 	if(material.hasColorSpecular)

@@ -72,6 +72,15 @@ namespace Mesher.Core
             foreach(var postRenderItem in args.PostRenderItems)
                 foreach(var primitive in postRenderItem.Primitives)
                     primitive.Render(m_mesherApplication.Graphics.RenderersFactory, postRenderItem.RenderArgs);
+
+            foreach (var postRenderItem in args.PostRenderItems)
+            {
+                postRenderItem.RenderArgs.RCamera.Dispose();
+                postRenderItem.RenderArgs.RLights.Dispose();
+
+                foreach(var primitive in postRenderItem.Primitives)
+                    primitive.Dispose();
+            }
         }
 
         protected override void OnResize(EventArgs e)

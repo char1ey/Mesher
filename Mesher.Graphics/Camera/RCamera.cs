@@ -4,7 +4,7 @@ using Mesher.Mathematics;
 
 namespace Mesher.Graphics.Camera
 {
-    public class RCamera
+    public class RCamera : IDisposable
     {
 	    private const Double EPS = 1e-9;
 
@@ -94,6 +94,10 @@ namespace Mesher.Graphics.Camera
         public Vec3 UnProject(Single x, Single y, Single z, Single windowWidth, Single windowHeight)
         {
             return UnProject(new Vec3(x, y, z), windowWidth, windowHeight);
+        }
+
+        public void Dispose()
+        {
         }
     }
 }
