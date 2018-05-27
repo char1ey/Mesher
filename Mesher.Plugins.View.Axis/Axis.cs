@@ -43,11 +43,6 @@ namespace Mesher.Plugins.View.Axis
 
             m_axisesCenter = new Vec3(80, 80, 0);
 
-            DocumentView.MouseMove += DocumentView_MouseMove;
-            DocumentView.MouseClick += DocumentView_MouseClick;
-            DocumentView.AfterDocumentViewRender += DocumentView_AfterDocumentViewRender;
-
-            m_axisesCenter = new Vec3(80, 80, 0);
             m_axisXColor = XColor;
             m_axisYColor = YColor;
             m_axisZColor = ZColor;
@@ -188,11 +183,14 @@ namespace Mesher.Plugins.View.Axis
         public override void Execute()
         {
             Enabled = true;
+
+            DocumentView.MouseMove += DocumentView_MouseMove;
+            DocumentView.MouseClick += DocumentView_MouseClick;
+            DocumentView.AfterDocumentViewRender += DocumentView_AfterDocumentViewRender;
         }
 
         public override void Dispose()
         {
-            throw new NotImplementedException();
         }
 
         private bool CheckPlaneXYIntersect(Point p)
