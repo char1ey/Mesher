@@ -52,7 +52,6 @@
   <ItemGroup>
     <Compile Include="ArcBallCameraControler.cs" />
     <Compile Include="Collections\Lights.cs" />
-    <Compile Include="Collections\SceneFormComponents.cs" />
     <Compile Include="CameraControler.cs" />
     <Compile Include="Data\DataLoaderPrototype.cs" />
     <Compile Include="Document.cs" />
@@ -85,7 +84,6 @@
     <Compile Include="Objects\Scene.cs" />
     <Compile Include="Plugins\ViewDependetPlugin.cs" />
     <Compile Include="PostRenderItem.cs" />
-    <Compile Include="Renderers\SceneContextGraphics.cs" />
     <Compile Include="DocumentViewWinforms.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -102,8 +100,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="SceneContexts\Components\Axises.cs" />
-    <Compile Include="SceneContexts\Components\SceneContextComponent.cs" />
     <EmbeddedResource Include="DocumentViewWinforms.resx">
       <DependentUpon>DocumentViewWinforms.cs</DependentUpon>
     </EmbeddedResource>

@@ -17,9 +17,13 @@ namespace Mesher.Core
 
             foreach (var plugin in mesherApplication.PluginsSystem.Plugins)
             {
-                var p = (ViewDependetPlugin)Activator.CreateInstance(plugin, m_mesherApplication, DocumentView);
-                var item = toolStripMenuItemPlugins.DropDownItems.Add(p.Name);
-                item.Tag = p;
+                Plugin pluginInstance;
+                if (plugin.IsSubclassOf(typeof(ViewDependetPlugin)))
+                    pluginInstance = (ViewDependetPlugin) Activator.CreateInstance(plugin, m_mesherApplication, DocumentView);
+                else pluginInstance = (Plugin) Activator.CreateInstance(plugin, m_mesherApplication);
+
+                var item = toolStripMenuItemPlugins.DropDownItems.Add(pluginInstance.Name);
+                item.Tag = pluginInstance;
                 item.Click += Item_Click;
             }
 

@@ -5,7 +5,6 @@ using Mesher.Core.Collections;
 using Mesher.Core.Events;
 using Mesher.Core.Events.EventArgs;
 using Mesher.Core.Objects;
-using Mesher.Core.SceneContexts.Components;
 using Mesher.Graphics.Camera;
 using Mesher.Graphics.RenderContexts;
 using Mesher.Mathematics;

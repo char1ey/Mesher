@@ -2,7 +2,6 @@
 using System.Windows.Forms;
 using Mesher.Core.Events;
 using Mesher.Core.Objects;
-using Mesher.Core.SceneContexts.Components;
 using Mesher.Graphics.Camera;
 using Mesher.Graphics.RenderContexts;
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using Mesher.Core.Renderers;
 
 namespace Mesher.Core.Plugins
 {
