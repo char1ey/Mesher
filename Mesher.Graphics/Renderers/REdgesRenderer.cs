@@ -1,8 +1,10 @@
-﻿using Mesher.Graphics.Primitives;
+﻿using System;
+using Mesher.Graphics.Primitives;
 
 namespace Mesher.Graphics.Renderers
 {
-    public abstract class REdgesRenderer : RPrimitiveRenderer<REdges>
+    public abstract class REdgesRenderer : RPrimitiveRenderer<REdges>, IDisposable
     {
+        public abstract void Dispose();
     }
 }

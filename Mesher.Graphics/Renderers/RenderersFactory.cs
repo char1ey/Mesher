@@ -1,6 +1,8 @@
-﻿namespace Mesher.Graphics.Renderers
+﻿using System;
+
+namespace Mesher.Graphics.Renderers
 {
-    public abstract class RenderersFactory
+    public abstract class RenderersFactory : IDisposable
     {
         private RTrianglesRenderer m_trianglesRenderer;
         private REdgesRenderer m_edgesRenderer;
@@ -50,5 +52,9 @@
         protected abstract REdgesRenderer CreateEdgesRenderer();
         protected abstract RGlyphRenderer CreateGlyphsRenderer();
         protected abstract RLightRenderer CreateLightRenderer();
+
+        public void Dispose()
+        {
+        }
     }
 }

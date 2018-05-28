@@ -9,5 +9,10 @@ namespace Mesher.Graphics.Renderers.OpenGL
         {
             throw new NotImplementedException();
         }
+
+        public override void Dispose()
+        {
+          
+        }
     }
 }

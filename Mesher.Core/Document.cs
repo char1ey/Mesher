@@ -53,7 +53,7 @@ namespace Mesher.Core
 
 	    public static Document Load(String fileName, MesherApplication application)
 	    {
-	        return DataLoaderPrototype.LoadDocument(fileName, application);
+	        return DataLoader.LoadDocument(fileName, application);
 	    }
 	}
 }

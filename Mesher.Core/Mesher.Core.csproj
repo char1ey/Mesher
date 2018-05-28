@@ -53,7 +53,7 @@
     <Compile Include="ArcBallCameraControler.cs" />
     <Compile Include="Collections\Lights.cs" />
     <Compile Include="CameraControler.cs" />
-    <Compile Include="Data\DataLoaderPrototype.cs" />
+    <Compile Include="Data\DataLoader.cs" />
     <Compile Include="Document.cs" />
     <Compile Include="Events\EventArgs\ChangeDocumentEventArgs.cs" />
     <Compile Include="Events\EventArgs\DocumentViewRenderEventArgs.cs" />
@@ -90,7 +90,6 @@
     <Compile Include="DocumentViewWinforms.Designer.cs">
       <DependentUpon>DocumentViewWinforms.cs</DependentUpon>
     </Compile>
-    <Compile Include="Data\DataLoader.cs" />
     <Compile Include="Plugins\Plugin.cs" />
     <Compile Include="Plugins\PluginSystem.cs" />
     <Compile Include="Program.cs" />

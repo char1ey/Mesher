@@ -198,5 +198,10 @@ namespace Mesher.Graphics.Renderers.OpenGL
 
             m_shaderProgram.Unbind();
         }
+
+        public override void Dispose()
+        {
+            m_shaderProgram.Dispose();
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Mesher.Graphics.Camera;
 using Mesher.Graphics.Data;
 using Mesher.Graphics.Light;
@@ -9,14 +10,21 @@ using Mesher.Graphics.Renderers;
 
 namespace Mesher.Graphics
 {
-    public abstract class MesherGraphics
+    public abstract class MesherGraphics : IDisposable
     {
         //TODO encapsulate dataContext
 
         private RenderersFactory m_renderersFactory;
 
+        private List<IDisposable> m_disposables;
+
         public abstract IDataContext DataContext { get; }
 
+        public MesherGraphics()
+        {
+            m_disposables = new List<IDisposable>();
+        }
+        
         public RenderersFactory RenderersFactory
         {
             get
@@ -29,36 +37,67 @@ namespace Mesher.Graphics
 
         public RTriangles CreateTriangles()
         {
-            return new RTriangles(DataContext);
+            var rTriangles = new RTriangles(DataContext);
+
+            m_disposables.Add(rTriangles);
+
+            return rTriangles;
         }
 
         public REdges CreateEdges()
         {
-            return new REdges(DataContext);
+            var rEdges = new REdges(DataContext);
+
+            m_disposables.Add(rEdges);
+
+            return rEdges;
         }
 
         public RGlyphs CreateGlyphs()
         {
-            return new RGlyphs(DataContext);
+            var rGlyphs = new RGlyphs(DataContext);
+
+            m_disposables.Add(rGlyphs);
+
+            return rGlyphs;
         }
 
         public RLight CreateLight()
         {
-            return new RLight(DataContext);
+            var rLight = new RLight(DataContext);
+
+            m_disposables.Add(rLight);
+
+            return rLight;
         }
 
         public RMaterial CreateMaterial()
         {
-            return new RMaterial();
+            var rMaterial = new RMaterial();
+
+            m_disposables.Add(rMaterial);
+
+            return rMaterial;
         }
 
         public RCamera CreateCamera() 
         {
-            return new RCamera();
+            var rCamera = new RCamera();
+
+            m_disposables.Add(rCamera);
+
+            return rCamera;
         }
 
         public abstract IRenderContext CreateRenderContext(IntPtr handle);
 
         protected abstract RenderersFactory CreateRSceneRenderer();
+
+        public void Dispose()
+        {
+            foreach(var disposable in m_disposables)
+                disposable.Dispose();
+            RenderersFactory.Dispose();
+        }
     }
 }

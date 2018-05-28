@@ -11,7 +11,7 @@ using Mesher.Graphics;
 
 namespace Mesher.Core
 {
-    public class MesherApplication
+    public class MesherApplication : IDisposable
     {
         private Document m_currentDocument;
         public MesherGraphics Graphics { get; set; }
@@ -51,6 +51,11 @@ namespace Mesher.Core
         public Document LoadDocument(String fileName)
         {
             return Document.Load(fileName, this);
+        }
+
+        public void Dispose()
+        {
+            
         }
     }
 }

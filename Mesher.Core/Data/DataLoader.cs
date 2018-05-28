@@ -2,18 +2,23 @@
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using Mesher.Core.Objects;
 using Mesher.Graphics;
 using Mesher.Graphics.Data;
-using Mesher.Graphics.Material;
-using Mesher.Graphics.Primitives;
 using Mesher.Graphics.Texture;
 using Mesher.Mathematics;
 
 namespace Mesher.Core.Data
 {
 	public static class DataLoader
-	{
-		public static RTriangles LoadScene(String filePath, MesherGraphics graphics)
+    {
+        public static Document LoadDocument(String filePath, MesherApplication application)
+        {
+            var document = new Document(application) {Scene = LoadScene(filePath, application.Graphics) };
+            return document;
+        }
+
+		public static Scene LoadScene(String filePath, MesherGraphics graphics)
 		{
 			var path = filePath.Substring(0, filePath.LastIndexOf("\\") + 1);
 
@@ -21,19 +26,17 @@ namespace Mesher.Core.Data
 
 			var aiScene = importer.ImportFile(filePath, Assimp.PostProcessPreset.TargetRealTimeMaximumQuality);
 
-            /*
+            var scene = new Scene(graphics);
+            
 			if (aiScene.HasLights)
 				for (var i = 0; i < aiScene.LightCount; i++)
-					rScene.RLights.Add(InitLight(aiScene.RLights[i], rScene));
-            */
-
-		    RTriangles mesh = null;
-
+					scene.Lights.Add(InitLight(aiScene.Lights[i], scene));
+            
 			if (aiScene.HasMeshes)
 				for (var i = 0; i < aiScene.MeshCount; i++)
 				{
 					var aiMesh = aiScene.Meshes[i];
-					mesh = graphics.CreateTriangles();
+				    var mesh = scene.AddMesh();
 
 					if (aiMesh.HasVertices)
 					{
@@ -65,7 +68,7 @@ namespace Mesher.Core.Data
 					mesh.HasTextureVertexes = aiMesh.HasTextureCoords(0);
 					mesh.HasTangentBasis = aiMesh.HasTangentBasis;
 
-					var inds = aiMesh.GetIndices().Select(t => (Int32)t).ToList();
+					var inds = aiMesh.GetIndices().Select(t => (Int32)t).ToArray();
 
 					mesh.IndexedRendering = true;
 					mesh.Indexes.AddRange(inds);
@@ -73,15 +76,15 @@ namespace Mesher.Core.Data
 					mesh.HasMaterial = aiMesh.MaterialIndex != -1;
 
 					if (mesh.HasMaterial)
-						mesh.Material = GetMaterial(aiScene.Materials[aiMesh.MaterialIndex], path, graphics.DataContext);
+						mesh.Material = GetMaterial(aiScene.Materials[aiMesh.MaterialIndex], path, graphics);
 				}
 
-			return mesh;
+			return scene;
 		}
 
-		private static RMaterial GetMaterial(Assimp.Material aiMaterial, String filePath, IDataContext dataContext)
+		private static Material GetMaterial(Assimp.Material aiMaterial, String filePath, MesherGraphics graphics)
 		{
-			var material = new RMaterial();
+			var material = new Material(graphics);
 
 			if (aiMaterial.HasColorAmbient)
 				material.ColorAmbient = GetColor(aiMaterial.ColorAmbient);
@@ -99,7 +102,7 @@ namespace Mesher.Core.Data
 
 			if (aiMaterial.GetTextureCount(Assimp.TextureType.Ambient) > 0)
 			{
-				material.TextureAmbient = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Ambient, 0), filePath, dataContext);
+				material.TextureAmbient = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Ambient, 0), filePath, graphics.DataContext);
 				if (material.TextureAmbient != null)
 					material.HasTextureAmbient = true;
 			}
@@ -107,7 +110,7 @@ namespace Mesher.Core.Data
 
 			if (aiMaterial.GetTextureCount(Assimp.TextureType.Diffuse) > 0)
 			{
-				material.TextureDiffuse = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Diffuse, 0), filePath, dataContext);
+				material.TextureDiffuse = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Diffuse, 0), filePath, graphics.DataContext);
 				if (material.TextureDiffuse != null)
 					material.HasTextureDiffuse = true;
 			}
@@ -115,7 +118,7 @@ namespace Mesher.Core.Data
 
 			if (aiMaterial.GetTextureCount(Assimp.TextureType.Emissive) > 0)
 			{
-				material.TextureEmissive = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Emissive, 0), filePath, dataContext);
+				material.TextureEmissive = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Emissive, 0), filePath, graphics.DataContext);
 				if (material.TextureEmissive != null)
 					material.HasTextureEmissive = true;
 			}
@@ -123,7 +126,7 @@ namespace Mesher.Core.Data
 
 			if (aiMaterial.GetTextureCount(Assimp.TextureType.Specular) > 0)
 			{
-				material.TextureSpecular = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Specular, 0), filePath, dataContext);
+				material.TextureSpecular = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Specular, 0), filePath, graphics.DataContext);
 				if (material.TextureSpecular != null)
 					material.HasTextureSpecular = true;
 			}
@@ -131,7 +134,7 @@ namespace Mesher.Core.Data
 
 			if (aiMaterial.GetTextureCount(Assimp.TextureType.Height) > 0)
 			{
-				material.TextureNormal = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Height, 0), filePath, dataContext);
+				material.TextureNormal = GetTexture(aiMaterial.GetTexture(Assimp.TextureType.Height, 0), filePath, graphics.DataContext);
 				if (material.TextureNormal != null)
 					material.HasTextureNormal = true;
 			}
@@ -147,21 +150,21 @@ namespace Mesher.Core.Data
 			return dataContext.CreateTexture((Bitmap)Image.FromFile(filePath + aiTexture.FilePath));
 		}
 
-        /*
-		private static RLight InitLight(Assimp.Light aiLight, RScene rScene)
+        
+		private static Light InitLight(Assimp.Light aiLight, Scene rScene)
 		{
-			var light = rScene.AddLight();
+			var light = new Light();
 
-			light.RLightType = (RLightType)aiLight.RLightType;
+			light.LightType = (LightType)aiLight.LightType;
 			light.Name = aiLight.Name;
 			light.AmbientColor = GetColor(aiLight.ColorAmbient);
 			light.DiffuseColor = GetColor(aiLight.ColorDiffuse);
 			light.SpecularColor = GetColor(aiLight.ColorSpecular);
 
-			if (light.RLightType == RLightType.Directional)
+			if (light.LightType == LightType.Directional)
 				light.Direction = GetVec3(aiLight.Direction);
 
-			if (light.RLightType == RLightType.Point)
+			if (light.LightType == LightType.Point)
 			{
 				light.Position = GetVec3(aiLight.Position);
 				light.AttenuationConstant = aiLight.AttenuationConstant;
@@ -169,14 +172,14 @@ namespace Mesher.Core.Data
 				light.AttenuationQuadratic = aiLight.AttenuationQuadratic;
 			}
 
-			if (light.RLightType == RLightType.Spot)
+			if (light.LightType == LightType.Spot)
 			{
 				light.InnerAngle = aiLight.AngleInnerCone;
 				light.OuterAngle = aiLight.AngleOuterCone;
 			}
 
 			return light;
-		}*/
+		}
 
 		private static Color3 GetColor(Assimp.Color3D color)
 		{

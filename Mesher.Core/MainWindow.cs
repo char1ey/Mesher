@@ -86,5 +86,11 @@ namespace Mesher.Core
             DocumentView.Update();
             Render();
         }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            m_mesherApplication.Dispose();
+            Close();
+        }
     }
 }
